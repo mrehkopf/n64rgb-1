@@ -1,0 +1,14 @@
+*.bak
+*.cdf
+*.done
+*.jdi
+*.rpt
+*.sld
+*.smsg
+*.srf
+*.summary
+*.qws
+*_description.txt
+db/
+incremental_db/
+output_files/n64rgb_heuristic_template.pof
