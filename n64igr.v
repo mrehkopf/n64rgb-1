@@ -10,8 +10,9 @@
 //
 // Dependencies:
 //
-// Revision: 1
-// Additional Comments: activate / deactivate de-blur in 240p (default:  on)
+// Revision: 2
+// Additional Comments: console reset
+//                      activate / deactivate de-blur in 240p (default:  on)
 //                      activate / deactivate 15bit mode      (default: off)
 //                      defaults set on each power cycle
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -22,11 +23,13 @@ module n64igr (
 
   input CTRL,
 
+  output reg nRST,
   output reg nDeBlur,
   output reg n15bit_mode
 );
 
 initial begin
+  nRST        = 1'bz;
   nDeBlur     = 1'b0;
   n15bit_mode = 1'b1;
 end
@@ -65,14 +68,16 @@ reg [ 3:0] remember_data    =  4'h0;
 reg [15:0] prev_data_stream = 16'h0;
 reg  [3:0] data_cnt         =  4'h0;
 
+reg initiate_nrst = 1'b0;
 
 always @(negedge nCLK2) begin
   case (read_state)
     ST_WAIT4N64:
       if (&wait_cnt) begin // waiting duration ends (exit wait state only if CTRL was high for a certain duration)
-        read_state  <= ST_N64_RD;
-        data_stream <= 16'h0000;
-        data_cnt    <=  4'h0;
+        read_state    <= ST_N64_RD;
+        data_stream   <= 16'h0000;
+        data_cnt      <=  4'h0;
+        initiate_nrst <= 1'b0;
       end
     ST_N64_RD:
       if (wait_cnt[3:0] == 4'h4) begin // low bit_cnt increased 4 times since neg. edge (delay somewhere between 1.8us and 2.2us) -> sample data
@@ -104,6 +109,8 @@ always @(negedge nCLK2) begin
               n15bit_mode <= ~n15bit_mode;
             remember_data <= 4'hf;
           end
+          if ({data_stream[14:0], CTRL} == 16'b1100010100110000) // A + B + Dd + Dr + L + R pressed (no prevention needed here)
+            initiate_nrst <= 1'b1;
           read_state  <= ST_WAIT4N64;
           if (~|remember_data)
             prev_data_stream <= {data_stream[14:0], CTRL};
@@ -124,6 +131,19 @@ always @(negedge nCLK2) begin
     wait_cnt <= wait_cnt + 1'b1;
 
   prev_ctrl <= CTRL;
+end
+
+
+reg [15:0] rst_cnt = 16'b0; // ~24ms are needed to count from max downto 0 with nCLK2.
+
+always @(negedge nCLK2) begin
+  if (initiate_nrst == 1'b1) begin
+    nRST    <= 1'b0;      // reset system
+    rst_cnt <= 16'hffff;
+  end else if (|rst_cnt) // decrement as long as rst_cnt is not zero
+    rst_cnt <= rst_cnt - 1'b1;
+  else
+    nRST <= 1'bz; // end of reset
 end
 
 endmodule

@@ -53,6 +53,7 @@ set_global_assignment -name ERROR_CHECK_FREQUENCY_DIVISOR "-1"
 set_global_assignment -name POWER_EXT_SUPPLY_VOLTAGE_TO_REGULATOR 3.3V
 set_global_assignment -name RESERVE_ALL_UNUSED_PINS "AS INPUT TRI-STATED WITH WEAK PULL-UP"
 set_global_assignment -name STRATIX_DEVICE_IO_STANDARD "3.3-V LVTTL"
+set_location_assignment PIN_1 -to nRST_o1
 set_location_assignment PIN_12 -to nCLK
 set_location_assignment PIN_14 -to nDSYNC
 set_location_assignment PIN_21 -to D_i[0]
@@ -87,8 +88,11 @@ set_location_assignment PIN_75 -to R_o[3]
 set_location_assignment PIN_74 -to R_o[4]
 set_location_assignment PIN_73 -to R_o[5]
 set_location_assignment PIN_72 -to R_o[6]
+set_location_assignment PIN_99 -to nRST_o99
 set_location_assignment PIN_100 -to CTRL_i
 set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to CTRL_i
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to nRST_o1
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to nRST_o99
 set_location_assignment PIN_37 -to dummy[0]
 set_location_assignment PIN_39 -to dummy[1]
 set_location_assignment PIN_58 -to dummy[2]

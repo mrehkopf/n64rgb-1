@@ -9,13 +9,14 @@
 // Tool versions:  Altera Quartus Prime
 // Description:
 //
-// Dependencies: n64igr.v
+// Dependencies: n64igr.v (Rev. 2)
 //
-// Revision: 4
+// Revision: 5
 // Additional Comments: BUFFERED version (no color shifting around edges)
 //                      deactivation of de-blur if wanted
 //                      15bit color mode (5bit for each color) if wanted
 //                      controller input detection for switching de-blur and 15bit mode
+//                      resetting N64 using the controller
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -35,22 +36,30 @@ module n64rgb (
 
   output [6:0] R_o,     // red data vector
   output [6:0] G_o,     // green data vector
-  output [6:0] B_o     // blue data vector
+  output [6:0] B_o,     // blue data vector
+
+  output nRST_o1,
+  output nRST_o99
 );
 
 
 // Part 1: IGR
 // ===========
 
+wire nRST;
 wire nDeBlur;
 wire n15bit_mode;
 
 n64igr igr(
   .nCLK(nCLK),
   .CTRL(CTRL_i),
+  .nRST(nRST),
   .nDeBlur(nDeBlur),
   .n15bit_mode(n15bit_mode)
 );
+
+assign nRST_o1  = nRST;
+assign nRST_o99 = nRST;
 
 
 // Part 2: RGB Demux with De-Blur Add-On
