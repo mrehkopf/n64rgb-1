@@ -25,7 +25,7 @@ By default this feature is on.
 
 ### 15bit Color Mode
 
-The 15bit color mode reduces the color depth from 21bit (7bit for each color) downto 15bits (5bit for each color). Most games just use the five MSBs of the color information and the two LSBs for some kind of gamma dither. The 15bit color mode simply sets the two LSBs to '0'.
+The 15bit color mode reduces the color depth from 21bit (7bit for each color) downto 15bits (5bit for each color). Some very few games just use the five MSBs of the color information and the two LSBs for some kind of gamma dither. The 15bit color mode simply sets the two LSBs to '0'.
 
 By default this feature is off.
 - 'firmware without IGR': To activate it set pin 99 of the CPLD to GND.
