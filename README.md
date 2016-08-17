@@ -4,12 +4,13 @@ An alternative firmware for viletims commercial N64 RGB mod
 
 ## Description of the Firmware Version
 
-I uploaded two different firmware versions as well as a template. These are the features:
+I uploaded three different firmware versions as well as a template. These are the features:
 - Detection of 240p/288p
 - Detection of PAL and NTSC mode (no output of that information at the moment as it is only internally used)
 - De-Blur in 240p/288p (horizontal resolution decreased from 640 to 320 pixels)
 - 15bit color mode
 - Slow Slew Rate (separate programming file)
+- toogle de-blur and 15bit color mode using the controller (separate programming file; NO slow slew rates)
 
 Some games uses full horizontal resolution even in 240p/288p output mode. In this case the de-blur introduces a blurry picture. This can be deactivated by setting an appropriate pin (see below)
 
@@ -18,13 +19,17 @@ Some games uses full horizontal resolution even in 240p/288p output mode. In thi
 
 De-blur of the picture information is only be done in 240p/288p. This is be done by simply blanking every second pixel. Normally, the blanked pixels are used to introduce blur by the N64 in 240p/288p mode. However, some games like Mario Tennis use these pixel for additional information rather than for bluring effects. Hence, the picture looks more blurry in this case if de-blur feature is activated.
 
-By default this feature is on. To deactivate it pin 100 of the MaxII CPLD has to be set to GND.
+By default this feature is on.
+- 'firmware without IGR': To deactivate it pin 100 of the MaxII CPLD has to be set to GND.
+- 'firmware with IGR': To deactivate / reactivate press D-Pad ri + L + R C-ri. The default is set on each power cycle.
 
 ### 15bit Color Mode
 
 The 15bit color mode reduces the color depth from 21bit (7bit for each color) downto 15bits (5bit for each color). Most games just use the five MSBs of the color information and the two LSBs for some kind of gamma dither. The 15bit color mode simply sets the two LSBs to '0'.
 
-By default this feature is off. To activate it set pin 99 of the CPLD to GND.
+By default this feature is off.
+- 'firmware without IGR': To activate it set pin 99 of the CPLD to GND.
+- 'firmware with IGR': To deactivate / reactivate press D-Pad le + L + R C-le. The default is set on each power cycle. 
 
 ### Slow Slew Rate
 
@@ -37,6 +42,14 @@ This feature is only provided over an addition programming file. Choose n64rgb.p
 I uploaded a template for the heuristic guess, which should provide the information if the N64 uses full horizontal resolution of 640 pixels in 240p/288p or not with a certain probability. I don't know how good the template is neither I know if it is possible with the current CPLD used. Feel free to implement your own tries.
 
 In this template no 15bit color mode exists at the moment. At the MaxII, pin 100 is used for activation the *Auto* mode (i.e. de-blur only in 240p/288p and if the heuristic guess says that only half of the horizontal resolution is used) and pin 99 is used to activate the *Manual* mode (i.e. de-blur in 240p/288p in every case). Both defaults are off; for on pins has to be set to GND.
+
+### IGR (In Game Routines)
+
+To use this firmware (and therefore the IGRs) pin 100 of the CPLD (pad *A*) has to be connected to the communication wire of controller 1. On the controller port this is the middle pin, which is connected to pin 16 of the PIF-NUS (PIFP-NUS) on most consoles. Check this before solderinga wire to the PIF-NUS.  
+
+At the moment two functunalities are implemented: toggle de-blur feature and the 15bit mode (see above). Resetting the console is planned but not working at the moment (possible due to a bad solder joint).  
+
+However, as the communication between N64 and the controller goes over a single wire, sniffing the input is not an easy task (and probably my solution is not the best one). This together with the lack of an exhaustive testing (many many games out there as well my limited time), I'm looking forward to any incomming issue report to furhter improve this feature :)   
 
 ## Technical Information
 
