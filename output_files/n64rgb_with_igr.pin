@@ -63,7 +63,7 @@ CHIP  "n64rgb_with_igr"  ASSIGNED TO AN: EPM240T100C5
 
 Pin Name/Usage               : Location  : Dir.   : I/O Standard      : Voltage : I/O Bank  : User Assignment
 -------------------------------------------------------------------------------------------------------------
-nRST_o1                      : 1         : output : 3.3-V LVTTL       :         : 2         : Y              
+nRST_o1                      : 1         : bidir  : 3.3-V LVTTL       :         : 2         : Y              
 RESERVED_INPUT_WITH_WEAK_PULLUP : 2         :        :                   :         : 1         :                
 RESERVED_INPUT_WITH_WEAK_PULLUP : 3         :        :                   :         : 1         :                
 RESERVED_INPUT_WITH_WEAK_PULLUP : 4         :        :                   :         : 1         :                
@@ -161,5 +161,5 @@ RESERVED_INPUT_WITH_WEAK_PULLUP : 95        :        :                   :      
 RESERVED_INPUT_WITH_WEAK_PULLUP : 96        :        :                   :         : 2         :                
 RESERVED_INPUT_WITH_WEAK_PULLUP : 97        :        :                   :         : 2         :                
 RESERVED_INPUT_WITH_WEAK_PULLUP : 98        :        :                   :         : 2         :                
-nRST_o99                     : 99        : output : 3.3-V LVTTL       :         : 2         : Y              
+nRST_o99                     : 99        : bidir  : 3.3-V LVTTL       :         : 2         : Y              
 CTRL_i                       : 100       : input  : 3.3-V LVTTL       :         : 2         : Y              

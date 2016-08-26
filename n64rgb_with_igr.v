@@ -9,14 +9,15 @@
 // Tool versions:  Altera Quartus Prime
 // Description:
 //
-// Dependencies: n64igr.v (Rev. 2)
+// Dependencies: n64igr.v (Rev. 3)
 //
-// Revision: 5
+// Revision: 6
 // Additional Comments: BUFFERED version (no color shifting around edges)
 //                      deactivation of de-blur if wanted
 //                      15bit color mode (5bit for each color) if wanted
 //                      controller input detection for switching de-blur and 15bit mode
 //                      resetting N64 using the controller
+//                      defaults of de-blur and 15bit mode are set on power cycle and reset
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -38,28 +39,32 @@ module n64rgb (
   output [6:0] G_o,     // green data vector
   output [6:0] B_o,     // blue data vector
 
-  output nRST_o1,
-  output nRST_o99
+  inout nRST_o1,
+  inout nRST_o99
 );
 
 
 // Part 1: IGR
 // ===========
 
-wire nRST;
+wire nRST_IGR;
+wire DRV_RST;
 wire nDeBlur;
 wire n15bit_mode;
 
+assign nRST_IGR = nRST_o1 & nRST_o99;
+
 n64igr igr(
   .nCLK(nCLK),
+  .nRST_IGR(nRST_IGR),
   .CTRL(CTRL_i),
-  .nRST(nRST),
+  .DRV_RST(DRV_RST),
   .nDeBlur(nDeBlur),
   .n15bit_mode(n15bit_mode)
 );
 
-assign nRST_o1  = nRST;
-assign nRST_o99 = nRST;
+assign nRST_o1  = DRV_RST ? 1'b0 : 1'bz;
+assign nRST_o99 = DRV_RST ? 1'b0 : 1'bz;
 
 
 // Part 2: RGB Demux with De-Blur Add-On

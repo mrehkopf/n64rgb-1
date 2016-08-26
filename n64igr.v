@@ -10,29 +10,33 @@
 //
 // Dependencies:
 //
-// Revision: 2
+// Revision: 3
 // Additional Comments: console reset
 //                      activate / deactivate de-blur in 240p (default:  on)
 //                      activate / deactivate 15bit mode      (default: off)
-//                      defaults set on each power cycle
+//                      defaults set on each power cycle and on each reset
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 
 module n64igr (
   input nCLK,
+  input nRST_IGR,
 
   input CTRL,
 
-  output reg nRST,
+  output reg DRV_RST,
   output reg nDeBlur,
   output reg n15bit_mode
 );
 
 initial begin
-  nRST        = 1'bz;
+  DRV_RST     = 1'b0;
   nDeBlur     = 1'b0;
   n15bit_mode = 1'b1;
 end
+
+// Part 1: Clock Divider
+// =====================
 
 // nCLK frequency (NTSC and PAL related to console type; not to video type)
 //   - NTSC: ~48.68MHz
@@ -53,6 +57,9 @@ always @(negedge nCLK) begin
 end
 
 
+
+// Part 2: IGR
+// ===========
 
 reg [1:0] read_state  = 2'b0; // state machine
 
@@ -77,7 +84,7 @@ always @(negedge nCLK2) begin
         read_state    <= ST_N64_RD;
         data_stream   <= 16'h0000;
         data_cnt      <=  4'h0;
-        initiate_nrst <= 1'b0;
+        initiate_nrst <=  1'b0;
       end
     ST_N64_RD:
       if (wait_cnt[3:0] == 4'h4) begin // low bit_cnt increased 4 times since neg. edge (delay somewhere between 1.8us and 2.2us) -> sample data
@@ -131,19 +138,32 @@ always @(negedge nCLK2) begin
     wait_cnt <= wait_cnt + 1'b1;
 
   prev_ctrl <= CTRL;
+
+  if (nRST_IGR == 1'b0) begin
+    nDeBlur     <= 1'b0;
+    n15bit_mode <= 1'b1;
+
+    read_state    <= ST_WAIT4N64;
+    wait_cnt      <= 12'h000;
+    prev_ctrl     <=  1'b1;
+    initiate_nrst <=  1'b0;
+  end
 end
 
+// Part 3: Driving Reset
+// =====================
 
 reg [15:0] rst_cnt = 16'b0; // ~24ms are needed to count from max downto 0 with nCLK2.
 
+
 always @(negedge nCLK2) begin
   if (initiate_nrst == 1'b1) begin
-    nRST    <= 1'b0;      // reset system
+    DRV_RST <= 1'b1;      // reset system
     rst_cnt <= 16'hffff;
   end else if (|rst_cnt) // decrement as long as rst_cnt is not zero
     rst_cnt <= rst_cnt - 1'b1;
   else
-    nRST <= 1'bz; // end of reset
+    DRV_RST <= 1'b0; // end of reset
 end
 
 endmodule
