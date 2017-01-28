@@ -12,3 +12,8 @@
 db/
 incremental_db/
 output_files/n64rgb_heuristic_template.pof
+.DS_Store
+.qsys_edit/
+ModelSim/
+simulation/
+greybox_tmp/
