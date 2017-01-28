@@ -21,7 +21,10 @@ De-blur of the picture information is only be done in 240p/288p. This is be done
 
 By default this feature is on.
 - 'firmware without IGR': To deactivate it pin 100 of the MaxII CPLD has to be set to GND.
-- 'firmware with IGR': To deactivate / reactivate press D-Pad ri + L + R C-ri. The default is set on each power cycle.
+- 'firmware with IGR':
+  * to deactivate de-blur press D-Pad le + L + R C-le.
+  * to (re)activate de-blur press D-Pad ri + L + R C-ri.
+  * the default is set on each power cycle. Default is de-blur *on*! If you want to have it *off* by default, short pin 91 and 90 at the MaxII CPLD!
 
 ### 15bit Color Mode
 
@@ -29,7 +32,10 @@ The 15bit color mode reduces the color depth from 21bit (7bit for each color) do
 
 By default this feature is off.
 - 'firmware without IGR': To activate it set pin 99 of the CPLD to GND.
-- 'firmware with IGR': To deactivate / reactivate press D-Pad le + L + R C-le. The default is set on each power cycle. 
+- 'firmware with IGR':
+  * to deactivate 15bit mode press D-Pad up + L + R C-up.
+  * to (re)activate 15bit mode press D-Pad dw + L + R C-dw.
+  * the default is set on each power cycle. Default for 15bit color mode is *off*! If you want to have it *on* by default, short pin 36 and 37 at the MaxII CPLD!
 
 ### Slow Slew Rate
 
