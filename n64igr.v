@@ -41,17 +41,17 @@ end
 // nCLK frequency (NTSC and PAL related to console type; not to video type)
 //   - NTSC: ~48.68MHz
 //   -  PAL: ~49.66MHz
-// nCLK2 is nCLK divided by 2*9
-//   - NTSC: ~2.70MHz (~0.369us period)
-//   -  PAL: ~2.76MHz (~0.362us period)
+// nCLK2 is nCLK divided by 2*6
+//   - NTSC: ~4.06MHz (~0.247us period)
+//   -  PAL: ~4.14MHz (~0.242us period)
 
-reg nCLK2 = 1'b0;             // clock with period as described
-reg [3:0] div_clk_cnt = 4'h0; // counter to generate a clock devider 2*9
+reg nCLK2 = 1'b0;               // clock with period as described
+reg [2:0] div_clk_cnt = 3'b000; // counter to generate a clock devider 2*6
 
 always @(negedge nCLK) begin
-  if (div_clk_cnt[3]) begin
+  if (div_clk_cnt == 3'b101) begin
     nCLK2 <= ~nCLK2;
-    div_clk_cnt <= 4'h0;
+    div_clk_cnt <= 3'b000;
   end else
     div_clk_cnt <= div_clk_cnt + 1'b1;
 end
@@ -94,7 +94,7 @@ always @(negedge nCLK2) begin
         initiate_nrst <=  1'b0;
       end
     ST_N64_RD:
-      if (wait_cnt[3:0] == 4'h4) begin // low bit_cnt increased 4 times since neg. edge (delay somewhere between 1.8us and 2.2us) -> sample data
+      if (wait_cnt[7:0] == 8'h09) begin // low bit_cnt increased 10 times since neg. edge (delay somewhere between 2.4us) -> sample data
         if (data_cnt[3]) // eight bits read
           if (data_stream[13:6] == 8'b00000001 & CTRL) begin // check command and stop bit
           // trick: the 2 LSB command bits lies where controller produces unused constant values
@@ -111,7 +111,7 @@ always @(negedge nCLK2) begin
         end
       end
     ST_CTRL_RD:
-      if (wait_cnt[7:0] == 8'h04) begin // low bit_cnt increased 4 times since neg. edge (delay somewhere between 1.8us and 2.2us) -> sample data
+      if (wait_cnt[7:0] == 8'h09) begin // low bit_cnt increased 10 times since neg. edge (delay somewhere around 2.4us) -> sample data
         if (&data_cnt) begin // sixteen bits read (analog values of stick not point of interest)
           if ({data_stream[14:0], CTRL} == 16'b0000000100110001) begin // Dr + L + R + Cr pressed
             if (prev_data_stream != {data_stream[14:0], CTRL}) // prevents multiple executions (together with remember data)
@@ -160,13 +160,13 @@ end
 // Part 3: Driving Reset
 // =====================
 
-reg [15:0] rst_cnt = 16'b0; // ~24ms are needed to count from max downto 0 with nCLK2.
+reg [19:0] rst_cnt = 20'b0; // ~250ms are needed to count from max downto 0 with nCLK2.
 
 
 always @(negedge nCLK2) begin
   if (initiate_nrst == 1'b1) begin
     DRV_RST <= 1'b1;      // reset system
-    rst_cnt <= 16'hffff;
+    rst_cnt <= 20'hfffff;
   end else if (|rst_cnt) // decrement as long as rst_cnt is not zero
     rst_cnt <= rst_cnt - 1'b1;
   else
