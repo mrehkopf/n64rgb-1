@@ -10,10 +10,11 @@
 //
 // Dependencies:
 //
-// Revision: 3
+// Revision: 4
 // Additional Comments: console reset
-//                      activate / deactivate de-blur in 240p (default:  on)
-//                      activate / deactivate 15bit mode      (default: off)
+//                      activate / deactivate de-blur in 240p
+//                      activate / deactivate 15bit mode
+//                      selectable defaults
 //                      defaults set on each power cycle and on each reset
 ///////////////////////////////////////////////////////////////////////////////////////////
 
@@ -24,15 +25,17 @@ module n64igr (
 
   input CTRL,
 
-  output reg DRV_RST,
+  input Default_DeBlur,
+  input Default_n15bit_mode,
+
   output reg nDeBlur,
-  output reg n15bit_mode
+  output reg n15bit_mode,
+
+  output reg DRV_RST
 );
 
 initial begin
-  DRV_RST     = 1'b0;
-  nDeBlur     = 1'b0;
-  n15bit_mode = 1'b1;
+  DRV_RST    = 1'b0;
 end
 
 // Part 1: Clock Divider
@@ -68,14 +71,14 @@ parameter ST_N64_RD   = 2'b01; // N64 request sniffing
 parameter ST_CTRL_RD  = 2'b10; // controller response
 
 reg        prev_ctrl    =  1'b1;
-reg [11:0] wait_cnt     = 12'b0; // counter for wait state (needs appr. 1.5ms at nCLK2 clock to fill up from 0 to 4095)
+reg [11:0] wait_cnt     = 12'b0; // counter for wait state (needs appr. 1.0ms at nCLK2 clock to fill up from 0 to 4095)
 
 reg [15:0] data_stream      = 16'b0;
-reg [ 3:0] remember_data    =  4'h0;
-reg [15:0] prev_data_stream = 16'h0;
 reg  [3:0] data_cnt         =  4'h0;
 
 reg initiate_nrst = 1'b0;
+reg nfirstboot    = 1'b0;
+
 // controller data bits:
 //  0: 7 - A, B, Z, St, Du, Dd, Dl, Dr
 //  8:15 - 'Joystick reset', (0), L, R, Cu, Cd, Cl, Cr
@@ -113,23 +116,17 @@ always @(negedge nCLK2) begin
     ST_CTRL_RD:
       if (wait_cnt[7:0] == 8'h09) begin // low bit_cnt increased 10 times since neg. edge (delay somewhere around 2.4us) -> sample data
         if (&data_cnt) begin // sixteen bits read (analog values of stick not point of interest)
-          if ({data_stream[14:0], CTRL} == 16'b0000000100110001) begin // Dr + L + R + Cr pressed
-            if (prev_data_stream != {data_stream[14:0], CTRL}) // prevents multiple executions (together with remember data)
-              nDeBlur <= ~nDeBlur;
-            remember_data <= 4'hf;
-          end
-          if ({data_stream[14:0], CTRL} == 16'b0000001000110010) begin // Dl + L + R + Cl pressed
-            if (prev_data_stream != {data_stream[14:0], CTRL}) // prevents multiple executions (together with remember data)
-              n15bit_mode <= ~n15bit_mode;
-            remember_data <= 4'hf;
-          end
-          if ({data_stream[14:0], CTRL} == 16'b1100010100110000) // A + B + Dd + Dr + L + R pressed (no prevention needed here)
+          if ({data_stream[14:0], CTRL} == 16'b0000001000110010) // Dl + L + R + Cl pressed
+            nDeBlur <= 1'b1;
+          if ({data_stream[14:0], CTRL} == 16'b0000000100110001) // Dr + L + R + Cr pressed
+            nDeBlur <= 1'b0;
+          if ({data_stream[14:0], CTRL} == 16'b0000100000111000) // Du + L + R + Cu pressed
+              n15bit_mode <= 1'b1;
+          if ({data_stream[14:0], CTRL} == 16'b0000010000110100) // Dd + L + R + Cd pressed
+              n15bit_mode <= 1'b0;
+          if ({data_stream[14:0], CTRL} == 16'b1100010100110000) // A + B + Dd + Dr + L + R pressed
             initiate_nrst <= 1'b1;
           read_state  <= ST_WAIT4N64;
-          if (~|remember_data)
-            prev_data_stream <= {data_stream[14:0], CTRL};
-          else
-            remember_data <= remember_data - 1'b1;
         end else begin
           data_stream[15:1] <= data_stream[14:0];
           data_stream[0]    <= CTRL;
@@ -146,9 +143,11 @@ always @(negedge nCLK2) begin
 
   prev_ctrl <= CTRL;
 
-  if (nRST_IGR == 1'b0) begin
-    nDeBlur     <= 1'b0;
-    n15bit_mode <= 1'b1;
+  if ((nRST_IGR & nfirstboot) == 1'b0) begin
+    nfirstboot <= 1'b1;
+
+    nDeBlur     <= ~Default_DeBlur;
+    n15bit_mode <=  Default_n15bit_mode;
 
     read_state    <= ST_WAIT4N64;
     wait_cnt      <= 12'h000;

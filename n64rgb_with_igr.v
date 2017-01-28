@@ -9,12 +9,13 @@
 // Tool versions:  Altera Quartus Prime
 // Description:
 //
-// Dependencies: n64igr.v (Rev. 3)
+// Dependencies: n64igr.v (Rev. 4)
 //
-// Revision: 6
+// Revision: 8
 // Additional Comments: BUFFERED version (no color shifting around edges)
-//                      deactivation of de-blur if wanted
-//                      15bit color mode (5bit for each color) if wanted
+//                      deblur and 15bit mode (5bit for each color)
+//                        - deblur default: on (default) / off (short pin 91 & 90)
+//                        - 15bit mode default: on (short pin 36 & 37) / off (default)
 //                      controller input detection for switching de-blur and 15bit mode
 //                      resetting N64 using the controller
 //                      defaults of de-blur and 15bit mode are set on power cycle and reset
@@ -27,6 +28,9 @@ module n64rgb (
   input [6:0] D_i,
 
   input CTRL_i,
+
+  input Default_DeBlur,
+  input Default_n15bit_mode,
 
   input [4:0] dummy, // some pins are tied to Vcc/GND according to viletims design
 
@@ -58,9 +62,11 @@ n64igr igr(
   .nCLK(nCLK),
   .nRST_IGR(nRST_IGR),
   .CTRL(CTRL_i),
-  .DRV_RST(DRV_RST),
+  .Default_DeBlur(Default_DeBlur),
+  .Default_n15bit_mode(Default_n15bit_mode),
   .nDeBlur(nDeBlur),
-  .n15bit_mode(n15bit_mode)
+  .n15bit_mode(n15bit_mode),
+  .DRV_RST(DRV_RST)
 );
 
 assign nRST_o1  = DRV_RST ? 1'b0 : 1'bz;
@@ -171,9 +177,9 @@ always @(negedge nCLK) begin // data register management
   end else if (nblank_rgb) begin // get RGB only if not blanked
     // demux of RGB
     case(data_cnt)
-      2'b01: R_DBr[0] <= D_i;
-      2'b10: G_DBr[0] <= D_i;
-      2'b11: B_DBr[0] <= D_i;
+      2'b01: R_DBr[0] <= n15bit_mode ? D_i : {D_i[6:2], 2'b00};
+      2'b10: G_DBr[0] <= n15bit_mode ? D_i : {D_i[6:2], 2'b00};
+      2'b11: B_DBr[0] <= n15bit_mode ? D_i : {D_i[6:2], 2'b00};
     endcase
 
     // increment data counter
@@ -182,8 +188,8 @@ always @(negedge nCLK) begin // data register management
 end
 
 assign {nVSYNC, nCLAMP, nHSYNC, nCSYNC} = S_DBr[1];
-assign R_o = n15bit_mode ? R_DBr[1] : {R_DBr[1][6:2], 2'b00};
-assign G_o = n15bit_mode ? G_DBr[1] : {G_DBr[1][6:2], 2'b00};
-assign B_o = n15bit_mode ? B_DBr[1] : {B_DBr[1][6:2], 2'b00};
+assign R_o = R_DBr[1];
+assign G_o = G_DBr[1];
+assign B_o = B_DBr[1];
 
 endmodule
