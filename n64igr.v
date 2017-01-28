@@ -76,6 +76,13 @@ reg [15:0] prev_data_stream = 16'h0;
 reg  [3:0] data_cnt         =  4'h0;
 
 reg initiate_nrst = 1'b0;
+// controller data bits:
+//  0: 7 - A, B, Z, St, Du, Dd, Dl, Dr
+//  8:15 - 'Joystick reset', (0), L, R, Cu, Cd, Cl, Cr
+// 16:23 - X axis
+// 24:31 - Y axis
+// 32    - Stop bit
+// (bits[0:15] used here)
 
 always @(negedge nCLK2) begin
   case (read_state)
