@@ -22,8 +22,8 @@ De-blur of the picture information is only be done in 240p/288p. This is be done
 By default this feature is on.
 - 'firmware without IGR': To activate it pin 100 of the MaxII CPLD has to be set to GND. By default, this feature is switched *off*.
 - 'firmware with IGR':
-  * to deactivate de-blur press D-Pad le + L + R C-le.
-  * to (re)activate de-blur press D-Pad ri + L + R C-ri.
+  * to deactivate de-blur press D-Pad le + L + R + C-le.
+  * to (re)activate de-blur press D-Pad ri + L + R + C-ri.
   * the default is set on each power cycle. Default is de-blur *on*! If you want to have it *off* by default, short pin 91 and 90 at the MaxII CPLD!
 
 ### 15bit Color Mode
@@ -31,7 +31,7 @@ By default this feature is on.
 The 15bit color mode reduces the color depth from 21bit (7bit for each color) downto 15bits (5bit for each color). Some very few games just use the five MSBs of the color information and the two LSBs for some kind of gamma dither. The 15bit color mode simply sets the two LSBs to '0'.
 
 By default this feature is off.
-- 'firmware without IGR': To activate it set pin 99 of the CPLD to GND.
+- 'firmware without IGR': To activate it set pin 99 of the CPLD to GND. This feature is *off* by default.
 - 'firmware with IGR':
   * to deactivate 15bit mode press D-Pad up + L + R C-up.
   * to (re)activate 15bit mode press D-Pad dw + L + R C-dw.
@@ -45,9 +45,14 @@ This feature is only provided over an addition programming file. Choose n64rgb.p
 
 ### IGR (In Game Routines)
 
-To use this firmware (and therefore the IGRs) pin 100 of the CPLD (pad *A*) has to be connected to the communication wire of controller 1. On the controller port this is the middle pin, which is connected to pin 16 of the PIF-NUS (PIFP-NUS) on most consoles. Check this before solderinga wire to the PIF-NUS.  
+To use this firmware (and therefore the IGRs) pin 100 of the CPLD (pad *A*) has to be connected to the communication wire of controller 1. On the controller port this is the middle pin, which is connected to pin 16 of the PIF-NUS (PIFP-NUS) on most consoles. Check this before soldering a wire to the PIF-NUS.  
 
-Three functunalities are implemented: toggle de-blur feature and the 15bit mode (see above) as well as resetting the console. To use the reset functionality please connect pin 1 OR pin 99 of the CPLD (pad *M*) to the PIF-NUS pin 27. The reset is initiated by pressing A + B + D-Pad down + D-Pad right + L + R together.  
+Three functunalities are implemented: toggle de-blur feature and the 15bit mode (see above) as well as resetting the console. To use the reset functionality please connect pin 1 OR pin 99 of the CPLD (pad *M*) to the PIF-NUS pin 27.
+
+The button combination are as follows:
+- reset the console: A + B + D-Pad dw + D-Pad ri + L + R
+- (de)activate De-Blur: (see section above)
+- (de)activate 15bit mode: (see section above)
 
 However, as the communication between N64 and the controller goes over a single wire, sniffing the input is not an easy task (and probably my solution is not the best one). This together with the lack of an exhaustive testing (many many games out there as well my limited time), I'm looking forward to any incomming issue report to furhter improve this feature :)   
 
@@ -64,4 +69,8 @@ The firmware is suiteable for all version of the N64RGB modding kits designed by
 - On V1.2 boards (and later versions?), CPLD pin 100 is connected to pad *A* and pin 99 to pad *M*.
 
 
-Lastly, the information how to update can be grabbed incl. some more technical information here: [URL to viletims official website](http://etim.net.au/n64rgb/tech/). The use of the presented firmware is up on everybodies own risk. However, a fallback to the initial firmware is provided on viletim webpage. 
+Lastly, the information how to update can be grabbed incl. some more technical information here: [URL to viletims official website](http://etim.net.au/n64rgb/tech/). The use of the presented firmware is up on everybodies own risk. However, a fallback to the initial firmware is provided on viletims webpage.
+
+## Acknowledgement
+
+Many thanks go to Ikari_01. He has written the code to detect 480i and PAL/NTSC output. His code is written for the XC9572XL and can be accessed here: [URL to Ikari_01's GitHub repository](https://github.com/mrehkopf/n64rgb)
