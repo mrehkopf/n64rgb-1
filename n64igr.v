@@ -60,7 +60,6 @@ always @(negedge nCLK) begin
 end
 
 
-
 // Part 2: IGR
 // ===========
 
@@ -143,29 +142,29 @@ always @(negedge nCLK2) begin
 
   prev_ctrl <= CTRL;
 
-  if ((nRST_IGR & nfirstboot) == 1'b0) begin
-    nfirstboot <= 1'b1;
-
-    nDeBlur     <= ~Default_DeBlur;
-    n15bit_mode <=  Default_n15bit_mode;
-
+  if (~nRST_IGR) begin
     read_state    <= ST_WAIT4N64;
     wait_cnt      <= 12'h000;
     prev_ctrl     <=  1'b1;
     initiate_nrst <=  1'b0;
+  end
+
+  if (~nfirstboot) begin
+    nfirstboot  <= 1'b1;
+    nDeBlur     <= ~Default_DeBlur;
+    n15bit_mode <=  Default_n15bit_mode;
   end
 end
 
 // Part 3: Driving Reset
 // =====================
 
-reg [19:0] rst_cnt = 20'b0; // ~250ms are needed to count from max downto 0 with nCLK2.
-
+reg [17:0] rst_cnt = 18'b0; // ~65ms are needed to count from max downto 0 with nCLK2.
 
 always @(negedge nCLK2) begin
   if (initiate_nrst == 1'b1) begin
     DRV_RST <= 1'b1;      // reset system
-    rst_cnt <= 20'hfffff;
+    rst_cnt <= 18'h3ffff;
   end else if (|rst_cnt) // decrement as long as rst_cnt is not zero
     rst_cnt <= rst_cnt - 1'b1;
   else

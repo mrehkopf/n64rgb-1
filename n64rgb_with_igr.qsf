@@ -107,3 +107,4 @@ set_global_assignment -name VERILOG_FILE n64rgb_with_igr.v
 set_global_assignment -name VERILOG_FILE n64igr.v
 set_global_assignment -name SDC_FILE n64rgb.sdc
 set_global_assignment -name SDC_FILE n64igr.sdc
+set_global_assignment -name OPTIMIZATION_MODE BALANCED

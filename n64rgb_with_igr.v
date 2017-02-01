@@ -18,7 +18,7 @@
 //                        - 15bit mode default: on (short pin 36 & 37) / off (default)
 //                      controller input detection for switching de-blur and 15bit mode
 //                      resetting N64 using the controller
-//                      defaults of de-blur and 15bit mode are set on power cycle and reset
+//                      defaults of de-blur and 15bit mode are set on power cycle
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -51,10 +51,9 @@ module n64rgb (
 // Part 1: IGR
 // ===========
 
-wire nRST_IGR;
-wire DRV_RST;
-wire nDeBlur;
-wire n15bit_mode;
+
+wire nDeBlur, n15bit_mode;
+wire nRST_IGR, DRV_RST;
 
 assign nRST_IGR = nRST_o1 & nRST_o99;
 
