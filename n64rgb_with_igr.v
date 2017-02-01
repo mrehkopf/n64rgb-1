@@ -144,7 +144,7 @@ end
 
 reg [1:0] data_cnt = 2'b00;
 
-reg [3:0] S_DBr[0:1]; // sync data vector buffer: {nVSYNC, nCLAMP, nHSYNC, nCSYNC}
+reg [3:0] S_DBr[0:2]; // sync data vector buffer: {nVSYNC, nCLAMP, nHSYNC, nCSYNC}
 reg [6:0] R_DBr[0:1]; // red data vector buffer
 reg [6:0] G_DBr[0:1]; // green data vector buffer
 reg [6:0] B_DBr[0:1]; // blue data vector buffer
@@ -153,17 +153,19 @@ reg [6:0] B_DBr[0:1]; // blue data vector buffer
 initial begin
   integer idx;
   for (idx=0; idx<2; idx=idx+1) begin
-   S_DBr[idx] = 4'b1111;
-   R_DBr[idx] = 7'b0000000;
-   G_DBr[idx] = 7'b0000000;
-   B_DBr[idx] = 7'b0000000;
+    S_DBr[idx] = 4'b1111;
+    R_DBr[idx] = 7'b0000000;
+    G_DBr[idx] = 7'b0000000;
+    B_DBr[idx] = 7'b0000000;
   end
+  S_DBr[2] = 4'b1111;
 end
 
 
 always @(negedge nCLK) begin // data register management
   if (~nDSYNC) begin
     // shift data to the left
+    S_DBr[2] <= S_DBr[1];
     S_DBr[1] <= S_DBr[0];
     R_DBr[1] <= R_DBr[0];
     G_DBr[1] <= G_DBr[0];
@@ -187,7 +189,7 @@ always @(negedge nCLK) begin // data register management
   end
 end
 
-assign {nVSYNC, nCLAMP, nHSYNC, nCSYNC} = S_DBr[1];
+assign {nVSYNC, nCLAMP, nHSYNC, nCSYNC} = nDeBlur ? S_DBr[1] : S_DBr[2];
 assign R_o = R_DBr[1];
 assign G_o = G_DBr[1];
 assign B_o = B_DBr[1];
