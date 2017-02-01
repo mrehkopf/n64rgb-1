@@ -90,7 +90,7 @@ set_location_assignment PIN_74 -to R_o[4]
 set_location_assignment PIN_73 -to R_o[5]
 set_location_assignment PIN_72 -to R_o[6]
 set_location_assignment PIN_99 -to n15bit_mode
-set_location_assignment PIN_100 -to DBF_ENABLE
+set_location_assignment PIN_100 -to nDeBlur
 set_instance_assignment -name SLOW_SLEW_RATE ON -to R_o
 set_instance_assignment -name SLOW_SLEW_RATE ON -to G_o
 set_instance_assignment -name SLOW_SLEW_RATE ON -to B_o
@@ -99,7 +99,7 @@ set_instance_assignment -name SLOW_SLEW_RATE ON -to nHSYNC
 set_instance_assignment -name SLOW_SLEW_RATE ON -to nCLAMP
 set_instance_assignment -name SLOW_SLEW_RATE ON -to nVSYNC
 set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to n15bit_mode
-set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to DBF_ENABLE
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to nDeBlur
 set_location_assignment PIN_37 -to dummy[0]
 set_location_assignment PIN_39 -to dummy[1]
 set_location_assignment PIN_58 -to dummy[2]

@@ -23,8 +23,8 @@ module n64rgb (
   input nDSYNC,
   input [6:0] D_i,
 
-  input DBF_ENABLE,  // feature to enable de-blur (DBF = De-Blur-Feature, 0 = feature off, 1 = feature on)
-                     // (pin can be left unconnected for always on; weak pull-up assigned)
+  input nDeBlur,  // feature to enable de-blur (0 = feature on, 1 = feature off)
+                  // (pin can be left unconnected for always on; weak pull-up assigned)
   input n15bit_mode, // 15bit color mode if input set to GND (weak pull-up assigned)
   input [4:0] dummy, // some pins are tied to Vcc/GND according to viletims design
 
@@ -91,7 +91,7 @@ always @(negedge nCLK) begin
     if(~S_DBr[0][1] & D_i[1]) // posedge nHSYNC -> increase line_cnt
       line_cnt <= line_cnt + 1'b1;
 
-    if(~n64_480i & DBF_ENABLE) begin // 240p and de-blur enabled
+    if(~(n64_480i | nDeBlur)) begin // 240p and de-blur enabled
       if(~S_DBr[0][0] & D_i[0]) // posedge nCSYNC -> reset blanking
         nblank_rgb <= vmode;
       else

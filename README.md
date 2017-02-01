@@ -20,7 +20,7 @@ Some games uses full horizontal resolution even in 240p/288p output mode. In thi
 De-blur of the picture information is only be done in 240p/288p. This is be done by simply blanking every second pixel. Normally, the blanked pixels are used to introduce blur by the N64 in 240p/288p mode. However, some games like Mario Tennis use these pixel for additional information rather than for bluring effects. Hence, the picture looks more blurry in this case if de-blur feature is activated.
 
 By default this feature is on.
-- 'firmware without IGR': To deactivate it pin 100 of the MaxII CPLD has to be set to GND.
+- 'firmware without IGR': To activate it pin 100 of the MaxII CPLD has to be set to GND. By default, this feature is switched *off*.
 - 'firmware with IGR':
   * to deactivate de-blur press D-Pad le + L + R C-le.
   * to (re)activate de-blur press D-Pad ri + L + R C-ri.

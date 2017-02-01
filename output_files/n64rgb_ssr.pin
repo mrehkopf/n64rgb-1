@@ -162,4 +162,4 @@ RESERVED_INPUT_WITH_WEAK_PULLUP : 96        :        :                   :      
 RESERVED_INPUT_WITH_WEAK_PULLUP : 97        :        :                   :         : 2         :                
 RESERVED_INPUT_WITH_WEAK_PULLUP : 98        :        :                   :         : 2         :                
 n15bit_mode                  : 99        : input  : 3.3-V LVTTL       :         : 2         : Y              
-DBF_ENABLE                   : 100       : input  : 3.3-V LVTTL       :         : 2         : Y              
+nDeBlur                      : 100       : input  : 3.3-V LVTTL       :         : 2         : Y              
