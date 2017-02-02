@@ -33,8 +33,8 @@ The 15bit color mode reduces the color depth from 21bit (7bit for each color) do
 By default this feature is off.
 - 'firmware without IGR': To activate it set pin 99 of the CPLD to GND. This feature is *off* by default.
 - 'firmware with IGR':
-  * to deactivate 15bit mode press D-Pad up + L + R C-up.
-  * to (re)activate 15bit mode press D-Pad dw + L + R C-dw.
+  * to deactivate 15bit mode press D-Pad up + L + R + C-up.
+  * to (re)activate 15bit mode press D-Pad dw + L + R + C-dw.
   * the default is set on each power cycle. Default for 15bit color mode is *off*! If you want to have it *on* by default, short pin 36 and 37 at the MaxII CPLD!
 
 ### Slow Slew Rate
@@ -73,4 +73,5 @@ Lastly, the information how to update can be grabbed incl. some more technical i
 
 ## Acknowledgement
 
-Many thanks go to Ikari_01. He has written the code to detect 480i and PAL/NTSC output. His code is written for the XC9572XL and can be accessed here: [URL to Ikari_01's GitHub repository](https://github.com/mrehkopf/n64rgb)
+Of course, many thanks to viletim for his initial CPLD-based DAC project, providing the modding board as well as publishing the schematics and source codes for that.
+I also want to send many thanks to Ikari_01. He has written the code to detect 480i and PAL/NTSC output. His code is written for the XC9572XL and can be accessed here: [URL to Ikari_01's GitHub repository](https://github.com/mrehkopf/n64rgb)
