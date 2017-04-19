@@ -123,7 +123,7 @@ RESERVED_INPUT_WITH_WEAK_PULLUP : 57        :        :                   :      
 dummy[2]                     : 58        : input  : 3.3-V LVTTL       :         : 2         : Y              
 VCCIO2                       : 59        : power  :                   : 3.3V    : 2         :                
 GNDIO                        : 60        : gnd    :                   :         :           :                
-RESERVED_INPUT_WITH_WEAK_PULLUP : 61        :        :                   :         : 2         :                
+Default_nForceDeBlur         : 61        : input  : 3.3-V LVTTL       :         : 2         : Y              
 RESERVED_INPUT_WITH_WEAK_PULLUP : 62        :        :                   :         : 2         :                
 VCCINT                       : 63        : power  :                   : 2.5V/3.3V :           :                
 RESERVED_INPUT_WITH_WEAK_PULLUP : 64        :        :                   :         : 2         :                

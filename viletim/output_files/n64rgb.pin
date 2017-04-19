@@ -98,7 +98,7 @@ GNDIO                        : 32        : gnd    :                   :         
 G_o[5]                       : 33        : output : 3.3-V LVTTL       :         : 1         : Y              
 G_o[6]                       : 34        : output : 3.3-V LVTTL       :         : 1         : Y              
 RESERVED_INPUT_WITH_WEAK_PULLUP : 35        :        :                   :         : 1         :                
-RESERVED_INPUT_WITH_WEAK_PULLUP : 36        :        :                   :         : 1         :                
+n15bit_mode                  : 36        : input  : 3.3-V LVTTL       :         : 1         : Y              
 dummy[0]                     : 37        : input  : 3.3-V LVTTL       :         : 1         : Y              
 RESERVED_INPUT_WITH_WEAK_PULLUP : 38        :        :                   :         : 1         :                
 dummy[1]                     : 39        : input  : 3.3-V LVTTL       :         : 1         : Y              
@@ -161,5 +161,5 @@ RESERVED_INPUT_WITH_WEAK_PULLUP : 95        :        :                   :      
 RESERVED_INPUT_WITH_WEAK_PULLUP : 96        :        :                   :         : 2         :                
 RESERVED_INPUT_WITH_WEAK_PULLUP : 97        :        :                   :         : 2         :                
 RESERVED_INPUT_WITH_WEAK_PULLUP : 98        :        :                   :         : 2         :                
-n15bit_mode                  : 99        : input  : 3.3-V LVTTL       :         : 2         : Y              
-nDeBlur                      : 100       : input  : 3.3-V LVTTL       :         : 2         : Y              
+nForceDeBlur                 : 99        : input  : 3.3-V LVTTL       :         : 2         : Y              
+nAutoDeBlur                  : 100       : input  : 3.3-V LVTTL       :         : 2         : Y              

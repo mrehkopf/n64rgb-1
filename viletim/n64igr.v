@@ -10,28 +10,31 @@
 //
 // Dependencies:
 //
-// Revision: 4
-// Additional Comments: console reset
-//                      activate / deactivate de-blur in 240p
-//                      activate / deactivate 15bit mode
-//                      selectable defaults
-//                      defaults set on each power cycle and on each reset
+// Revision: 2.5
+// Features: console reset
+//           override heuristic for deblur (resets on each reset and power cycle)
+//           activate / deactivate de-blur in 240p (a change overrides heuristic for de-blur)
+//           activate / deactivate 15bit mode
+//           selectable defaults
+//           defaults set on each power cycle and on each reset
+//
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 
 module n64igr (
-  input nCLK,
-  input nRST_IGR,
+  input      nCLK,
+  input      nRST_IGR,
+  output reg DRV_RST,
 
   input CTRL,
 
+  input Default_nForceDeBlur,
   input Default_DeBlur,
   input Default_n15bit_mode,
 
+  output reg nForceDeBlur,
   output reg nDeBlur,
-  output reg n15bit_mode,
-
-  output reg DRV_RST
+  output reg n15bit_mode
 );
 
 initial begin
@@ -115,10 +118,14 @@ always @(negedge nCLK2) begin
     ST_CTRL_RD:
       if (wait_cnt[7:0] == 8'h09) begin // low bit_cnt increased 10 times since neg. edge (delay somewhere around 2.4us) -> sample data
         if (&data_cnt) begin // sixteen bits read (analog values of stick not point of interest)
-          if ({data_stream[14:0], CTRL} == 16'b0000001000110010) // Dl + L + R + Cl pressed
-            nDeBlur <= 1'b1;
-          if ({data_stream[14:0], CTRL} == 16'b0000000100110001) // Dr + L + R + Cr pressed
-            nDeBlur <= 1'b0;
+          if ({data_stream[14:0], CTRL} == 16'b0000001000110010) begin // Dl + L + R + Cl pressed
+            nForceDeBlur <= 1'b0;
+            nDeBlur      <= 1'b1;
+          end
+          if ({data_stream[14:0], CTRL} == 16'b0000000100110001) begin // Dr + L + R + Cr pressed
+            nForceDeBlur <= 1'b0;
+            nDeBlur      <= 1'b0;
+          end
           if ({data_stream[14:0], CTRL} == 16'b0000100000111000) // Du + L + R + Cu pressed
               n15bit_mode <= 1'b1;
           if ({data_stream[14:0], CTRL} == 16'b0000010000110100) // Dd + L + R + Cd pressed
@@ -147,10 +154,12 @@ always @(negedge nCLK2) begin
     wait_cnt      <= 12'h000;
     prev_ctrl     <=  1'b1;
     initiate_nrst <=  1'b0;
+    nForceDeBlur  <= Default_nForceDeBlur;
   end
 
   if (~nfirstboot) begin
     nfirstboot  <= 1'b1;
+    nForceDeBlur <= Default_nForceDeBlur;
     nDeBlur     <= ~Default_DeBlur;
     n15bit_mode <=  Default_n15bit_mode;
   end

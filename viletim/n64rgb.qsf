@@ -64,6 +64,13 @@ set_location_assignment PIN_18 -to D_i[3]
 set_location_assignment PIN_17 -to D_i[4]
 set_location_assignment PIN_16 -to D_i[5]
 set_location_assignment PIN_15 -to D_i[6]
+set_location_assignment PIN_78 -to R_o[0]
+set_location_assignment PIN_77 -to R_o[1]
+set_location_assignment PIN_76 -to R_o[2]
+set_location_assignment PIN_75 -to R_o[3]
+set_location_assignment PIN_74 -to R_o[4]
+set_location_assignment PIN_73 -to R_o[5]
+set_location_assignment PIN_72 -to R_o[6]
 set_location_assignment PIN_26 -to G_o[0]
 set_location_assignment PIN_27 -to G_o[1]
 set_location_assignment PIN_28 -to G_o[2]
@@ -82,17 +89,19 @@ set_location_assignment PIN_69 -to nCSYNC
 set_location_assignment PIN_68 -to nHSYNC
 set_location_assignment PIN_67 -to nCLAMP
 set_location_assignment PIN_66 -to nVSYNC
-set_location_assignment PIN_78 -to R_o[0]
-set_location_assignment PIN_77 -to R_o[1]
-set_location_assignment PIN_76 -to R_o[2]
-set_location_assignment PIN_75 -to R_o[3]
-set_location_assignment PIN_74 -to R_o[4]
-set_location_assignment PIN_73 -to R_o[5]
-set_location_assignment PIN_72 -to R_o[6]
-set_location_assignment PIN_99 -to n15bit_mode
-set_location_assignment PIN_100 -to nDeBlur
-set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to nDeBlur
+set_instance_assignment -name SLOW_SLEW_RATE ON -to R_o
+set_instance_assignment -name SLOW_SLEW_RATE ON -to G_o
+set_instance_assignment -name SLOW_SLEW_RATE ON -to B_o
+set_instance_assignment -name SLOW_SLEW_RATE ON -to nCSYNC
+set_instance_assignment -name SLOW_SLEW_RATE ON -to nHSYNC
+set_instance_assignment -name SLOW_SLEW_RATE ON -to nCLAMP
+set_instance_assignment -name SLOW_SLEW_RATE ON -to nVSYNC
+set_location_assignment PIN_36 -to n15bit_mode
+set_location_assignment PIN_99 -to nForceDeBlur
+set_location_assignment PIN_100 -to nAutoDeBlur
 set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to n15bit_mode
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to nForceDeBlur
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to nAutoDeBlur
 set_location_assignment PIN_37 -to dummy[0]
 set_location_assignment PIN_39 -to dummy[1]
 set_location_assignment PIN_58 -to dummy[2]
