@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="7.6.0">
+<eagle version="7.7.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -167,6 +167,19 @@
 <part name="U$11" library="wirepad" deviceset="SMD0,45" device=""/>
 <part name="U$12" library="wirepad" deviceset="SMD0,45" device=""/>
 <part name="U$13" library="wirepad" deviceset="SMD0,45" device=""/>
+<part name="U$23" library="wirepad" deviceset="SMD0,45" device=""/>
+<part name="U$24" library="wirepad" deviceset="SMD0,45" device=""/>
+<part name="U$25" library="wirepad" deviceset="SMD0,45" device=""/>
+<part name="U$26" library="wirepad" deviceset="SMD0,45" device=""/>
+<part name="U$27" library="wirepad" deviceset="SMD0,45" device=""/>
+<part name="U$28" library="wirepad" deviceset="SMD0,45" device=""/>
+<part name="U$29" library="wirepad" deviceset="SMD0,45" device=""/>
+<part name="U$30" library="wirepad" deviceset="SMD0,45" device=""/>
+<part name="U$31" library="wirepad" deviceset="SMD0,45" device=""/>
+<part name="U$32" library="wirepad" deviceset="SMD0,45" device=""/>
+<part name="U$33" library="wirepad" deviceset="SMD0,45" device=""/>
+<part name="U$34" library="wirepad" deviceset="SMD0,45" device=""/>
+<part name="U$35" library="wirepad" deviceset="SMD0,45" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -197,6 +210,19 @@
 <instance part="U$11" gate="G$1" x="2.54" y="15.24"/>
 <instance part="U$12" gate="G$1" x="2.54" y="12.7"/>
 <instance part="U$13" gate="G$1" x="2.54" y="10.16"/>
+<instance part="U$23" gate="G$1" x="-2.54" y="40.64"/>
+<instance part="U$24" gate="G$1" x="-2.54" y="38.1"/>
+<instance part="U$25" gate="G$1" x="-2.54" y="35.56"/>
+<instance part="U$26" gate="G$1" x="-2.54" y="33.02"/>
+<instance part="U$27" gate="G$1" x="-2.54" y="30.48"/>
+<instance part="U$28" gate="G$1" x="-2.54" y="27.94"/>
+<instance part="U$29" gate="G$1" x="-2.54" y="25.4"/>
+<instance part="U$30" gate="G$1" x="-2.54" y="22.86"/>
+<instance part="U$31" gate="G$1" x="-2.54" y="20.32"/>
+<instance part="U$32" gate="G$1" x="-2.54" y="17.78"/>
+<instance part="U$33" gate="G$1" x="-2.54" y="15.24"/>
+<instance part="U$34" gate="G$1" x="-2.54" y="12.7"/>
+<instance part="U$35" gate="G$1" x="-2.54" y="10.16"/>
 </instances>
 <busses>
 </busses>

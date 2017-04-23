@@ -96,8 +96,3 @@ After 19.04.2017:
 - Revision numbering has changed:
   * 1.x - no IGR implemented. Use mechanical (or external electrical) switches
   * 2.x - IGR functions implemented.
-
-## Acknowledgement
-
-Of course, many thanks to viletim for his initial CPLD-based DAC project, providing the modding board as well as publishing the schematics and source codes for that.
-I also want to send many thanks to Ikari_01. He has written the code to detect 480i and PAL/NTSC output. His code is written for the XC9572XL and can be accessed here: [URL to Ikari_01's GitHub repository](https://github.com/mrehkopf/n64rgb)
