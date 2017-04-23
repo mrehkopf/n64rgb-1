@@ -54,6 +54,22 @@ module n64rgb_with_igr (
 );
 
 
+reg [3:0] S_DBr[0:1];          // sync data vector buffer: {nVSYNC, nCLAMP, nHSYNC, nCSYNC}
+reg [6:0] R_DBr, G_DBr, B_DBr; // red, green and blue data buffer
+
+initial begin
+  S_DBr[1] = 4'b1111;
+  S_DBr[0] = 4'b1111;
+  {nVSYNC, nCLAMP, nHSYNC, nCSYNC} = 4'b1111;
+  R_DBr = 7'b0000000;
+  G_DBr = 7'b0000000;
+  B_DBr = 7'b0000000;
+  R_o = 7'b0000000;
+  G_o = 7'b0000000;
+  B_o = 7'b0000000;
+end
+
+
 // Part 1: connect IGR module
 // ==========================
 
@@ -262,22 +278,6 @@ end
 
 // Part 4: data demux
 // ==================
-
-reg [3:0] S_DBr[0:1];          // sync data vector buffer: {nVSYNC, nCLAMP, nHSYNC, nCSYNC}
-reg [6:0] R_DBr, G_DBr, B_DBr; // red, green and blue data buffer
-
-initial begin
-  S_DBr[1] = 4'b1111;
-  S_DBr[0] = 4'b1111;
-  {nVSYNC, nCLAMP, nHSYNC, nCSYNC} = 4'b1111;
-  R_DBr = 7'b0000000;
-  G_DBr = 7'b0000000;
-  B_DBr = 7'b0000000;
-  R_o = 7'b0000000;
-  G_o = 7'b0000000;
-  B_o = 7'b0000000;
-end
-
 
 always @(negedge nCLK) begin // data register management
   if (~nDSYNC) begin
