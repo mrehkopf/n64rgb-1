@@ -110,7 +110,7 @@ Firmware programming file depends on the CPLD you use. Please keep that in mind 
 - Flash the firmware to the CPLD:
   * You need a Altera USB Blaster
   * The board needs to be powered; so you may consider to install the PCB into your N64 first and then use the N64 for powering the board
-  * If you want to build an adapter, you may take a look onto my DIY adapter at OSHPark
+  * If you want to build an adapter, you may take a look onto [my DIY adapter](https://oshpark.com/shared_projects/mEwjoesz) at [my profile on OSHPark](https://oshpark.com/profiles/borti4938)
 - Install the modding board:
   * Installation is similar to the [installation of viletims board](http://etim.net.au/n64rgb/). The minor differences / extra pads are as follows:
     * Pad *Fil*: controls the low pass filter mode (see above)
