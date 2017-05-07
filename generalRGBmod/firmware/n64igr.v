@@ -104,11 +104,7 @@ always @(negedge nCLK2) begin
         initiate_nrst <= 1'b0;
       end
     ST_N64_RD:
-      `ifndef UFM_TEST
       if (wait_cnt[7:0] == 8'h09) begin // low bit_cnt increased 10 times since neg. edge (delay somewhere around 2.4us) -> sample data
-      `else
-      if (wait_cnt[7:0] == 8'h0a) begin // low bit_cnt increased 11 times since neg. edge (delay somewhere between 1.89us and 2.82us) -> sample data
-      `endif
         if (data_cnt[3]) // eight bits read
           if (data_stream[13:6] == 8'b00000001 & CTRL) begin // check command and stop bit
           // trick: the 2 LSB command bits lies where controller produces unused constant values
