@@ -33,7 +33,7 @@ can be found in this document.
 | **R1, R41** | 4.7kohm (1%) | SMD 0603 | 2 | 71-CRCW06034K70FKEAH | |
 | **R42** | 475ohm (1%) | SMD 0603 | 1 | 71-CRCW0603-475-E3 | csync compatible with 75ohm termination [2,3] |
 | | 10.7kohm | SMD 0603 | 1 | 71-CRCW060310K7FKEB | TTL compatible csync [2,3] |
-| **C11,C21,C31** | 82pF / 50V (10%) | SMD 0603 | 3 | 80-C0603C824K8P | |
+| **C11,C21,C31** | 0.082uF / 25V (10%) | SMD 0603 | 3 | 81-GRM188R71E823KA1D | |
 | **R12,R22,R32** | 5.1Mohm (1%) | SMD 0603 | 3 | 71-CRCW06035M10FKEA | |
 | | | | | | |
 | **R13,R23,R33** | 75ohm (1%) | SMD 0603 | 3 | 71-RCS060375R0FKEA | NTSC-SNES RGB cable setup or direct wiring on RGB wires [4] |

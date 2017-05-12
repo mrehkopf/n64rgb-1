@@ -155,7 +155,8 @@ The mouser ordering keys are just to help you to source appropriate components.
 | **R10--R12** | 270ohm (1%) | SMD 0603 | 3 | 71-CRCW0603270RFKEAH | |
 | **R13** | 4.7kohm (1%) | SMD 0603 | 1 | 71-CRCW06034K70FKEAH | |
 | **R14** | 475ohm (1%) | SMD 0603 | 1 | 71-CRCW0603-475-E3 | |
-| **R15** | 330ohm (1%) | SMD 0603 | 1 | 71-CRCW0603330RFKEAH | |
+| **R15** | 330ohm (1%) | SMD 0603 | 1 | 71-CRCW0603330RFKEAH | [4] |
+| | _bridge_ | SMD 0603 | 1 | | **Alternative** for R15 [4]|
 | | | | | | | |
 | **U2** | THS7374 | TSSOP-14 | 1 | 595-THS7374IPWR | |
 | | THS7373 | TSSOP-14 | 1 | 595-THS7373IPWR | **Alternative** for the THS7374 [2] |
@@ -184,6 +185,9 @@ In contrast, the THS7374 has four SD-video filters, which can be all bypassed. T
 #### [3]
 If you use a RGB-cable for a NTSC-SNES, you need the 75ohm resistors.
 If you use a RGB-cable for a PAL-SNES, you need the 39ohm resistors.
+
+#### [4]
+If you have a cable with this resistor inside your cable on the sync line, you don't need to have it here on board.
 
 ### Firmware
 The firmware is located in the folder firmware/. To build the firmware on your own you need Quartus Prime Lite (any version which supports MaxII and MaxV devices).
