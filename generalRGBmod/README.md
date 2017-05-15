@@ -13,12 +13,12 @@ If you are looking for a ready to install kit, just look on your own for a selle
 - Supporting for different CPLDs on a common PCB design:
   * MaxII EPM240T100C5
   * MaxII EPM570T100C5
-  * MaxV 5M240ZT100C4 (a 5M240ZT100C5 does not met timing requirements)
-  * MaxV 5M570ZT100C4 (a 5M570ZT100C5 does not met timing requirements)
+  * MaxV 5M240ZT100C4 (a 5M240ZT100C5 does not met timing requirements [1])
+  * MaxV 5M570ZT100C4 (a 5M570ZT100C5 does not met timing requirements [1])
 - Video amplifier THS7374 or THS7373
 - Detection of 240p/288p
 - Detection of PAL and NTSC mode
-- Heuristic for de-blur function
+- Heuristic for de-blur function [2]
 - De-Blur in 240p/288p (horizontal resolution decreased from 640 to 320 pixels)
 - 15bit color mode
 - IGR features:
@@ -30,6 +30,16 @@ If you are looking for a ready to install kit, just look on your own for a selle
 
 The following shortly describes the main features of the firmware and how to use / control them.
 
+#### Notes
+##### [1]
+Clocks are defined in the SDC-files place in the firmware folder.
+The 5M240ZT100C5 and 5M570ZT100C5 does not met the timing requirements checked during the Timing Analysis. However, the default model is the so called *slow model*. If one uses the *fast model* for analysis, the timings are met without any problems.
+So one could also give a try with the 5M240ZT100C5 or the 5M570ZT100C5, which should also works with 95% of all units produced in 'common' environments (e.g. living room temperature environment). Nevertheless, I won't garantee that.
+
+
+##### [2]
+Heuristic for de-blur function highly depends on the image content. So it might be the case that de-blur is switched on and off rapidly even on small content changes. In any case you can override the heuristic by forcing de-blur on or off.  
+If you observe something like that or where do you think that de-blur is not correctly guessed, please take a note (PAL / NTSC N64, game, ROM, situation), where I can check that and can try to further improve the heuristic algorithm. Send me your observation vie email or open an issue here on GitHub.
 
 ### De-Blur
 
@@ -203,3 +213,13 @@ For flashing you need:
 #### Firmware Revision Numbering
 
 Revision numbering goes along with the revision numbering I use for the alternative firmware for viletims N64RGB modding kit.
+
+#### Road Map / New Ideas
+
+- Estimation of sampling point for controller sniffing (will be also available for viletims PCB solution)
+- Simple onscreen feedback for user controled changes (possibly only for the CPLDs with 570LEs)
+- Linedoubling mode (needs an upgrade to Max10 FPGA; will be separated from this sub-folder, e.g. in folder advancedRGBmod)
+- Color transformation to component (needs an upgrade to Max10 FPGA; will be separated from this sub-folder, e.g. in folder advancedRGBmod)
+- HDMI?
+
+Any other ideas: email me :)
