@@ -137,10 +137,18 @@ always @(negedge nCLK2) begin
             nForceDeBlur <= 1'b0;
             nDeBlur      <= 1'b0;
           end
-          if ({data_stream[14:0], CTRL} == 16'b0000100000111000) // Du + L + R + Cu pressed
-              n15bit_mode <= 1'b1;
-          if ({data_stream[14:0], CTRL} == 16'b0000010000110100) // Dd + L + R + Cd pressed
-              n15bit_mode <= 1'b0;
+          if ({data_stream[14:0], CTRL} == 16'b0000100000111000) begin // Du + L + R + Cu pressed
+`ifdef DEBUG // reset nForceDeBlur by changing 15bit mode
+            nForceDeBlur <= 1'b1;
+`endif
+            n15bit_mode  <= 1'b1;
+          end
+          if ({data_stream[14:0], CTRL} == 16'b0000010000110100) begin // Dd + L + R + Cd pressed
+`ifdef DEBUG // reset nForceDeBlur by changing 15bit mode
+            nForceDeBlur <= 1'b1;
+`endif
+            n15bit_mode  <= 1'b0;
+          end
 `ifdef OPTION_INVLPF
           if ({data_stream[14:0], CTRL} == 16'b0000101000111001) begin // Du +Dl + L + R + Cu + Cr pressed
             if (prev_data_stream != {data_stream[14:0], CTRL})         // prevents multiple executions (together with remember data)

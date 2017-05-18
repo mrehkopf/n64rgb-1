@@ -107,6 +107,7 @@ set_location_assignment PIN_91 -to Default_DeBlur
 set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to Default_n15bit_mode
 set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to Default_nForceDeBlur
 set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to Default_DeBlur
+#set_location_assignment PIN_85 -to nTHS7374_LPF_Bypass_i
 set_location_assignment PIN_98 -to nTHS7374_LPF_Bypass_i
 set_location_assignment PIN_53 -to THS7374_LPF_Bypass_o
 set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to nTHS7374_LPF_Bypass_i
