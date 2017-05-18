@@ -199,6 +199,7 @@ If you use a RGB-cable for a PAL-SNES, you need the 39ohm resistors.
 #### [4]
 If you have a cable with this resistor inside your cable on the sync line, you don't need to have it here on board.
 
+
 ### Firmware
 The firmware is located in the folder firmware/. To build the firmware on your own you need Quartus Prime Lite (any version which supports MaxII and MaxV devices).
 

@@ -25,7 +25,6 @@
 //
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-`define HEURISTIC_USE_SHARP_GRADIENTS
 
 module n64rgb_with_igr (
   input nCLK,
@@ -180,70 +179,90 @@ end
 // Part 3.1: heuristic guess in 240p/288p if blur is used by the N64
 // =================================================================
 
-reg [2:0] run_estimation = 3'b000;  // run counter or not (run_cnt[2] decides)
-reg [7:0] nblur_est_cnt  = 8'b0;    // register to estimate whether blur is used or not by the N64
-reg [3:0] detection_cnt  = 4'b000;  // to change nblur_n64 32x times the estimation has come to the same result
-                                    // (this acts like a low pass filter on the estimation)
+`define CMP_RANGE 6:5 // evaluate gradients in this range (shall include the MSB)
+
+`define TREND_RANGE    8:0      // width of the trend filter
+`define NBLUR_TH_BIT   8        // MSB
+parameter init_trend = 9'h100;  // initial value (shall have MSB set, zero else)
+
+reg [1:0] nblur_est_cnt     = 2'b00;  // register to estimate whether blur is used or not by the N64
+reg [1:0] nblur_est_holdoff = 2'b00;  // Holf Off the nblur_est_cnt (removes ripples e.g. due to light effects)
+
+
+reg [2:0] run_estimation = 3'b000;    // run counter or not (run_estimation[2] decides); do not use pixels at border
 
 reg [1:0] gradient[2:0];  // shows the (sharp) gradient direction between neighbored pixels
                           // gradient[x][1]   = 1 -> decreasing intensity
                           // gradient[x][0]   = 1 -> increasing intensity
                           // else                 -> constant
-reg [2:0] gradient_change = 3'b0;
+reg [1:0] gradient_changes = 2'b00;
 
-reg nblur_n64_tmp = 1'b1; // temp value of the blur estimation (past frame estimation)
-reg nblur_n64     = 1'b1; // blur effect is estimated to be off within the N64 if value is 1'b1
+reg [`TREND_RANGE] nblur_n64_trend = init_trend;  // trend shows if the algorithm tends to estimate more blur enabled rather than disabled
+                                                  // this acts as like as a very simple mean filter
+reg nblur_n64 = 1'b1;                             // blur effect is estimated to be off within the N64 if value is 1'b1
 
 always @(negedge nCLK) begin // estimation of blur effect
   if (~nDSYNC) begin
-    if (&{~&nblur_est_cnt,gradient_change})
-      nblur_est_cnt <= nblur_est_cnt +1'b1;
+
+    if(~blur_pixel_pos) begin  // incomming (potential) blurry pixel
+                               // (blur_pixel_pos changes on next @(negedge nCLK))
+
+      run_estimation[2:1] <= run_estimation[1:0]; // deblur estimation counter is
+      run_estimation[0]   <= 1'b1;                // starts a bit delayed in each line
+
+      if (|nblur_est_holdoff) // hold_off? if yes, increment it until overflow back to zero
+        nblur_est_holdoff <= nblur_est_holdoff + 1'b1;
+
+
+      if (&gradient_changes) begin  // evaluate gradients: &gradient_changes == all color components changed the gradient
+        if (~nblur_est_cnt[1] & ~|nblur_est_holdoff)
+          nblur_est_cnt <= nblur_est_cnt +1'b1;
+        nblur_est_holdoff <= 2'b01;
+      end
+
+      gradient_changes    <= 2'b00; // reset
+    end
+
+    if(~S_DBr[0][0] & D_i[0]) begin // negedge at CSYNC detected - new line
+      run_estimation    <= 3'b000;
+      nblur_est_holdoff <= 2'b00;
+    end
 
     if(S_DBr[0][3] & ~D_i[3]) begin // negedge at nVSYNC detected - new frame
-      if (nblur_n64_tmp ^ &nblur_est_cnt) // current estimation differs to the previous one
-        detection_cnt <= 4'b0000; // reset detection counter
-      else
-        detection_cnt <= detection_cnt + 1'b1;
+      if(nblur_est_cnt[1]) begin // add to weight
+        if(~&nblur_n64_trend)
+          nblur_n64_trend <= nblur_n64_trend + 1'b1;
+      end else begin// subtract
+        if(|nblur_n64_trend)
+          nblur_n64_trend <= nblur_n64_trend - 1'b1;
+      end
 
-      if (&detection_cnt) // 32x times the same estimation
-        nblur_n64 <= nblur_n64_tmp;
+      nblur_n64 <= nblur_n64_trend[`NBLUR_TH_BIT];
 
-      nblur_n64_tmp <= &nblur_est_cnt;
-      nblur_est_cnt <= 8'b0;
+      nblur_est_cnt <= 2'b00;
     end
 
   end else if (&{S_DBr[1][3],S_DBr[1][1],S_DBr[0][3],S_DBr[0][1]}) begin
-    if (blur_pixel_pos) begin // incomming (potential) blurry pixel -> counter is allowed to run a bit delayed
-      run_estimation[2:1] <= run_estimation[1:0];
-      run_estimation[0]   <= 1'b1;
+    if (blur_pixel_pos) begin
       case(data_cnt)
-        `ifdef HEURISTIC_USE_SHARP_GRADIENTS
-          2'b01: gradient[2] <= {R_DBr[6],D_i[6]};
-          2'b10: gradient[1] <= {G_DBr[6],D_i[6]};
-          2'b11: gradient[0] <= {B_DBr[6],D_i[6]};
-        `else
-          2'b01: gradient[2] <= {R_DBr[6:5] < D_i[6:5],R_DBr[6:5] > D_i[6:5]};
-          2'b10: gradient[1] <= {G_DBr[6:5] < D_i[6:5],G_DBr[6:5] > D_i[6:5]};
-          2'b11: gradient[0] <= {B_DBr[6:5] < D_i[6:5],B_DBr[6:5] > D_i[6:5]};
-        `endif
+          2'b01: gradient[2] <= {R_DBr[`CMP_RANGE] < D_i[`CMP_RANGE],
+                                 R_DBr[`CMP_RANGE] > D_i[`CMP_RANGE]};
+          2'b10: gradient[1] <= {G_DBr[`CMP_RANGE] < D_i[`CMP_RANGE],
+                                 G_DBr[`CMP_RANGE] > D_i[`CMP_RANGE]};
+          2'b11: gradient[0] <= {B_DBr[`CMP_RANGE] < D_i[`CMP_RANGE],
+                                 B_DBr[`CMP_RANGE] > D_i[`CMP_RANGE]};
       endcase
     end else if (run_estimation[2]) begin
       case(data_cnt)
-        `ifdef HEURISTIC_USE_SHARP_GRADIENTS
-          2'b01: if (&(gradient[2] ^ {R_DBr[6],D_i[6]}))
-                   gradient_change[2] <= 1'b1;
-          2'b10: if (&(gradient[1] ^ {G_DBr[6],D_i[6]}))
-                   gradient_change[1] <= 1'b1;
-          2'b11: if (&(gradient[0] ^ {B_DBr[6],D_i[6]}))
-                   gradient_change[0] <= 1'b1;
-        `else
-          2'b01: if (&(gradient[2] ^ {R_DBr[6:5] < D_i[6:5],R_DBr[6:5] > D_i[6:5]}))
-                   gradient_change[2] <= 1'b1;
-          2'b10: if (&(gradient[1] ^ {G_DBr[6:5] < D_i[6:5],G_DBr[6:5] > D_i[6:5]}))
-                   gradient_change[1] <= 1'b1;
-          2'b11: if (&(gradient[0] ^ {B_DBr[6:5] < D_i[6:5],B_DBr[6:5] > D_i[6:5]}))
-                   gradient_change[0] <= 1'b1;
-        `endif
+          2'b01: if (&(gradient[2] ^ {R_DBr[`CMP_RANGE] < D_i[`CMP_RANGE],
+                                      R_DBr[`CMP_RANGE] > D_i[`CMP_RANGE]}))
+                   gradient_changes <= 2'b01;
+          2'b10: if (&(gradient[1] ^ {G_DBr[`CMP_RANGE] < D_i[`CMP_RANGE],
+                                      G_DBr[`CMP_RANGE] > D_i[`CMP_RANGE]}))
+                   gradient_changes <= gradient_changes + 1'b1;
+          2'b11: if (&(gradient[0] ^ {B_DBr[`CMP_RANGE] < D_i[`CMP_RANGE],
+                                      B_DBr[`CMP_RANGE] > D_i[`CMP_RANGE]}))
+                   gradient_changes <= gradient_changes + 1'b1;
       endcase
     end
   end else begin
@@ -251,7 +270,10 @@ always @(negedge nCLK) begin // estimation of blur effect
     gradient[2]     <= 2'b0;
     gradient[1]     <= 2'b0;
     gradient[0]     <= 2'b0;
-    gradient_change <= 3'b0;
+  end
+  if (~(nRST_o1 & nRST_o99) | n64_480i) begin
+    nblur_n64_trend <= init_trend;
+    nblur_n64       <= 1'b1;
   end
 end
 

@@ -19,14 +19,14 @@
 #
 # Quartus Prime
 # Version 15.1.2 Build 193 02/01/2016 SJ Lite Edition
-# Date created = 10:09:38  April 19, 2017
+# Date created = 10:13:38  May 18, 2017
 #
 # -------------------------------------------------------------------------- #
 
 QUARTUS_VERSION = "15.1"
-DATE = "10:09:38  April 19, 2017"
+DATE = "10:13:38  May 18, 2017"
 
 # Revisions
 
-PROJECT_REVISION = "n64rgb_with_igr"
 PROJECT_REVISION = "n64rgb"
+PROJECT_REVISION = "n64rgb_with_igr"
