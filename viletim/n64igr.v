@@ -72,6 +72,9 @@ parameter ST_WAIT4N64 = 2'b00; // wait for N64 sending request to controller
 parameter ST_N64_RD   = 2'b01; // N64 request sniffing
 parameter ST_CTRL_RD  = 2'b10; // controller response
 
+reg [3:0] sampling_point_n64  = 4'h9; // wait_cnt increased a few times since neg. edge -> sample data
+reg [3:0] sampling_point_ctrl = 4'h9; // (10 by default -> delay somewhere around 2.4us)
+
 reg        prev_ctrl    =  1'b1;
 reg [11:0] wait_cnt     = 12'b0; // counter for wait state (needs appr. 1.0ms at nCLK2 clock to fill up from 0 to 4095)
 
@@ -98,8 +101,8 @@ always @(negedge nCLK2) begin
         data_cnt      <=  4'h0;
         initiate_nrst <=  1'b0;
       end
-    ST_N64_RD:
-      if (wait_cnt[7:0] == 8'h09) begin // low bit_cnt increased 10 times since neg. edge (delay somewhere between 2.4us) -> sample data
+    ST_N64_RD: begin
+      if (wait_cnt[7:0] == {4'h0,sampling_point_n64}) begin // sample data
         if (data_cnt[3]) // eight bits read
           if (data_stream[13:6] == 8'b00000001 & CTRL) begin // check command and stop bit
           // trick: the 2 LSB command bits lies where controller produces unused constant values
@@ -115,8 +118,11 @@ always @(negedge nCLK2) begin
           data_cnt          <= data_cnt + 1'b1;
         end
       end
-    ST_CTRL_RD:
-      if (wait_cnt[7:0] == 8'h09) begin // low bit_cnt increased 10 times since neg. edge (delay somewhere around 2.4us) -> sample data
+      if (&{prev_ctrl,~CTRL,|data_cnt})
+        sampling_point_n64 <= wait_cnt[4:1];
+    end
+    ST_CTRL_RD: begin
+      if (wait_cnt[7:0] == {4'h0,sampling_point_ctrl}) begin // sample data
         if (&data_cnt) begin // sixteen bits read (analog values of stick not point of interest)
           if ({data_stream[14:0], CTRL} == 16'b0000001000110010) begin // Dl + L + R + Cl pressed
             nForceDeBlur <= 1'b0;
@@ -139,6 +145,9 @@ always @(negedge nCLK2) begin
           data_cnt          <= data_cnt + 1'b1;
         end
       end
+      if (&{prev_ctrl,~CTRL,|data_cnt})
+        sampling_point_ctrl <= wait_cnt[4:1];
+    end
   endcase
 
 
