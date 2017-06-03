@@ -219,8 +219,9 @@ Revision numbering goes along with the revision numbering I use for the alternat
 - don't use quite dark / light pictures for the de-blur heuristic algorithm (possibly only for the CPLDs with 570LEs)
 - Simple onscreen feedback for user controled changes (only for the CPLDs with 570LEs (for the 240LEs CPLDs instead of the heuristic?))
 - dynamic de-blur: decide on demand wether a pixel is used for a blurry effect or not (possible for the N64 to decide on demand? (e.g. background gaming with blur, front text without blur))
-- Linedoubling mode (needs an upgrade to Max10 FPGA; will be separated from this sub-folder, e.g. in folder advancedRGBmod)
-- Color transformation to component (needs an upgrade to Max10 FPGA; will be separated from this sub-folder, e.g. in folder advancedRGBmod)
+- Some advanced stuff (will be separated from this sub-folder, e.g. in folder advancedRGBmod):
+  - Color transformation to component
+  - Linedoubling mode (needs an upgrade to Max10 FPGA)
 - HDMI?
 
 Any other ideas: email me :)
