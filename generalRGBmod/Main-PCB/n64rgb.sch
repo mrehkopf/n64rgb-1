@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="7.7.0">
+<eagle version="8.2.1">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -8568,7 +8568,7 @@ Source: http://www.ctscorp.com/components/Datasheets/CTSChipArrayDs.pdf</descrip
 <part name="RN102" library="resistor-net" deviceset="CTS742C083" device="" value="CAT16-2001F4LF "/>
 <part name="RN101" library="resistor-net" deviceset="CTS742C083" device="" value="CAT16-1001F4LF "/>
 <part name="RN103" library="resistor-net" deviceset="CTS742C083" device="" value="CAT16-1001F4LF "/>
-<part name="R10" library="rcl" deviceset="R-EU_" device="R0603" value="270"/>
+<part name="R100" library="rcl" deviceset="R-EU_" device="R0603" value="270"/>
 <part name="GND22" library="supply1" deviceset="GND" device=""/>
 <part name="RN20" library="resistor-net" deviceset="CTS742C083" device="" value="CAT16-75R0F4LF "/>
 <part name="GND8" library="supply1" deviceset="GND" device=""/>
@@ -8579,13 +8579,13 @@ Source: http://www.ctscorp.com/components/Datasheets/CTSChipArrayDs.pdf</descrip
 <part name="RN112" library="resistor-net" deviceset="CTS742C083" device="" value="CAT16-2001F4LF "/>
 <part name="RN111" library="resistor-net" deviceset="CTS742C083" device="" value="CAT16-1001F4LF "/>
 <part name="RN113" library="resistor-net" deviceset="CTS742C083" device="" value="CAT16-1001F4LF "/>
-<part name="R11" library="rcl" deviceset="R-EU_" device="R0603" value="270"/>
+<part name="R110" library="rcl" deviceset="R-EU_" device="R0603" value="270"/>
 <part name="GND9" library="supply1" deviceset="GND" device=""/>
 <part name="RN120" library="resistor-net" deviceset="CTS742C083" device="" value="CAT16-2001F4LF "/>
 <part name="RN122" library="resistor-net" deviceset="CTS742C083" device="" value="CAT16-2001F4LF "/>
 <part name="RN121" library="resistor-net" deviceset="CTS742C083" device="" value="CAT16-1001F4LF "/>
 <part name="RN123" library="resistor-net" deviceset="CTS742C083" device="" value="CAT16-1001F4LF "/>
-<part name="R12" library="rcl" deviceset="R-EU_" device="R0603" value="270"/>
+<part name="R120" library="rcl" deviceset="R-EU_" device="R0603" value="270"/>
 <part name="GND10" library="supply1" deviceset="GND" device=""/>
 <part name="DSYNC#" library="wirepad" deviceset="SMD1" device="" value=""/>
 <part name="CLOCK#" library="wirepad" deviceset="SMD1" device="" value=""/>
@@ -8594,6 +8594,12 @@ Source: http://www.ctscorp.com/components/Datasheets/CTSChipArrayDs.pdf</descrip
 <part name="GND12" library="supply1" deviceset="GND" device=""/>
 <part name="FBN13" library="resistor-net" deviceset="CTS742C083" device="" value="BLA31BD221SN4D "/>
 <part name="J1" library="snes_div" deviceset="MY_JUMPER" device="" value=""/>
+<part name="R10" library="rcl" deviceset="R-EU_" device="R0603" value="1k"/>
+<part name="R11" library="rcl" deviceset="R-EU_" device="R0603" value="10k"/>
+<part name="R12" library="rcl" deviceset="R-EU_" device="R0603" value="10k"/>
+<part name="P+2" library="supply1" deviceset="VCC" device="" value="VCC@3.3V"/>
+<part name="P+18" library="supply1" deviceset="VCC" device="" value="VCC@3.3V"/>
+<part name="GND3" library="supply1" deviceset="GND" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -8694,7 +8700,7 @@ Source: http://www.ctscorp.com/components/Datasheets/CTSChipArrayDs.pdf</descrip
 <instance part="RN102" gate="G$1" x="251.46" y="167.64"/>
 <instance part="RN101" gate="G$1" x="274.32" y="185.42"/>
 <instance part="RN103" gate="G$1" x="274.32" y="167.64"/>
-<instance part="R10" gate="G$1" x="287.02" y="152.4" rot="R90"/>
+<instance part="R100" gate="G$1" x="287.02" y="152.4" rot="R90"/>
 <instance part="GND22" gate="1" x="287.02" y="144.78"/>
 <instance part="RN20" gate="G$1" x="373.38" y="104.14"/>
 <instance part="GND8" gate="1" x="330.2" y="91.44"/>
@@ -8705,13 +8711,13 @@ Source: http://www.ctscorp.com/components/Datasheets/CTSChipArrayDs.pdf</descrip
 <instance part="RN112" gate="G$1" x="251.46" y="132.08"/>
 <instance part="RN111" gate="G$1" x="274.32" y="114.3"/>
 <instance part="RN113" gate="G$1" x="274.32" y="132.08"/>
-<instance part="R11" gate="G$1" x="287.02" y="127" rot="R90"/>
+<instance part="R110" gate="G$1" x="287.02" y="127" rot="R90"/>
 <instance part="GND9" gate="1" x="287.02" y="119.38"/>
 <instance part="RN120" gate="G$1" x="251.46" y="73.66"/>
 <instance part="RN122" gate="G$1" x="251.46" y="91.44"/>
 <instance part="RN121" gate="G$1" x="274.32" y="73.66"/>
 <instance part="RN123" gate="G$1" x="274.32" y="91.44"/>
-<instance part="R12" gate="G$1" x="287.02" y="86.36" rot="R90"/>
+<instance part="R120" gate="G$1" x="287.02" y="86.36" rot="R90"/>
 <instance part="GND10" gate="1" x="287.02" y="78.74"/>
 <instance part="DSYNC#" gate="G$1" x="27.94" y="127"/>
 <instance part="CLOCK#" gate="G$1" x="38.1" y="129.54"/>
@@ -8720,6 +8726,12 @@ Source: http://www.ctscorp.com/components/Datasheets/CTSChipArrayDs.pdf</descrip
 <instance part="GND12" gate="1" x="76.2" y="63.5"/>
 <instance part="FBN13" gate="G$1" x="91.44" y="187.96"/>
 <instance part="J1" gate="G$1" x="101.6" y="248.92"/>
+<instance part="R10" gate="G$1" x="60.96" y="78.74" rot="R90"/>
+<instance part="R11" gate="G$1" x="53.34" y="78.74" rot="R90"/>
+<instance part="R12" gate="G$1" x="45.72" y="78.74" rot="R90"/>
+<instance part="P+2" gate="VCC" x="53.34" y="68.58" rot="R180"/>
+<instance part="P+18" gate="VCC" x="45.72" y="68.58" rot="R180"/>
+<instance part="GND3" gate="1" x="60.96" y="68.58"/>
 </instances>
 <busses>
 </busses>
@@ -8917,7 +8929,7 @@ Source: http://www.ctscorp.com/components/Datasheets/CTSChipArrayDs.pdf</descrip
 <wire x1="243.84" y1="187.96" x2="246.38" y2="187.96" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="R10" gate="G$1" pin="1"/>
+<pinref part="R100" gate="G$1" pin="1"/>
 <pinref part="GND22" gate="1" pin="GND"/>
 </segment>
 <segment>
@@ -8929,11 +8941,11 @@ Source: http://www.ctscorp.com/components/Datasheets/CTSChipArrayDs.pdf</descrip
 <pinref part="GND8" gate="1" pin="GND"/>
 </segment>
 <segment>
-<pinref part="R11" gate="G$1" pin="1"/>
+<pinref part="R110" gate="G$1" pin="1"/>
 <pinref part="GND9" gate="1" pin="GND"/>
 </segment>
 <segment>
-<pinref part="R12" gate="G$1" pin="1"/>
+<pinref part="R120" gate="G$1" pin="1"/>
 <pinref part="GND10" gate="1" pin="GND"/>
 </segment>
 <segment>
@@ -8943,6 +8955,11 @@ Source: http://www.ctscorp.com/components/Datasheets/CTSChipArrayDs.pdf</descrip
 <segment>
 <pinref part="GND11" gate="1" pin="GND"/>
 <wire x1="86.36" y1="66.04" x2="86.36" y2="68.58" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="R10" gate="G$1" pin="1"/>
+<pinref part="GND3" gate="1" pin="GND"/>
+<wire x1="60.96" y1="71.12" x2="60.96" y2="73.66" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="VCC@3.3V" class="0">
@@ -9045,6 +9062,16 @@ Source: http://www.ctscorp.com/components/Datasheets/CTSChipArrayDs.pdf</descrip
 <segment>
 <pinref part="P+17" gate="VCC" pin="VCC"/>
 <wire x1="83.82" y1="58.42" x2="83.82" y2="68.58" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="R11" gate="G$1" pin="1"/>
+<pinref part="P+2" gate="VCC" pin="VCC"/>
+<wire x1="53.34" y1="71.12" x2="53.34" y2="73.66" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="R12" gate="G$1" pin="1"/>
+<pinref part="P+18" gate="VCC" pin="VCC"/>
+<wire x1="45.72" y1="71.12" x2="45.72" y2="73.66" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$2" class="0">
@@ -9383,6 +9410,10 @@ Source: http://www.ctscorp.com/components/Datasheets/CTSChipArrayDs.pdf</descrip
 <pinref part="U1" gate="G$1" pin="B1/22-TCK"/>
 <wire x1="91.44" y1="93.98" x2="86.36" y2="93.98" width="0.1524" layer="91"/>
 <wire x1="86.36" y1="93.98" x2="86.36" y2="78.74" width="0.1524" layer="91"/>
+<pinref part="R10" gate="G$1" pin="2"/>
+<wire x1="86.36" y1="93.98" x2="60.96" y2="93.98" width="0.1524" layer="91"/>
+<wire x1="60.96" y1="93.98" x2="60.96" y2="83.82" width="0.1524" layer="91"/>
+<junction x="86.36" y="93.98"/>
 </segment>
 </net>
 <net name="TDI" class="0">
@@ -9390,6 +9421,10 @@ Source: http://www.ctscorp.com/components/Datasheets/CTSChipArrayDs.pdf</descrip
 <pinref part="U1" gate="G$1" pin="B1/21-TDI"/>
 <wire x1="91.44" y1="96.52" x2="76.2" y2="96.52" width="0.1524" layer="91"/>
 <wire x1="76.2" y1="96.52" x2="76.2" y2="78.74" width="0.1524" layer="91"/>
+<pinref part="R12" gate="G$1" pin="2"/>
+<wire x1="76.2" y1="96.52" x2="45.72" y2="96.52" width="0.1524" layer="91"/>
+<wire x1="45.72" y1="96.52" x2="45.72" y2="83.82" width="0.1524" layer="91"/>
+<junction x="76.2" y="96.52"/>
 </segment>
 </net>
 <net name="TMS" class="0">
@@ -9397,12 +9432,10 @@ Source: http://www.ctscorp.com/components/Datasheets/CTSChipArrayDs.pdf</descrip
 <wire x1="91.44" y1="99.06" x2="81.28" y2="99.06" width="0.1524" layer="91"/>
 <pinref part="U1" gate="G$1" pin="B1/20-TMS"/>
 <wire x1="81.28" y1="99.06" x2="81.28" y2="78.74" width="0.1524" layer="91"/>
-<pinref part="FBN10" gate="G$1" pin="5"/>
-<wire x1="81.28" y1="99.06" x2="35.56" y2="99.06" width="0.1524" layer="91"/>
+<pinref part="R11" gate="G$1" pin="2"/>
+<wire x1="81.28" y1="99.06" x2="53.34" y2="99.06" width="0.1524" layer="91"/>
+<wire x1="53.34" y1="99.06" x2="53.34" y2="83.82" width="0.1524" layer="91"/>
 <junction x="81.28" y="99.06"/>
-<pinref part="FBN10" gate="G$1" pin="4"/>
-<wire x1="35.56" y1="99.06" x2="22.86" y2="99.06" width="0.1524" layer="91"/>
-<junction x="35.56" y="99.06"/>
 </segment>
 </net>
 <net name="N$54" class="0">
@@ -9520,7 +9553,7 @@ Source: http://www.ctscorp.com/components/Datasheets/CTSChipArrayDs.pdf</descrip
 <wire x1="281.94" y1="132.08" x2="287.02" y2="132.08" width="0.1524" layer="91"/>
 <wire x1="287.02" y1="132.08" x2="294.64" y2="132.08" width="0.1524" layer="91"/>
 <wire x1="294.64" y1="132.08" x2="294.64" y2="111.76" width="0.1524" layer="91"/>
-<pinref part="R11" gate="G$1" pin="2"/>
+<pinref part="R110" gate="G$1" pin="2"/>
 <junction x="287.02" y="132.08"/>
 <pinref part="RN112" gate="G$1" pin="8"/>
 <pinref part="RN113" gate="G$1" pin="8"/>
@@ -9697,7 +9730,7 @@ Source: http://www.ctscorp.com/components/Datasheets/CTSChipArrayDs.pdf</descrip
 <segment>
 <pinref part="RN123" gate="G$1" pin="7"/>
 <wire x1="281.94" y1="91.44" x2="287.02" y2="91.44" width="0.1524" layer="91"/>
-<pinref part="R12" gate="G$1" pin="2"/>
+<pinref part="R120" gate="G$1" pin="2"/>
 <junction x="287.02" y="91.44"/>
 <pinref part="RN122" gate="G$1" pin="8"/>
 <pinref part="U2" gate="G$1" pin="CI4"/>
@@ -9944,7 +9977,7 @@ Source: http://www.ctscorp.com/components/Datasheets/CTSChipArrayDs.pdf</descrip
 <junction x="269.24" y="162.56"/>
 <pinref part="RN102" gate="G$1" pin="5"/>
 <wire x1="259.08" y1="162.56" x2="269.24" y2="162.56" width="0.1524" layer="91"/>
-<pinref part="R10" gate="G$1" pin="2"/>
+<pinref part="R100" gate="G$1" pin="2"/>
 <wire x1="287.02" y1="157.48" x2="327.66" y2="157.48" width="0.1524" layer="91"/>
 <wire x1="327.66" y1="157.48" x2="327.66" y2="104.14" width="0.1524" layer="91"/>
 <pinref part="U2" gate="G$1" pin="CI2"/>

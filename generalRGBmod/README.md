@@ -132,7 +132,7 @@ Firmware programming file depends on the CPLD you use. Please keep that in mind 
 ### Source the PCB
 Choose the PCB service which suits you. Here are some:
 
-- OSHPark: [Link to the Main PCB](https://oshpark.com/shared_projects/Qmn5GoX0) (If the PCB was updated and I forgot to update this link, look onto [my profile](https://oshpark.com/profiles/borti4938))
+- OSHPark: [Link to the Main PCB](https://oshpark.com/shared_projects/6PGgmuei) (If the PCB was updated and I forgot to update this link, look onto [my profile](https://oshpark.com/profiles/borti4938))
 - OSHPark: [Link to the MAV-NUS/AVDC-NUS Breakout PCB](https://oshpark.com/shared_projects/36EEl3hA) (If the PCB was updated and I forgot to update this link, look onto [my profile](https://oshpark.com/profiles/borti4938))
 - PCBWay.com: [Link](http://www.pcbway.com/), [Affiliate Link](http://www.pcbway.com/setinvite.aspx?inviteid=10658)
 
@@ -160,12 +160,14 @@ The mouser ordering keys are just to help you to source appropriate components.
 | **C10--C19,C22** | 0.1uF / 50V (10%) | SMD 0603 | 10 | 80-C0603C104K9R | |  
 | **FBN10--FBN13** | Ferrite Chip Bead Array 1206; 4x 220ohm (25%) DCR 0.35ohm | SMD 1206 | 4 | 81-BLA31BD221SN4D | |
 | | Chip Resistor Array 1206; 100ohm (1%) Concave 4resistors | SMD 1206 | 4 | 652-CAT16-1000F4LF | **Alternative** for the Ferrit Beads |
-| **RN1x0, RN1x2** | Chip Resistor Array 1206; 2kohm (1%) Concave 4resistors | SMD 1206 | 6 | 652-CAT16-2001F4LF | |
-| **RN1x1, RN1x3** | Chip Resistor Array 1206; 1kohm (1%) Concave 4resistors | SMD 1206 | 6 | 652-CAT16-1001F4LF | |
-| **R10--R12** | 270ohm (1%) | SMD 0603 | 3 | 71-CRCW0603270RFKEAH | |
+| **R10** | 1kohm (1%) | SMD 0603 | 1 | 71-CRCW0603-1.0K | |
+| **R11, R12** | 10kohm (1%) | SMD 0603 | 1 | 71-CRCW0603-10K | |
 | **R13** | 4.7kohm (1%) | SMD 0603 | 1 | 71-CRCW06034K70FKEAH | |
 | **R14** | 475ohm (1%) | SMD 0603 | 1 | 71-CRCW0603-475-E3 | |
 | **R15** | 330ohm (1%) | SMD 0603 | 1 | 71-CRCW0603330RFKEAH | [4] |
+| **RN1x0, RN1x2** | Chip Resistor Array 1206; 2kohm (1%) Concave 4resistors | SMD 1206 | 6 | 652-CAT16-2001F4LF | |
+| **RN1x1, RN1x3** | Chip Resistor Array 1206; 1kohm (1%) Concave 4resistors | SMD 1206 | 6 | 652-CAT16-1001F4LF | |
+| **R100, R110, R120** | 270ohm (1%) | SMD 0603 | 3 | 71-CRCW0603270RFKEAH | |
 | | _bridge_ | SMD 0603 | 1 | | **Alternative** for R15 [4]|
 | | | | | | | |
 | **U2** | THS7374 | TSSOP-14 | 1 | 595-THS7374IPWR | |
@@ -219,9 +221,8 @@ Revision numbering goes along with the revision numbering I use for the alternat
 - don't use quite dark / light pictures for the de-blur heuristic algorithm (possibly only for the CPLDs with 570LEs)
 - Simple onscreen feedback for user controled changes (only for the CPLDs with 570LEs (for the 240LEs CPLDs instead of the heuristic?))
 - dynamic de-blur: decide on demand wether a pixel is used for a blurry effect or not (possible for the N64 to decide on demand? (e.g. background gaming with blur, front text without blur))
-- Some advanced stuff (will be separated from this sub-folder, e.g. in folder advancedRGBmod):
-  - Color transformation to component
-  - Linedoubling mode (needs an upgrade to Max10 FPGA)
+- Linedoubling mode (needs an upgrade to Max10 FPGA; will be separated from this sub-folder, e.g. in folder advancedRGBmod)
+- Color transformation to component (needs an upgrade to Max10 FPGA; will be separated from this sub-folder, e.g. in folder advancedRGBmod)
 - HDMI?
 
 Any other ideas: email me :)
