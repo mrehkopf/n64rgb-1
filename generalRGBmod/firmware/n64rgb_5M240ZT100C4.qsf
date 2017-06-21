@@ -107,10 +107,11 @@ set_location_assignment PIN_91 -to Default_DeBlur
 set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to Default_n15bit_mode
 set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to Default_nForceDeBlur
 set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to Default_DeBlur
-#set_location_assignment PIN_85 -to nTHS7374_LPF_Bypass_i
-set_location_assignment PIN_98 -to nTHS7374_LPF_Bypass_i
+set_location_assignment PIN_85 -to nTHS7374_LPF_Bypass_p85_i
+set_location_assignment PIN_98 -to nTHS7374_LPF_Bypass_p98_i
 set_location_assignment PIN_53 -to THS7374_LPF_Bypass_o
-set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to nTHS7374_LPF_Bypass_i
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to nTHS7374_LPF_Bypass_p85_i
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to nTHS7374_LPF_Bypass_p98_i
 set_location_assignment PIN_8 -to dummy[0]
 set_location_assignment PIN_37 -to dummy[1]
 set_location_assignment PIN_39 -to dummy[2]
@@ -119,3 +120,4 @@ set_location_assignment PIN_90 -to dummy[4]
 set_location_assignment PIN_95 -to dummy[5]
 set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "NO HEAT SINK WITH STILL AIR"
 set_global_assignment -name AUTO_PACKED_REGISTERS_MAX "MINIMIZE AREA"
+set_global_assignment -name NUM_PARALLEL_PROCESSORS 2

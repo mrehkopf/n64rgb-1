@@ -1,15 +1,15 @@
- -- Copyright (C) 1991-2016 Altera Corporation. All rights reserved.
- -- Your use of Altera Corporation's design tools, logic functions 
+ -- Copyright (C) 2017  Intel Corporation. All rights reserved.
+ -- Your use of Intel Corporation's design tools, logic functions 
  -- and other software and tools, and its AMPP partner logic 
  -- functions, and any output files from any of the foregoing 
  -- (including device programming or simulation files), and any 
  -- associated documentation or information are expressly subject 
- -- to the terms and conditions of the Altera Program License 
- -- Subscription Agreement, the Altera Quartus Prime License Agreement,
- -- the Altera MegaCore Function License Agreement, or other 
+ -- to the terms and conditions of the Intel Program License 
+ -- Subscription Agreement, the Intel Quartus Prime License Agreement,
+ -- the Intel MegaCore Function License Agreement, or other 
  -- applicable license agreement, including, without limitation, 
  -- that your use is for the sole purpose of programming logic 
- -- devices manufactured by Altera and sold by Altera or its 
+ -- devices manufactured by Intel and sold by Intel or its 
  -- authorized distributors.  Please refer to the applicable 
  -- agreement for further details.
  -- 
@@ -58,7 +58,7 @@
  -- Pin directions (input, output or bidir) are based on device operating in user mode.
  ---------------------------------------------------------------------------------
 
-Quartus Prime Version 15.1.2 Build 193 02/01/2016 SJ Lite Edition
+Quartus Prime Version 17.0.0 Build 595 04/25/2017 SJ Lite Edition
 CHIP  "n64rgb_EPM240T100C5"  ASSIGNED TO AN: EPM240T100C5
 
 Pin Name/Usage               : Location  : Dir.   : I/O Standard      : Voltage : I/O Bank  : User Assignment
@@ -147,7 +147,7 @@ RESERVED_INPUT_WITH_WEAK_PULLUP : 81        :        :                   :      
 RESERVED_INPUT_WITH_WEAK_PULLUP : 82        :        :                   :         : 2         :                
 RESERVED_INPUT_WITH_WEAK_PULLUP : 83        :        :                   :         : 2         :                
 RESERVED_INPUT_WITH_WEAK_PULLUP : 84        :        :                   :         : 2         :                
-RESERVED_INPUT_WITH_WEAK_PULLUP : 85        :        :                   :         : 2         :                
+nTHS7374_LPF_Bypass_p85_i    : 85        : input  : 3.3-V LVTTL       :         : 2         : Y              
 RESERVED_INPUT_WITH_WEAK_PULLUP : 86        :        :                   :         : 2         :                
 RESERVED_INPUT_WITH_WEAK_PULLUP : 87        :        :                   :         : 2         :                
 dummy[4]                     : 88        : input  : 3.3-V LVTTL       :         : 2         : Y              
@@ -160,6 +160,6 @@ VCCIO2                       : 94        : power  :                   : 3.3V    
 dummy[6]                     : 95        : input  : 3.3-V LVTTL       :         : 2         : Y              
 RESERVED_INPUT_WITH_WEAK_PULLUP : 96        :        :                   :         : 2         :                
 RESERVED_INPUT_WITH_WEAK_PULLUP : 97        :        :                   :         : 2         :                
-nTHS7374_LPF_Bypass_i        : 98        : input  : 3.3-V LVTTL       :         : 2         : Y              
+nTHS7374_LPF_Bypass_p98_i    : 98        : input  : 3.3-V LVTTL       :         : 2         : Y              
 nRST                         : 99        : bidir  : 3.3-V LVTTL       :         : 2         : Y              
 CTRL_i                       : 100       : input  : 3.3-V LVTTL       :         : 2         : Y              

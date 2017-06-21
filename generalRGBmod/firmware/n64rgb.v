@@ -57,8 +57,9 @@ module n64rgb (
 
   inout nRST,
 
-  input  nTHS7374_LPF_Bypass_i,
-  output THS7374_LPF_Bypass_o,
+  input  nTHS7374_LPF_Bypass_p85_i,   // my first prototypes have FIL pad input at pin 85
+  input  nTHS7374_LPF_Bypass_p98_i,   // the GitHub final version at pin 98
+  output THS7374_LPF_Bypass_o,        // so simply combine both for same firmware file
 
   // dummies: some I/O pins are tied to Vcc/GND
   `ifdef USE_EPM240T100C5
@@ -399,9 +400,9 @@ end
 
 
 `ifdef OPTION_INVLPF
-  assign THS7374_LPF_Bypass_o = ~nTHS7374_LPF_Bypass_i ^ InvLPF;
+  assign THS7374_LPF_Bypass_o = ~(nTHS7374_LPF_Bypass_p85_i & nTHS7374_LPF_Bypass_p98_i) ^ InvLPF;
 `else
-  assign THS7374_LPF_Bypass_o = ~nTHS7374_LPF_Bypass_i;
+  assign THS7374_LPF_Bypass_o = ~(nTHS7374_LPF_Bypass_p85_i & nTHS7374_LPF_Bypass_p98_i);
 `endif
 
 endmodule
