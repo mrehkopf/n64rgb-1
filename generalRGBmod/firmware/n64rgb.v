@@ -371,7 +371,8 @@ always @(negedge nCLK) begin // data register management
   if (~nDSYNC) begin
     // shift data to output registers
 `ifndef DEBUG
-    {nVSYNC, nCLAMP, nHSYNC, nCSYNC} <= ndo_deblur ? S_DBr[0] : S_DBr[1];
+    if(ndo_deblur)
+      {nVSYNC, nCLAMP, nHSYNC, nCSYNC} <= S_DBr[0];
 `else // DEBUG: make a large jump between deblur on and off to see occasional estimation switches
     {nVSYNC, nCLAMP, nHSYNC, nCSYNC} <= ndo_deblur ? D_i[3:0] : S_DBr[5];
     S_DBr[5] <= S_DBr[4];
@@ -392,7 +393,13 @@ always @(negedge nCLK) begin // data register management
     // demux of RGB
     case(data_cnt)
       2'b01: R_DBr <= n15bit_mode ? D_i : {D_i[6:2], 2'b00};
-      2'b10: G_DBr <= n15bit_mode ? D_i : {D_i[6:2], 2'b00};
+      2'b10: begin
+        G_DBr <= n15bit_mode ? D_i : {D_i[6:2], 2'b00};
+`ifndef DEBUG
+        if(~ndo_deblur)
+          {nVSYNC, nCLAMP, nHSYNC, nCSYNC} <= S_DBr[0];
+`endif
+      end
       2'b11: B_DBr <= n15bit_mode ? D_i : {D_i[6:2], 2'b00};
     endcase
   end

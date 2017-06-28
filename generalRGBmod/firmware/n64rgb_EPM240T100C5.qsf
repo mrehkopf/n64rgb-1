@@ -42,7 +42,7 @@ set_global_assignment -name DEVICE EPM240T100C5
 set_global_assignment -name TOP_LEVEL_ENTITY n64rgb
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 15.1.2
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "11:03:36  AUGUST 12, 2016"
-set_global_assignment -name LAST_QUARTUS_VERSION "17.0.0 Lite Edition"
+set_global_assignment -name LAST_QUARTUS_VERSION "17.0.1 Lite Edition"
 set_global_assignment -name VERILOG_FILE n64rgb.v
 set_global_assignment -name VERILOG_FILE n64igr.v
 set_global_assignment -name SDC_FILE n64rgb.sdc
@@ -123,3 +123,4 @@ set_location_assignment PIN_90 -to dummy[5]
 set_location_assignment PIN_95 -to dummy[6]
 set_global_assignment -name NUM_PARALLEL_PROCESSORS 2
 set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "NO HEAT SINK WITH STILL AIR"
+set_global_assignment -name OPTIMIZATION_MODE "HIGH PERFORMANCE EFFORT"
