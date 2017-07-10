@@ -8,7 +8,7 @@
 // Tool versions:  Altera Quartus Prime
 // Description:
 //
-// Dependencies:
+// Dependencies: igr_params.vh
 //
 // Revision: 2.5
 // Features: console reset
@@ -40,6 +40,8 @@ module n64igr (
   output reg InvLPF
 `endif
 );
+
+`include "igr_params.vh"
 
 `ifdef OPTION_INVLPF
   initial InvLPF = 1'b0;
@@ -129,35 +131,36 @@ always @(negedge nCLK2) begin
     ST_CTRL_RD: begin
       if (wait_cnt[7:0] == {4'h0,sampling_point_ctrl}) begin // sample data
         if (&data_cnt) begin // sixteen bits read (analog values of stick not point of interest)
-          if ({data_stream[14:0], CTRL} == 16'b0000001000110010) begin // Dl + L + R + Cl pressed (no prevention needed here)
+          if ({data_stream[14:0], CTRL} == igr_deblur_off) begin // defined button combination pressed
             nForceDeBlur <= 1'b0;
             nDeBlur      <= 1'b1;
           end
-          if ({data_stream[14:0], CTRL} == 16'b0000000100110001) begin // Dr + L + R + Cr pressed (no prevention needed here)
+          if ({data_stream[14:0], CTRL} == igr_deblur_on) begin // defined button combination pressed
             nForceDeBlur <= 1'b0;
             nDeBlur      <= 1'b0;
           end
-          if ({data_stream[14:0], CTRL} == 16'b0000100000111000) begin // Du + L + R + Cu pressed
+          if ({data_stream[14:0], CTRL} == igr_15bitmode_off) begin // defined button combination pressed
 `ifdef DEBUG // reset nForceDeBlur by changing 15bit mode
             nForceDeBlur <= 1'b1;
 `endif
             n15bit_mode  <= 1'b1;
           end
-          if ({data_stream[14:0], CTRL} == 16'b0000010000110100) begin // Dd + L + R + Cd pressed
+          if ({data_stream[14:0], CTRL} == igr_15bitmode_on) begin // defined button combination pressed
 `ifdef DEBUG // reset nForceDeBlur by changing 15bit mode
             nForceDeBlur <= 1'b1;
 `endif
             n15bit_mode  <= 1'b0;
           end
 `ifdef OPTION_INVLPF
-          if ({data_stream[14:0], CTRL} == 16'b0000101000111001) begin // Du +Dl + L + R + Cu + Cr pressed
-            if (prev_data_stream != {data_stream[14:0], CTRL})         // prevents multiple executions (together with remember data)
+          if ({data_stream[14:0], CTRL} == igr_toggle_LPF) begin // defined button combination pressed
+            if (prev_data_stream != {data_stream[14:0], CTRL})   // prevents multiple executions (together with remember data)
               InvLPF <= ~InvLPF;
             remember_data <= 4'hf;
           end
 `endif
-          if ({data_stream[14:0], CTRL} == 16'b1100010100110000) // A + B + Dd + Dr + L + R pressed (no prevention needed here)
+          if ({data_stream[14:0], CTRL} == igr_reset) begin// defined button combination pressed
             initiate_nrst <= 1'b1;
+          end
           read_state  <= ST_WAIT4N64;
 `ifdef OPTION_INVLPF
           if (~|remember_data)

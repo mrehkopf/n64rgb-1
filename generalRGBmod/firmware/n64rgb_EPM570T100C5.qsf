@@ -45,6 +45,7 @@ set_global_assignment -name PROJECT_CREATION_TIME_DATE "11:45:38  APRIL 19, 2017
 set_global_assignment -name LAST_QUARTUS_VERSION "17.0.1 Lite Edition"
 set_global_assignment -name VERILOG_FILE n64rgb.v
 set_global_assignment -name VERILOG_FILE n64igr.v
+set_global_assignment -name VERILOG_INCLUDE_FILE igr_params.vh
 set_global_assignment -name SDC_FILE n64rgb.sdc
 set_global_assignment -name SDC_FILE n64igr.sdc
 set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files

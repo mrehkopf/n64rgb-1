@@ -8,7 +8,7 @@
 // Tool versions:  Altera Quartus Prime
 // Description:
 //
-// Dependencies:
+// Dependencies: igr_params.vh
 //
 // Revision: 2.5
 // Features: console reset
@@ -36,6 +36,8 @@ module n64igr (
   output reg nDeBlur,
   output reg n15bit_mode
 );
+
+`include "igr_params.vh"
 
 initial begin
   DRV_RST    = 1'b0;
@@ -124,19 +126,19 @@ always @(negedge nCLK2) begin
     ST_CTRL_RD: begin
       if (wait_cnt[7:0] == {4'h0,sampling_point_ctrl}) begin // sample data
         if (&data_cnt) begin // sixteen bits read (analog values of stick not point of interest)
-          if ({data_stream[14:0], CTRL} == 16'b0000001000110010) begin // Dl + L + R + Cl pressed
+          if ({data_stream[14:0], CTRL} == igr_deblur_off) begin // defined button combination pressed
             nForceDeBlur <= 1'b0;
             nDeBlur      <= 1'b1;
           end
-          if ({data_stream[14:0], CTRL} == 16'b0000000100110001) begin // Dr + L + R + Cr pressed
+          if ({data_stream[14:0], CTRL} == igr_deblur_on) begin // defined button combination pressed
             nForceDeBlur <= 1'b0;
             nDeBlur      <= 1'b0;
           end
-          if ({data_stream[14:0], CTRL} == 16'b0000100000111000) // Du + L + R + Cu pressed
+          if ({data_stream[14:0], CTRL} == igr_15bitmode_off) // defined button combination pressed
               n15bit_mode <= 1'b1;
-          if ({data_stream[14:0], CTRL} == 16'b0000010000110100) // Dd + L + R + Cd pressed
+          if ({data_stream[14:0], CTRL} == igr_15bitmode_on) // defined button combination pressed
               n15bit_mode <= 1'b0;
-          if ({data_stream[14:0], CTRL} == 16'b1100010100110000) // A + B + Dd + Dr + L + R pressed
+          if ({data_stream[14:0], CTRL} == igr_reset) // defined button combination pressed
             initiate_nrst <= 1'b1;
           read_state  <= ST_WAIT4N64;
         end else begin
