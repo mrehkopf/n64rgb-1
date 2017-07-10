@@ -8,7 +8,7 @@ If you are looking for a ready to install kit, just look on your own for a selle
 
 **WARNING:** This is an advanced DIY project if you do everything on your own. You need decent soldering skills. The CPLD has 0.5mm fine pitch with 100pins. Next to it the video amp has a 0.65mm pin pitch on the board there are some SMD1206 resistor and ferrit bead arrays.
 
-## Featrues
+## Features
 
 - Supporting for different CPLDs on a common PCB design:
   * MaxII EPM240T100C5
@@ -50,6 +50,8 @@ De-blur of the picture information is only be done in 240p/288p. This is be done
 - Press D-Pad ri + L + R + C-ri to activate de-blur (overrides the guess)
 - If heuristic estimation is switched off, the de-blur setting has a default value. This default is set on each power cycle but not on a reset. Default is de-blur *on*! If you want to have it *off* by default, short pin 91 and 90 at the CPLD!
 
+_(Button combinations can be modified according to your needs - see note below @ **In-Game Routines (IGR)**)_
+
 
 ### Heuristic for De-Blur
 
@@ -68,6 +70,7 @@ The 15bit color mode reduces the color depth from 21bit (7bit for each color) do
 - to deactivate 15bit mode press D-Pad up + L + R + C-up.
 - to (re)activate 15bit mode press D-Pad dw + L + R + C-dw.
 
+_(Button combinations can be modified according to your needs - see note below @ **In-Game Routines (IGR)**)_
 
 ### 'Hidden' Jumpers - Altering Defaults
 
@@ -93,7 +96,10 @@ The button combination are as follows:
 - (de)activate de-blur / override heuristic for de-blur: (see description above)
 - (de)activate 15bit mode: (see description above)
 
-_Final remark on IGR_:
+_Modifiying the IGR Button Combinations_:  
+It's difficult to make everybody happy with it. Third party controllers, which differ from the original ones by design, make it even more difficult. So it is possible to generate your own firmware with **your own** preferred **button combinations** implemented. Please refere to the document **IGR.README.md** located in the top folder of this repository for further information.
+
+_Final remark on IGR_:  
 However, as the communication between N64 and the controller goes over a single wire, sniffing the input is not an easy task (and probably my solution is not the best one). This together with the lack of an exhaustive testing (many many games out there as well my limited time), I'm looking forward to any incomming issue report to furhter improve this feature :)
 
 

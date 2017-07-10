@@ -34,6 +34,7 @@ By default this feature is on.
   * Press D-Pad ri + L + R + C-ri to activate de-blur (overrides the guess)
   * If heuristic estimation is switched off, the de-blur setting has a default value. This default is set on each power cycle. Default is de-blur *on*! If you want to have it *off* by default, short pin 91 and 90 at the MaxII CPLD!
 
+_(Button combinations can be modified according to your needs - see note below @ **In-Game Routines (IGR)**)_
 
 ### Heuristic for De-Blur
 
@@ -55,6 +56,7 @@ By default this feature is off.
   * to (re)activate 15bit mode press D-Pad dw + L + R + C-dw.
   * the default is set on each power cycle. Default for 15bit color mode is *off*! If you want to have it *on* by default, short pin 36 and 37 at the MaxII CPLD!
 
+_(Button combinations can be modified according to your needs - see note below @ **In-Game Routines (IGR)**)_
 
 ### Slow Slew Rate
 
@@ -68,11 +70,15 @@ To use this firmware (and therefore the IGRs) pin 100 of the CPLD (pad *A*) has 
 Three functunalities are implemented: toggle de-blur feature / override heuristic for de-blur and toggle the 15bit mode (see above) as well as resetting the console. To use the reset functionality please connect pin 1 OR pin 99 of the CPLD (pad *M*) to the PIF-NUS pin 27. This is optional and can be left out if not needed.
 
 The button combination are as follows:
+
 - reset the console: A + B + D-Pad dw + D-Pad ri + L + R
 - (de)activate de-blur / override heuristic for de-blur: (see description above)
 - (de)activate 15bit mode: (see description above)
 
-_Final remark on IGR_:
+_Modifiying the IGR Button Combinations_:  
+It's difficult to make everybody happy with it. Third party controllers, which differ from the original ones by design, make it even more difficult. So it is possible to generate your own firmware with **your own** preferred **button combinations** implemented. Please refere to the document **IGR.README.md** located in the top folder of this repository for further information.
+
+_Final remark on IGR_:  
 However, as the communication between N64 and the controller goes over a single wire, sniffing the input is not an easy task (and probably my solution is not the best one). This together with the lack of an exhaustive testing (many many games out there as well my limited time), I'm looking forward to any incomming issue report to furhter improve this feature :)
 
 
