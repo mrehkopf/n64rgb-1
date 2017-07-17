@@ -57,10 +57,12 @@ Both ICs are supported. The THS7373 has one SD-video low pass filter (used for /
 At the THS7373 the HD-video LPFs can be bypassed and at the THS7374 all four SD-video filters can be bypassed (using J1).
 
 ##### [2]
-According to your needs, you can design the board such that it outputs 75ohm compatible /CSYNC or TTL /CSYNC. Be aware of the components marked with this note (**R42**, **R43**, **C43/J2** and **C44**).
+According to your needs, you can design the board such that it outputs 75ohm compatible /CSYNC or TTL /CSYNC. Be aware of the components marked with this note (**R42**, **R43**, **C43/J2** and **C44**).  
+If you have a RGB cable build to work with /CSYNC and use this with another (probably) _unmodified_ console, which you use on a 75ohm terminated source, you may have a resistor (and a cap) build in the sync line. Then you must build this modding board here with TTL compatible sync, too.
 
 ##### [3]
-If you are going to use the stock /CSYNC circuit of the N64 - which I recommend if you have a NUS-CPU-01/02/03 board - you don't need the components **R43**, **C43** and **C44**. Just leave the footprints disassembled.
+If you are going to use the stock /CSYNC circuit of the N64 - which I recommend if you have a NUS-CPU-01/02/03 board - you don't need the components **R43**, **C43** and **C44**. Just leave the footprints disassembled.  
+**R42** should remain on the modding board (either size; could also be a short) as it holds channel one of the video amp close to GND.
 
 ##### [4]
 As the N64 does not output RGB by stock, there is no official RGB cable available. A most common method is to refere to the [SNES cable schematics](http://members.optusnet.com.au/eviltim/gamescart/gamescart.htm#snes).
