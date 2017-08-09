@@ -150,6 +150,7 @@ always @(negedge nCLK2) begin
       if (&{prev_ctrl,~CTRL,|data_cnt})
         sampling_point_ctrl <= wait_cnt[4:1];
     end
+    default: read_state <= ST_WAIT4N64;
   endcase
 
 
