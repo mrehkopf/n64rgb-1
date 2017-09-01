@@ -165,7 +165,7 @@ The mouser ordering keys are just to help you to source appropriate components.
 | | 5M570ZT100C4N [1] | TQFP100 | 1 | 989-5M570ZT100C4N | Leave J1 open; use U3 |
 | **C10--C19,C22** | 0.1uF / 50V (10%) | SMD 0603 | 10 | 80-C0603C104K9R | |  
 | **FBN10--FBN13** | Ferrite Chip Bead Array 1206; 4x 220ohm (25%) DCR 0.35ohm | SMD 1206 | 4 | 81-BLA31BD221SN4D | |
-| | Chip Resistor Array 1206; 100ohm (1%) Concave 4resistors | SMD 1206 | 4 | 652-CAT16-1000F4LF | **Alternative** for the Ferrit Beads |
+| | Chip Resistor Array 1206; 47ohm (1%) Concave 4resistors | SMD 1206 | 4 | 652-CAT16-47R0F4LF | **Alternative** for the Ferrit Beads |
 | **R10** | 1kohm (1%) | SMD 0603 | 1 | 71-CRCW0603-1.0K | |
 | **R11, R12** | 10kohm (1%) | SMD 0603 | 1 | 71-CRCW0603-10K | |
 | **R13** | 4.7kohm (1%) | SMD 0603 | 1 | 71-CRCW06034K70FKEAH | |
