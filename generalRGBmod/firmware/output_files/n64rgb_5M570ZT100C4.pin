@@ -58,18 +58,18 @@
  -- Pin directions (input, output or bidir) are based on device operating in user mode.
  ---------------------------------------------------------------------------------
 
-Quartus Prime Version 17.0.1 Build 598 06/07/2017 SJ Lite Edition
+Quartus Prime Version 17.0.2 Build 602 07/19/2017 SJ Lite Edition
 CHIP  "n64rgb_5M570ZT100C4"  ASSIGNED TO AN: 5M570ZT100C4
 
 Pin Name/Usage               : Location  : Dir.   : I/O Standard      : Voltage : I/O Bank  : User Assignment
 -------------------------------------------------------------------------------------------------------------
-dummy                        : 1         : input  : 3.3-V LVTTL       :         : 2         : Y              
+RESERVED_INPUT_WITH_BUS_HOLD : 1         :        :                   :         : 2         :                
 Default_nForceDeBlur         : 2         : input  : 3.3-V LVTTL       :         : 1         : Y              
-RESERVED_INPUT_WITH_WEAK_PULLUP : 3         :        :                   :         : 1         :                
-RESERVED_INPUT_WITH_WEAK_PULLUP : 4         :        :                   :         : 1         :                
-RESERVED_INPUT_WITH_WEAK_PULLUP : 5         :        :                   :         : 1         :                
-RESERVED_INPUT_WITH_WEAK_PULLUP : 6         :        :                   :         : 1         :                
-RESERVED_INPUT_WITH_WEAK_PULLUP : 7         :        :                   :         : 1         :                
+RESERVED_INPUT_WITH_BUS_HOLD : 3         :        :                   :         : 1         :                
+RESERVED_INPUT_WITH_BUS_HOLD : 4         :        :                   :         : 1         :                
+RESERVED_INPUT_WITH_BUS_HOLD : 5         :        :                   :         : 1         :                
+RESERVED_INPUT_WITH_BUS_HOLD : 6         :        :                   :         : 1         :                
+RESERVED_INPUT_WITH_BUS_HOLD : 7         :        :                   :         : 1         :                
 GND                          : 8         : gnd    :                   :         :           :                
 VCCIO1                       : 9         : power  :                   : 3.3V    : 1         :                
 GND                          : 10        : gnd    :                   :         :           :                
@@ -97,14 +97,14 @@ VCCIO1                       : 31        : power  :                   : 3.3V    
 GND                          : 32        : gnd    :                   :         :           :                
 G_o[5]                       : 33        : output : 3.3-V LVTTL       :         : 1         : Y              
 G_o[6]                       : 34        : output : 3.3-V LVTTL       :         : 1         : Y              
-RESERVED_INPUT_WITH_WEAK_PULLUP : 35        :        :                   :         : 1         :                
+RESERVED_INPUT_WITH_BUS_HOLD : 35        :        :                   :         : 1         :                
 Default_n15bit_mode          : 36        : input  : 3.3-V LVTTL       :         : 1         : Y              
 GND                          : 37        : gnd    :                   :         :           :                
-RESERVED_INPUT_WITH_WEAK_PULLUP : 38        :        :                   :         : 1         :                
+RESERVED_INPUT_WITH_BUS_HOLD : 38        :        :                   :         : 1         :                
 VCCINT                       : 39        : power  :                   : 1.8V    :           :                
-RESERVED_INPUT_WITH_WEAK_PULLUP : 40        :        :                   :         : 1         :                
-RESERVED_INPUT_WITH_WEAK_PULLUP : 41        :        :                   :         : 1         :                
-RESERVED_INPUT_WITH_WEAK_PULLUP : 42        :        :                   :         : 1         :                
+RESERVED_INPUT_WITH_BUS_HOLD : 40        :        :                   :         : 1         :                
+RESERVED_INPUT_WITH_BUS_HOLD : 41        :        :                   :         : 1         :                
+RESERVED_INPUT_WITH_BUS_HOLD : 42        :        :                   :         : 1         :                
 B_o[0]                       : 43        : output : 3.3-V LVTTL       :         : 1         : Y              
 B_o[1]                       : 44        : output : 3.3-V LVTTL       :         : 1         : Y              
 VCCIO1                       : 45        : power  :                   : 3.3V    : 1         :                
@@ -114,26 +114,26 @@ B_o[3]                       : 48        : output : 3.3-V LVTTL       :         
 B_o[4]                       : 49        : output : 3.3-V LVTTL       :         : 1         : Y              
 B_o[5]                       : 50        : output : 3.3-V LVTTL       :         : 1         : Y              
 B_o[6]                       : 51        : output : 3.3-V LVTTL       :         : 1         : Y              
-RESERVED_INPUT_WITH_WEAK_PULLUP : 52        :        :                   :         : 2         :                
+RESERVED_INPUT_WITH_BUS_HOLD : 52        :        :                   :         : 2         :                
 THS7374_LPF_Bypass_o         : 53        : output : 3.3-V LVTTL       :         : 2         : Y              
-RESERVED_INPUT_WITH_WEAK_PULLUP : 54        :        :                   :         : 2         :                
-RESERVED_INPUT_WITH_WEAK_PULLUP : 55        :        :                   :         : 2         :                
-RESERVED_INPUT_WITH_WEAK_PULLUP : 56        :        :                   :         : 2         :                
-RESERVED_INPUT_WITH_WEAK_PULLUP : 57        :        :                   :         : 2         :                
-RESERVED_INPUT_WITH_WEAK_PULLUP : 58        :        :                   :         : 2         :                
+RESERVED_INPUT_WITH_BUS_HOLD : 54        :        :                   :         : 2         :                
+RESERVED_INPUT_WITH_BUS_HOLD : 55        :        :                   :         : 2         :                
+RESERVED_INPUT_WITH_BUS_HOLD : 56        :        :                   :         : 2         :                
+RESERVED_INPUT_WITH_BUS_HOLD : 57        :        :                   :         : 2         :                
+RESERVED_INPUT_WITH_BUS_HOLD : 58        :        :                   :         : 2         :                
 VCCIO2                       : 59        : power  :                   : 3.3V    : 2         :                
 GND                          : 60        : gnd    :                   :         :           :                
-RESERVED_INPUT_WITH_WEAK_PULLUP : 61        :        :                   :         : 2         :                
-RESERVED_INPUT_WITH_WEAK_PULLUP : 62        :        :                   :         : 2         :                
+RESERVED_INPUT_WITH_BUS_HOLD : 61        :        :                   :         : 2         :                
+RESERVED_INPUT_WITH_BUS_HOLD : 62        :        :                   :         : 2         :                
 VCCINT                       : 63        : power  :                   : 1.8V    :           :                
-RESERVED_INPUT_WITH_WEAK_PULLUP : 64        :        :                   :         : 2         :                
+RESERVED_INPUT_WITH_BUS_HOLD : 64        :        :                   :         : 2         :                
 GND                          : 65        : gnd    :                   :         :           :                
-nVSYNC                       : 66        : output : 3.3-V LVTTL       :         : 2         : Y              
-nCLAMP                       : 67        : output : 3.3-V LVTTL       :         : 2         : Y              
-nHSYNC                       : 68        : output : 3.3-V LVTTL       :         : 2         : Y              
+install_type                 : 66        : input  : 3.3-V LVTTL       :         : 2         : Y              
+RESERVED_INPUT_WITH_BUS_HOLD : 67        :        :                   :         : 2         :                
+nCLAMP                       : 68        : output : 3.3-V LVTTL       :         : 2         : Y              
 nCSYNC                       : 69        : output : 3.3-V LVTTL       :         : 2         : Y              
-RESERVED_INPUT_WITH_WEAK_PULLUP : 70        :        :                   :         : 2         :                
-RESERVED_INPUT_WITH_WEAK_PULLUP : 71        :        :                   :         : 2         :                
+nVSYNC                       : 70        : output : 3.3-V LVTTL       :         : 2         : Y              
+nHSYNC                       : 71        : output : 3.3-V LVTTL       :         : 2         : Y              
 R_o[6]                       : 72        : output : 3.3-V LVTTL       :         : 2         : Y              
 R_o[5]                       : 73        : output : 3.3-V LVTTL       :         : 2         : Y              
 R_o[4]                       : 74        : output : 3.3-V LVTTL       :         : 2         : Y              
@@ -143,23 +143,23 @@ R_o[1]                       : 77        : output : 3.3-V LVTTL       :         
 R_o[0]                       : 78        : output : 3.3-V LVTTL       :         : 2         : Y              
 GND                          : 79        : gnd    :                   :         :           :                
 VCCIO2                       : 80        : power  :                   : 3.3V    : 2         :                
-RESERVED_INPUT_WITH_WEAK_PULLUP : 81        :        :                   :         : 2         :                
-RESERVED_INPUT_WITH_WEAK_PULLUP : 82        :        :                   :         : 2         :                
-RESERVED_INPUT_WITH_WEAK_PULLUP : 83        :        :                   :         : 2         :                
-RESERVED_INPUT_WITH_WEAK_PULLUP : 84        :        :                   :         : 2         :                
+RESERVED_INPUT_WITH_BUS_HOLD : 81        :        :                   :         : 2         :                
+RESERVED_INPUT_WITH_BUS_HOLD : 82        :        :                   :         : 2         :                
+RESERVED_INPUT_WITH_BUS_HOLD : 83        :        :                   :         : 2         :                
+RESERVED_INPUT_WITH_BUS_HOLD : 84        :        :                   :         : 2         :                
 nTHS7374_LPF_Bypass_p85_i    : 85        : input  : 3.3-V LVTTL       :         : 2         : Y              
-RESERVED_INPUT_WITH_WEAK_PULLUP : 86        :        :                   :         : 2         :                
-RESERVED_INPUT_WITH_WEAK_PULLUP : 87        :        :                   :         : 2         :                
+RESERVED_INPUT_WITH_BUS_HOLD : 86        :        :                   :         : 2         :                
+RESERVED_INPUT_WITH_BUS_HOLD : 87        :        :                   :         : 2         :                
 VCCINT                       : 88        : power  :                   : 1.8V    :           :                
-RESERVED_INPUT_WITH_WEAK_PULLUP : 89        :        :                   :         : 2         :                
+RESERVED_INPUT_WITH_BUS_HOLD : 89        :        :                   :         : 2         :                
 GND                          : 90        : gnd    :                   :         :           :                
 Default_DeBlur               : 91        : input  : 3.3-V LVTTL       :         : 2         : Y              
-RESERVED_INPUT_WITH_WEAK_PULLUP : 92        :        :                   :         : 2         :                
+RESERVED_INPUT_WITH_BUS_HOLD : 92        :        :                   :         : 2         :                
 GND                          : 93        : gnd    :                   :         :           :                
 VCCIO2                       : 94        : power  :                   : 3.3V    : 2         :                
 GND                          : 95        : gnd    :                   :         :           :                
-RESERVED_INPUT_WITH_WEAK_PULLUP : 96        :        :                   :         : 2         :                
-RESERVED_INPUT_WITH_WEAK_PULLUP : 97        :        :                   :         : 2         :                
+RESERVED_INPUT_WITH_BUS_HOLD : 96        :        :                   :         : 2         :                
+RESERVED_INPUT_WITH_BUS_HOLD : 97        :        :                   :         : 2         :                
 nTHS7374_LPF_Bypass_p98_i    : 98        : input  : 3.3-V LVTTL       :         : 2         : Y              
-nRST                         : 99        : bidir  : 3.3-V LVTTL       :         : 2         : Y              
-CTRL_i                       : 100       : input  : 3.3-V LVTTL       :         : 2         : Y              
+nRST_nManualDB               : 99        : bidir  : 3.3-V LVTTL       :         : 2         : Y              
+CTRL_nAutoDB                 : 100       : input  : 3.3-V LVTTL       :         : 2         : Y              

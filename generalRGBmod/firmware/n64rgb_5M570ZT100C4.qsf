@@ -42,7 +42,7 @@ set_global_assignment -name DEVICE 5M570ZT100C4
 set_global_assignment -name TOP_LEVEL_ENTITY n64rgb
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 15.1.2
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "12:56:40  APRIL 19, 2017"
-set_global_assignment -name LAST_QUARTUS_VERSION "17.0.1 Lite Edition"
+set_global_assignment -name LAST_QUARTUS_VERSION "17.0.2 Lite Edition"
 set_global_assignment -name VERILOG_FILE n64rgb.v
 set_global_assignment -name VERILOG_FILE n64igr.v
 set_global_assignment -name VERILOG_INCLUDE_FILE igr_params.vh
@@ -54,12 +54,12 @@ set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
 set_global_assignment -name DEVICE_FILTER_PACKAGE TQFP
 set_global_assignment -name DEVICE_FILTER_PIN_COUNT 100
 set_global_assignment -name ERROR_CHECK_FREQUENCY_DIVISOR "-1"
-set_global_assignment -name RESERVE_ALL_UNUSED_PINS "AS INPUT TRI-STATED WITH WEAK PULL-UP"
+set_global_assignment -name RESERVE_ALL_UNUSED_PINS "AS INPUT TRI-STATED WITH BUS-HOLD"
 set_global_assignment -name STRATIX_DEVICE_IO_STANDARD "3.3-V LVTTL"
-set_location_assignment PIN_99 -to nRST
-set_location_assignment PIN_100 -to CTRL_i
-set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to CTRL_i
-set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to nRST
+set_location_assignment PIN_99 -to nRST_nManualDB
+set_location_assignment PIN_100 -to CTRL_nAutoDB
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to nRST_nManualDB
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to CTRL_nAutoDB
 set_location_assignment PIN_12 -to nCLK
 set_location_assignment PIN_14 -to nDSYNC
 set_location_assignment PIN_21 -to D_i[0]
@@ -90,10 +90,10 @@ set_location_assignment PIN_48 -to B_o[3]
 set_location_assignment PIN_49 -to B_o[4]
 set_location_assignment PIN_50 -to B_o[5]
 set_location_assignment PIN_51 -to B_o[6]
+set_location_assignment PIN_68 -to nCLAMP
 set_location_assignment PIN_69 -to nCSYNC
-set_location_assignment PIN_68 -to nHSYNC
-set_location_assignment PIN_67 -to nCLAMP
-set_location_assignment PIN_66 -to nVSYNC
+set_location_assignment PIN_70 -to nVSYNC
+set_location_assignment PIN_71 -to nHSYNC
 set_instance_assignment -name SLOW_SLEW_RATE ON -to R_o
 set_instance_assignment -name SLOW_SLEW_RATE ON -to G_o
 set_instance_assignment -name SLOW_SLEW_RATE ON -to B_o
@@ -112,7 +112,11 @@ set_location_assignment PIN_98 -to nTHS7374_LPF_Bypass_p98_i
 set_location_assignment PIN_53 -to THS7374_LPF_Bypass_o
 set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to nTHS7374_LPF_Bypass_p85_i
 set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to nTHS7374_LPF_Bypass_p98_i
-set_location_assignment PIN_1 -to dummy
+set_location_assignment PIN_66 -to install_type
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to install_type
 set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "NO HEAT SINK WITH STILL AIR"
 set_global_assignment -name OPTIMIZATION_MODE "HIGH PERFORMANCE EFFORT"
 set_global_assignment -name NUM_PARALLEL_PROCESSORS 2
+set_global_assignment -name ENABLE_OCT_DONE OFF
+set_global_assignment -name STRATIXV_CONFIGURATION_SCHEME "PASSIVE SERIAL"
+set_global_assignment -name USE_CONFIGURATION_DEVICE ON

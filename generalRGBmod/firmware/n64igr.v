@@ -22,8 +22,9 @@
 
 
 module n64igr (
-  input nCLK,
-  inout nRST,
+  input      nCLK,
+  input      nRST_IGR,
+  output reg DRV_RST,
 
   input CTRL,
 
@@ -177,7 +178,6 @@ always @(negedge nCLK2) begin
       if (&{prev_ctrl,~CTRL,|data_cnt})
         sampling_point_ctrl <= wait_cnt[4:1];
     end
-    default: read_state <= ST_WAIT4N64;
   endcase
 
 
@@ -188,7 +188,7 @@ always @(negedge nCLK2) begin
 
   prev_ctrl <= CTRL;
 
-  if (nRST == 1'b0) begin
+  if (~nRST_IGR) begin
 `ifdef OPTION_INVLPF
     InvLPF      <= 1'b0;
 `endif
@@ -209,19 +209,17 @@ always @(negedge nCLK2) begin
   end
 end
 
-reg        drv_rst =  1'b0;
+
 reg [17:0] rst_cnt = 18'b0; // ~65ms are needed to count from max downto 0 with nCLK2.
 
 always @(negedge nCLK2) begin
   if (initiate_nrst == 1'b1) begin
-    drv_rst <= 1'b1;      // reset system
+    DRV_RST <= 1'b1;      // reset system
     rst_cnt <= 18'h3ffff;
   end else if (|rst_cnt) // decrement as long as rst_cnt is not zero
     rst_cnt <= rst_cnt - 1'b1;
   else
-    drv_rst <= 1'b0; // end of reset
+    DRV_RST <= 1'b0; // end of reset
 end
-
-assign nRST = drv_rst ? 1'b0 : 1'bz;
 
 endmodule

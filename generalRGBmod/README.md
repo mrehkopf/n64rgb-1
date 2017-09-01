@@ -24,6 +24,7 @@ If you are looking for a ready to install kit, just look on your own for a selle
 - IGR features:
   * reset the console with the controller
   * full control on de-blur and 15bit mode with the controller
+- **NEW** Installation type: user decides whether he want to use IGR features or dedicated mechanical switches
 - Slow Slew Rate
 - for possibly future implementation: switch LPF of the video amplifier on and off (may only fit into CPLDs with 570LE)
 
@@ -43,7 +44,7 @@ If you observe something like that or where do you think that de-blur is not cor
 
 ### De-Blur
 
-De-blur of the picture information is only be done in 240p/288p. This is be done by simply blanking every second pixel. Normally, the blanked pixels are used to introduce blur by the N64 in 240p/288p mode. However, some games like Mario Tennis use these pixel for additional information rather than for bluring effects. In other words this means that these games uses full horizontal resolution even in 240p/288p output mode. Hence, the picture looks more blurry in this case if de-blur feature is activated.
+De-blur of the picture information is only be done in 240p/288p. This is be done by simply blanking every second pixel. Normally, the blanked pixels are used to introduce blur by the N64 in 240p/288p mode. However, some games like Mario Tennis, 007 Goldeneye, and some others use these pixel for additional information rather than for bluring effects. In other words this means that these games uses full horizontal resolution even in 240p/288p output mode. Hence, the picture looks more blurry in this case if de-blur feature is activated.
 
 - **By default heuristic is activated on every power cycle and on every reset!** However, as the heuristic guess might be not reliable, the guess can be override. Also, the heuristic algorithm can be switched off permanently by setting pin 2 of the CPLD to GND (short pin 1 and 2)
 - Press D-Pad le + L + R + C-le to deactivate de-blur (overrides the guess)
@@ -80,13 +81,16 @@ There are three 'hidden' jumpers on the modding board. The jumpers are nothing e
 - pin 36 and 37 -> deactivates de-blur by default (only applied if de-blur heuristic is off by default)
 - pin 90 and 91 -> activates the 15bit color mode by default
 
+**Note**:  
+Board Version September 2017 and later have a dedicated double solder jumper for de-blur heuristic and de-blur default. The jumper is labeled with _J11_ (left pad is _marked with a dot_). The middle pad is GND, the right pad is de-blur heuristic on (open) or off (short to middle) and the left pad is de-blur on (open) or off (short to middle), respectively.
+
 
 ### Slow Slew Rate
 
 This feature reduces the rising and falling time of the outputs. This reduces artefacts due to fast rising/falling edges at the outputs and the resulting over-/undershoots. The drawback is that the edges are not as sharp as with fast slew rates (at least in theory), which is not noticeable.
 
 
-### In-Game Routines (IGR)
+### In-Game Routines (IGR) (default installation type)
 
 Three functunalities are implemented: toggle de-blur feature / override heuristic for de-blur and toggle the 15bit mode (see above) as well as resetting the console.
 
@@ -102,6 +106,17 @@ It's difficult to make everybody happy with it. Third party controllers, which d
 _Final remark on IGR_:  
 However, as the communication between N64 and the controller goes over a single wire, sniffing the input is not an easy task (and probably my solution is not the best one). This together with the lack of an exhaustive testing (many many games out there as well my limited time), I'm looking forward to any incomming issue report to furhter improve this feature :)
 
+### **NEW**: Switches for De-Blur (alternative installation type)
+
+To use switches for de-blur (similar to viletims board) on can set the jumper _J12_ on the board. This deactivates the IGR functionalities and the user can use the in-/ouputs for controller and reset for switches.
+
+These switches are used as on viletims commercial board: **A**uto and **M**anual. The corresponding inputs are _Ctrl_ and _Rst#_, respectively. On newer boards (September 2017 and later) these pads are relabeled with _Ctrl/ A_ and _Rst#/ M_.
+
+If pad _Ctrl/ A_ is shorted to GND via a switch, the de-blur heuristic is used to switch de-blur on and off.
+If pad _Rst#/ M_ is shorted to GND via a switch, the de-blur is forced to be on (beats heuristic).
+
+**Note**:  
+_J12_ is connected to pin 66 of the CPLD. Next to it is pin 65 which is connected to GND. If you have an older version of the board (August 2017 and earlier) running with the current firmware (September 2017 and later) you can short pin 65 and 66 to activate the alternative installation type.
 
 ### Low Pass Filter Bypass Mode of the THS7374
 
@@ -138,7 +153,7 @@ Firmware programming file depends on the CPLD you use. Please keep that in mind 
 ### Source the PCB
 Choose the PCB service which suits you. Here are some:
 
-- OSHPark: [Link to the Main PCB](https://oshpark.com/shared_projects/6PGgmuei) (If the PCB was updated and I forgot to update this link, look onto [my profile](https://oshpark.com/profiles/borti4938))
+- OSHPark: [Link to the Main PCB](https://oshpark.com/shared_projects/ZkJGARiN) (If the PCB was updated and I forgot to update this link, look onto [my profile](https://oshpark.com/profiles/borti4938))
 - OSHPark: [Link to the MAV-NUS/AVDC-NUS Breakout PCB](https://oshpark.com/shared_projects/36EEl3hA) (If the PCB was updated and I forgot to update this link, look onto [my profile](https://oshpark.com/profiles/borti4938))
 - PCBWay.com: [Link](http://www.pcbway.com/), [Affiliate Link](http://www.pcbway.com/setinvite.aspx?inviteid=10658)
 

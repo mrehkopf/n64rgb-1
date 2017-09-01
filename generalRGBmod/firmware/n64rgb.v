@@ -11,9 +11,9 @@
 //
 // Dependencies: n64igr.v (Rev. 2.5)
 //
-// Revision: 2.5
+// Revision: 2.6
 // Features: BUFFERED version (no color shifting around edges)
-//           deblur (with heuristic) and 15bit mode (5bit for each color)
+//           deblur (with heuristic) and 15bit mode (5bit for each color); defaults for IGR can be set as follows:
 //             - heuristic deblur:   on (default)                               | off (set pin 1 to GND / short pin 1 & 2)
 //             - deblur default:     on (default)                               | off (set pin 91 to GND / short pin 91 & 90)
 //               (deblur deafult only comes into account if heuristic is switched off)
@@ -22,17 +22,15 @@
 //           resetting N64 using the controller
 //           defaults of de-blur and 15bit mode are set on power cycle
 //           if de-blur heuristic is overridden by user, it is reset on each power cycle and on each reset
+//           selectable installation type
+//             - either with IGR or with switches on Reset and Ctrl input
+//             - Reset (IGR) and Auto (Switch) have a shared input
+//             - Controller (IGR) and Manual (Switch) have a shared input
+//             - default for 15bit mode is forwarded to actual setting for the installation with a switch
 //
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 //`define DEBUG
-
-// Only uncomment one of the following `define macros!
-//`define USE_EPM240T100C5
-//`define USE_EPM570T100C5
-//`define USE_5M240ZT100C4
-`define USE_5M570ZT100C4
-
 //`define OPTION_INVLPF
 
 module n64rgb (
@@ -40,40 +38,29 @@ module n64rgb (
   input nDSYNC,
   input [6:0] D_i,
 
-  input CTRL_i,
+  input install_type, // installation type
+                      // - 1 -> with IGR functionalities
+                      // - 0 -> toogle switch for deblur (no IGR fubnctions)
+
+  inout nRST_nManualDB,
+  input CTRL_nAutoDB,
 
   input Default_nForceDeBlur,
   input Default_DeBlur,
   input Default_n15bit_mode,
 
-  output reg nVSYNC,
-  output reg nCLAMP,
   output reg nHSYNC,
+  output reg nVSYNC,
   output reg nCSYNC,
+  output reg nCLAMP,
 
   output reg [6:0] R_o,     // red data vector
   output reg [6:0] G_o,     // green data vector
   output reg [6:0] B_o,     // blue data vector
 
-  inout nRST,
-
-  input  nTHS7374_LPF_Bypass_p85_i,   // my first prototypes have FIL pad input at pin 85
+  input  nTHS7374_LPF_Bypass_p85_i,   // my first prototypes have FIL pad input at pin 85 (MaxV only)
   input  nTHS7374_LPF_Bypass_p98_i,   // the GitHub final version at pin 98
-  output THS7374_LPF_Bypass_o,        // so simply combine both for same firmware file
-
-  // dummies: some I/O pins are tied to Vcc/GND
-  `ifdef USE_EPM240T100C5
-    input [6:0] dummy
-  `endif
-  `ifdef USE_EPM570T100C5
-    input [2:0] dummy
-  `endif
-  `ifdef USE_5M240ZT100C4
-    input [5:0] dummy
-  `endif
-  `ifdef USE_5M570ZT100C4
-    input dummy
-  `endif
+  output THS7374_LPF_Bypass_o         // so simply combine both for same firmware file
 );
 
 
@@ -84,49 +71,42 @@ module n64rgb (
 `endif
 reg [6:0] R_DBr, G_DBr, B_DBr; // red, green and blue data buffer
 
-initial begin
-  S_DBr[1] = 4'b1111;
-  S_DBr[0] = 4'b1111;
-`ifdef DEBUG
-  S_DBr[5] = 4'b1111;
-  S_DBr[4] = 4'b1111;
-  S_DBr[3] = 4'b1111;
-  S_DBr[2] = 4'b1111;
-`endif
-  {nVSYNC, nCLAMP, nHSYNC, nCSYNC} = 4'b1111;
-  R_DBr = 7'b0000000;
-  G_DBr = 7'b0000000;
-  B_DBr = 7'b0000000;
-  R_o = 7'b0000000;
-  G_o = 7'b0000000;
-  B_o = 7'b0000000;
-end
-
 
 // Part 1: connect IGR module
 // ==========================
 
-wire nForceDeBlur, nDeBlur, n15bit_mode;
+wire nForceDeBlur_IGR, nDeBlur_IGR, n15bit_mode_IGR;
+wire nRST_IGR, DRV_RST;
 `ifdef OPTION_INVLPF
   wire InvLPF;
 `endif
 
+wire   CTRL_IGR = install_type ? CTRL_nAutoDB   : 1'b1;
+assign nRST_IGR = install_type ? nRST_nManualDB : 1'b1;
+
 n64igr igr(
   .nCLK(nCLK),
-  .nRST(nRST),
-  .CTRL(CTRL_i),
+  .nRST_IGR(nRST_IGR),
+  .DRV_RST(DRV_RST),
+  .CTRL(CTRL_IGR),
   .Default_nForceDeBlur(Default_nForceDeBlur),
   .Default_DeBlur(Default_DeBlur),
   .Default_n15bit_mode(Default_n15bit_mode),
-  .nForceDeBlur(nForceDeBlur),
-  .nDeBlur(nDeBlur),
-  .n15bit_mode(n15bit_mode)
+  .nForceDeBlur(nForceDeBlur_IGR),
+  .nDeBlur(nDeBlur_IGR),
+  .n15bit_mode(n15bit_mode_IGR)
 `ifdef OPTION_INVLPF
   ,
   .InvLPF(InvLPF)
 `endif
 );
 
+assign nRST_nManualDB = ~install_type ? 1'bz : 
+                         DRV_RST      ? 1'b0 : 1'bz;
+
+wire nForceDeBlur = install_type ? nForceDeBlur_IGR : (~CTRL_nAutoDB & nRST_nManualDB);
+wire nDeBlur      = install_type ? nDeBlur_IGR      :                  nRST_nManualDB;
+wire n15bit_mode  = install_type ? n15bit_mode_IGR  : ~Default_DeBlur;
 
 // Part 2 - 4: RGB Demux with De-Blur Add-On
 // =========================================
@@ -338,7 +318,7 @@ always @(negedge nCLK) begin // estimation of blur effect
     gradient[1]     <= 2'b0;
     gradient[0]     <= 2'b0;
   end
-  if (~nRST | n64_480i) begin
+  if (DRV_RST | n64_480i) begin
     nblur_n64_trend <= init_trend;
     nblur_n64       <= 1'b1;
   end
