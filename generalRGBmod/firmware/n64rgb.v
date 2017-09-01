@@ -162,18 +162,19 @@ end
 // Part 2.2: estimation of 240p/288p
 // =================================
 
-reg [2:0] serr_cnt = 3'b000; // 240p: 3 hsync pulses during vsync pulse ; 480i: 6 serrated hsync per vsync
-reg       n64_480i = 1'b1;
-
-always @(negedge nCLK) begin // estimation of blur effect
+reg FrameID  = 1'b0; // 0 = even frame, 1 = odd frame
+reg n64_480i = 1'b1; // 240p: only odd frames; 480i: even and odd frames
+ 
+always @(negedge nCLK) begin
   if (~nDSYNC) begin
-    if(&{~S_DBr[0][3],~S_DBr[0][0],D_i[0]}) // nVSYNC low and posedge at nCSYNC
-      serr_cnt <= serr_cnt + 1'b1;          // count up hsync pulses during vsync pulse
-                                            // serr_cnt[2]==1 means a value >=4 -> 480i mode detected
-
-    if(~S_DBr[0][3] & D_i[3]) begin // posedge at nVSYNC detected - set n64_480i and reset serr_cnt
-      n64_480i <= serr_cnt[2];
-      serr_cnt <= 3'b000;
+    if (S_DBr[0][3] & ~D_i[3]) begin    // negedge at nVSYNC
+      if (S_DBr[0][1] & ~D_i[1]) begin  // negedge at nHSYNC, too -> odd frame
+        n64_480i <= ~FrameID;
+        FrameID  <= 1'b1;
+      end else begin                    // no negedge at nHSYNC -> even frame
+        n64_480i <= 1'b1;
+        FrameID  <= 1'b0;
+      end
     end
   end
 end
