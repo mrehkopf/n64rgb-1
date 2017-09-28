@@ -9,6 +9,11 @@ A collection of RGB mods for the N64. This repository includes:
   * supported devices: MaxII (EPM240T100C5, EPM570T100C5) and MaxV (5M240ZT100C4, 5M570ZT100C4) CPLDs
   * PCB files (common for all supported devices) and firmware (separate programming files) are provided
   * folder: generalRGBmod
+- an advanced RGB digital-to-analog converter with optional YPbPr conversion
+  * supported FPGA: Cyclone IV (EP4CE6E22 and EP4CE10E22) and Cyclone 10 LP (10CL006YE144 and 10CL010YE144)
+  * PCB files (common for all supported devices) and firmware (separate programming files) are provided
+  * additional Filter board for the outputted video signal if you need that
+  * folder: advancedRGBmod
 - additional MAV-NUS Adapter:
   * pin breakout from 0.8mm pitch to 1.27mm pitch
   * PCB files provided
