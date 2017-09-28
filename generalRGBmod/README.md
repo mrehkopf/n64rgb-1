@@ -16,10 +16,8 @@ If you are looking for a ready to install kit, just look on your own for a selle
   * MaxV 5M240ZT100C4 (a 5M240ZT100C5 does not met timing requirements [1])
   * MaxV 5M570ZT100C4 (a 5M570ZT100C5 does not met timing requirements [1])
 - Video amplifier THS7374 or THS7373
-- Detection of 240p/288p
-- Detection of PAL and NTSC mode
-- Heuristic for de-blur function [2]
-- De-Blur in 240p/288p (horizontal resolution decreased from 640 to 320 pixels)
+- Detection of 240p/288p vs. 480i/576i together with detection of NTSC vs. PAL mode
+- Heuristic for de-blur function [2], De-Blur in 240p/288p (horizontal resolution decreased from 640 to 320 pixels)
 - 15bit color mode
 - IGR features:
   * reset the console with the controller
@@ -43,6 +41,24 @@ Update: If you are looking for a 5M240ZT100C4 and 5M570ZT100C4, you propably rea
 ##### [2]
 Heuristic for de-blur function highly depends on the image content. So it might be the case that de-blur is switched on and off rapidly even on small content changes. In any case you can override the heuristic by forcing de-blur on or off.  
 If you observe something like that or where do you think that de-blur is not correctly guessed, please take a note (PAL / NTSC N64, game, ROM, situation), where I can check that and can try to further improve the heuristic algorithm. Send me your observation vie email or open an issue here on GitHub.
+
+
+### In-Game Routines (IGR) (default installation type)
+
+Three functunalities are implemented: toggle de-blur feature / override heuristic for de-blur and toggle the 15bit mode (see above) as well as resetting the console.
+
+The button combination are as follows:
+
+- reset the console: A + B + D-Pad dw + D-Pad ri + L + R
+- (de)activate de-blur / override heuristic for de-blur: (see description below)
+- (de)activate 15bit mode: (see description below)
+
+_Modifiying the IGR Button Combinations_:  
+It's difficult to make everybody happy with it. Third party controllers, which differ from the original ones by design, make it even more difficult. So it is possible to generate your own firmware with **your own** preferred **button combinations** implemented. Please refere to the document **IGR.README.md** located in the top folder of this repository for further information.
+
+_Final remark on IGR_:  
+However, as the communication between N64 and the controller goes over a single wire, sniffing the input is not an easy task (and probably my solution is not the best one). This together with the lack of an exhaustive testing (many many games out there as well my limited time), I'm looking forward to any incomming issue report to furhter improve this feature :)
+
 
 ### De-Blur
 
@@ -92,22 +108,6 @@ Board Version September 2017 and later have a dedicated double solder jumper for
 This feature reduces the rising and falling time of the outputs. This reduces artefacts due to fast rising/falling edges at the outputs and the resulting over-/undershoots. The drawback is that the edges are not as sharp as with fast slew rates (at least in theory), which is not noticeable.
 
 
-### In-Game Routines (IGR) (default installation type)
-
-Three functunalities are implemented: toggle de-blur feature / override heuristic for de-blur and toggle the 15bit mode (see above) as well as resetting the console.
-
-The button combination are as follows:
-
-- reset the console: A + B + D-Pad dw + D-Pad ri + L + R
-- (de)activate de-blur / override heuristic for de-blur: (see description above)
-- (de)activate 15bit mode: (see description above)
-
-_Modifiying the IGR Button Combinations_:  
-It's difficult to make everybody happy with it. Third party controllers, which differ from the original ones by design, make it even more difficult. So it is possible to generate your own firmware with **your own** preferred **button combinations** implemented. Please refere to the document **IGR.README.md** located in the top folder of this repository for further information.
-
-_Final remark on IGR_:  
-However, as the communication between N64 and the controller goes over a single wire, sniffing the input is not an easy task (and probably my solution is not the best one). This together with the lack of an exhaustive testing (many many games out there as well my limited time), I'm looking forward to any incomming issue report to furhter improve this feature :)
-
 ### **NEW**: Switches for De-Blur (alternative installation type)
 
 To use switches for de-blur (similar to viletims board) on can set the jumper _J12_ on the board. This deactivates the IGR functionalities and the user can use the in-/ouputs for controller and reset for switches.
@@ -156,7 +156,6 @@ Firmware programming file depends on the CPLD you use. Please keep that in mind 
 Choose the PCB service which suits you. Here are some:
 
 - OSHPark: [Link to the Main PCB](https://oshpark.com/shared_projects/ZkJGARiN) (If the PCB was updated and I forgot to update this link, look onto [my profile](https://oshpark.com/profiles/borti4938))
-- OSHPark: [Link to the MAV-NUS/AVDC-NUS Breakout PCB](https://oshpark.com/shared_projects/36EEl3hA) (If the PCB was updated and I forgot to update this link, look onto [my profile](https://oshpark.com/profiles/borti4938))
 - PCBWay.com: [Link](http://www.pcbway.com/), [Affiliate Link](http://www.pcbway.com/setinvite.aspx?inviteid=10658)
 
 ### Part List for the PCB

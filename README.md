@@ -8,11 +8,11 @@ A collection of RGB mods for the N64. This repository includes:
 - a general RGB digital-to-analog converter based on viletims schematics
   * supported devices: MaxII (EPM240T100C5, EPM570T100C5) and MaxV (5M240ZT100C4, 5M570ZT100C4) CPLDs
   * PCB files (common for all supported devices) and firmware (separate programming files) are provided
-  folder: generalRGBmod
+  * folder: generalRGBmod
 - additional MAV-NUS Adapter:
   * pin breakout from 0.8mm pitch to 1.27mm pitch
-  * PCB files for 
-  * folder: generalRGBmod/MAV-NUS-BreakOut
+  * PCB files provided
+  * folder: MAV-NUS-BreakOut
 - an alternative firmware for viletims commercial N64 RGB modding kit
   * folder: viletim
 
