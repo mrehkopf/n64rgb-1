@@ -50,16 +50,12 @@
 // user definitions:
 // - add your button combinations here
 
-parameter igr_reset = `A + `B + `Dd + `Dr + `L + `R;
+parameter igr_reset = `A + `B + `Z + `St + `R;
 
-parameter igr_deblur_off = `Dl + `L + `R + `Cl;
-parameter igr_deblur_on  = `Dr + `L + `R + `Cr;
+parameter igr_deblur_off = `Z + `St + `R + `Cl;
+parameter igr_deblur_on  = `Z + `St + `R + `Cr;
 
-parameter igr_15bitmode_off = `Du + `L + `R + `Cu;
-parameter igr_15bitmode_on  = `Dd + `L + `R + `Cd;
-
-`ifdef OPTION_INVLPF
-  parameter igr_toggle_LPF = `Du + `Dl + `L + `R + `Cu + `Cr;
-`endif
+parameter igr_15bitmode_off = `Z + `St + `R + `Cu;
+parameter igr_15bitmode_on  = `Z + `St + `R + `Cd;
 
 `endif

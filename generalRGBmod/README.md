@@ -49,7 +49,7 @@ Three functunalities are implemented: toggle de-blur feature / override heuristi
 
 The button combination are as follows:
 
-- reset the console: A + B + D-Pad dw + D-Pad ri + L + R
+- reset the console: Z + Start + R + A + B
 - (de)activate de-blur / override heuristic for de-blur: (see description below)
 - (de)activate 15bit mode: (see description below)
 
@@ -65,8 +65,8 @@ However, as the communication between N64 and the controller goes over a single 
 De-blur of the picture information is only be done in 240p/288p. This is be done by simply blanking every second pixel. Normally, the blanked pixels are used to introduce blur by the N64 in 240p/288p mode. However, some games like Mario Tennis, 007 Goldeneye, and some others use these pixel for additional information rather than for bluring effects. In other words this means that these games uses full horizontal resolution even in 240p/288p output mode. Hence, the picture looks more blurry in this case if de-blur feature is activated.
 
 - **By default heuristic is activated on every power cycle and on every reset!** However, as the heuristic guess might be not reliable, the guess can be override. Also, the heuristic algorithm can be switched off permanently by setting pin 2 of the CPLD to GND (short pin 1 and 2)
-- Press D-Pad le + L + R + C-le to deactivate de-blur (overrides the guess)
-- Press D-Pad ri + L + R + C-ri to activate de-blur (overrides the guess)
+- Press Z + Start + R + C-le to deactivate de-blur (overrides the guess)
+- Press Z + Start + R + C-ri to activate de-blur (overrides the guess)
 - If heuristic estimation is switched off, the de-blur setting has a default value. This default is set on each power cycle but not on a reset. Default is de-blur *on*! If you want to have it *off* by default, short pin 91 and 90 at the CPLD!
 
 _(Button combinations can be modified according to your needs - see note below @ **In-Game Routines (IGR)**)_
@@ -86,8 +86,8 @@ The heuristic algorithm estimates whether a game uses the first or the second me
 The 15bit color mode reduces the color depth from 21bit (7bit for each color) downto 15bits (5bit for each color). Some very few games just use the five MSBs of the color information and the two LSBs for some kind of gamma dither. The 15bit color mode simply sets the two LSBs to '0'.
 
 - By default the 15bit mode is *off*! The default is set on each power cycle but not on a reset. If you want to have it *on* by default, short pin 36 and 37 at the CPLD!
-- to deactivate 15bit mode press D-Pad up + L + R + C-up.
-- to (re)activate 15bit mode press D-Pad dw + L + R + C-dw.
+- to deactivate 15bit mode press Z + Start + R + C-up.
+- to (re)activate 15bit mode press Z + Start + R + C-dw.
 
 _(Button combinations can be modified according to your needs - see note below @ **In-Game Routines (IGR)**)_
 
