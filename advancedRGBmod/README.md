@@ -51,7 +51,7 @@ Three functunalities are implemented: toggle de-blur feature / override heuristi
 
 The button combination are as follows:
 
-- reset the console: Z + Start + R A + B
+- reset the console: Z + Start + R + A + B
 - (de)activate de-blur / override heuristic for de-blur: (see description above)
 - (de)activate 15bit mode: (see description above)
 
