@@ -5,44 +5,47 @@ This folder contains all you need for a complete DIY RGB mod.
 Please don't ask me for selling a modding. I either sell some prototypes on some forums marketplaces (which is very unlikely) or I don't have any of the boards.
 This is a complete DIY modding project. So everybody is on his own here.
 
-**WARNING:** This is an advanced DIY project if you do everything on your own. You need decent soldering skills. The CPLD has 0.5mm fine pitch with 100pins. Next to it the video amp has a 0.65mm pin pitch on the board there are some SMD1206 resistor and ferrit bead arrays.
+**WARNING:** This is an advanced DIY project if you do everything on your own. You need decent soldering skills. The FPGA has 0.5mm fine pitch with 144pins and one exposed pad below the IC, which has to be soldered to the PCB. Next to it the video DAC has also 0.5mm pin pitch on the board there are some SMD1206 resistor and ferrit bead arrays.
 
 ## Features
 
-- Supporting for different CPLDs on a common PCB design:
-  * Cyclone IV EP4CE6E22
+- Supporting for different FPGAs [1] on a common PCB design:
+  * (Cyclone IV EP4CE6E22)
   * Cyclone IV EP4CE10E22
-  * Cyclone 10 LP 10CL006YE144
+  * (Cyclone 10 LP 10CL006YE144)
   * Cyclone 10 LP 10CL010YE144
 - Video DAC ADV7125 (or ADV7123)
 - Detection of 240p/288p vs. 480i/576i together with detection of NTSC vs. PAL mode
-- Heuristic for de-blur function [1], De-Blur in 240p/288p (horizontal resolution decreased from 640 to 320 pixels)
+- Heuristic for de-blur function [2], De-Blur in 240p/288p (horizontal resolution decreased from 640 to 320 pixels)
 - 15bit color mode
 - IGR features:
   * reset the console with the controller
   * full control on de-blur and 15bit mode with the controller
 - Advanced features:
   * output of RGsB or YPBPr on demand
-  * linedoubling of 240p/288p video to 480p/576p [2]
-  * selectable scanline strength: 0% (i.e. sl off), 25%, 50% and 100%
+  * linedoubling of 240p/288p video to 480p/576p [3]
+  * selectable scanline strength: 0% (i.e. sl off), 25%, 50% and 100% [4]
   * optional bob de-interlace of 480i/576i to 480p/576p [3]
-  * VGA output [4]
+  * VGA output [5]
 
 
 The following shortly describes the main features of the firmware and how to use / control them.
 
 #### Notes
 ##### [1]
+For now, all FPGAs seems to be fine. However, it might be the case that the 6k LEs FPGAs (EP4CE6E22 and 10CL006YE144) are to small for an OSD menu implementation due to the small amount of block RAM.
+
+##### [2]
 Heuristic for de-blur function highly depends on the image content. So it might be the case that de-blur is switched on and off rapidly even on small content changes. In any case you can override the heuristic by forcing de-blur on or off.  
 If you observe something like that or where do you think that de-blur is not correctly guessed, please take a note (PAL / NTSC N64, game, ROM, situation), where I can check that and can try to further improve the heuristic algorithm. Send me your observation vie email or open an issue here on GitHub.
 
-##### [2]
+##### [3]
 can be switched off
 
-##### [3]
+##### [4]
 no scanlines are available in this mode
 
-##### [4]
+##### [5]
 Not available if the filter adddon is used as HSYNC and VSYNC are shared outputs with F1 and F2 (filter selection)
 
 ### In-Game Routines (IGR)
@@ -106,7 +109,7 @@ Firmware programming file depends on the FPGA you use. Please keep that in mind 
 
 ### Jumpers
 
-There are some jumpers spreaded over the PCB, namely _J1_, _J2_, _J3_, _J4_ and _J6_. _J1 - J4_ have to parts, let's say _.1_ and _.2_, where _.1_ is marked with the _dot_ on the PCB.
+There are some jumpers spreaded over the PCB, namely _J1_, _J2_, _J3_, _J4_, _J5_ and _J6_. _J1 - J4_ have to parts, let's say _.1_ and _.2_, where _.1_ is marked with the _dot_ on the PCB.
 
 #### J1 (Filter AddOn)
 ##### J1.1 
@@ -142,6 +145,9 @@ There are some jumpers spreaded over the PCB, namely _J1_, _J2_, _J3_, _J4_ and 
 - opened: no bob de-interlace of 480i/576i
 - closed: bob de-interlace of 480i/576i to 480p/576p (J4.1 must be opened)
 
+#### J5
+_J5_ is the JTAG connector.
+
 #### J6 (Power supply of analog outputs)
 The analog part can be power with **either** 3.3V **or** 5V. If you want to power this part of the PCB with 3.3V, close J5 and leave pad . If you want to power this part with 5V, leave _J6_ opened and connect pad _5V_ to +5V power rail of the N64. **NEVER connect 5V and close J5.**
 
@@ -171,7 +177,7 @@ The analog part can be power with **either** 3.3V **or** 5V. If you want to powe
 Choose the PCB service which suits you. Here are some:
 
 - OSHPark: [Link to the Main PCB](https://oshpark.com/shared_projects/YetTVjdd) (If the PCB was updated and I forgot to update this link, look onto [my profile](https://oshpark.com/profiles/borti4938))
-- OSHPark: [Link to the Filter AddOn PCB](https://oshpark.com/shared_projects/BTvi9bfX) (If the PCB was updated and I forgot to update this link, look onto [my profile](https://oshpark.com/profiles/borti4938))
+- OSHPark: [Link to the Filter AddOn PCB](https://oshpark.com/shared_projects/BTvi9bfX) (If the PCB was updated and I forgot to update this link, look onto [my profile](https://oshpark.com/profiles/borti4938)) -- get this PCB with 0.8mm (or less) substrate thickness
 - PCBWay.com: [Link](http://www.pcbway.com/), [Affiliate Link](http://www.pcbway.com/setinvite.aspx?inviteid=10658)
 
 ### Part List for the PCB
