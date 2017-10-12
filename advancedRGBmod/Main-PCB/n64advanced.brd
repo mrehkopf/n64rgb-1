@@ -3865,7 +3865,7 @@ design rules under a new name.</description>
 <element name="U3" library="st-microelectronics" package="SC70" value="" x="46.863" y="27.94" smashed="yes">
 <attribute name="VALUE" x="49.403" y="27.94" size="1.016" layer="27" font="vector" ratio="12"/>
 </element>
-<element name="U4" library="OSSC_HDMI_Audio" package="74LVC3G34" value="74LVC3G34" x="43.053" y="34.925" smashed="yes"/>
+<element name="U4" library="OSSC_HDMI_Audio" package="74LVC3G34" value="74LVC3G17" x="43.053" y="34.925" smashed="yes"/>
 <element name="U6" library="v-reg-micrel" package="SOT23-5" value="TLV70012DDC" x="17.145" y="31.75" smashed="yes" rot="R270">
 <attribute name="MF" value="" x="17.145" y="31.75" size="1.778" layer="27" rot="R270" display="off"/>
 <attribute name="MPN" value="" x="17.145" y="31.75" size="1.778" layer="27" rot="R270" display="off"/>

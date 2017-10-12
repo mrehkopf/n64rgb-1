@@ -11796,7 +11796,7 @@ Based on Cypress-EZ-usb-8051.pdf</description>
 <part name="R15" library="rcl" deviceset="R-EU_" device="R0603" value="10k"/>
 <part name="GND5" library="supply1" deviceset="GND" device=""/>
 <part name="J2" library="jumper" deviceset="SJ2W" device=""/>
-<part name="U4" library="OSSC_HDMI_Audio" deviceset="74LVC3G34" device=""/>
+<part name="U4" library="OSSC_HDMI_Audio" deviceset="74LVC3G34" device="" value="74LVC3G17"/>
 <part name="C401" library="rcl" deviceset="C-EU" device="C0603" value="0.1u"/>
 <part name="P+8" library="supply1" deviceset="+5V" device=""/>
 <part name="AGND8" library="supply1" deviceset="GND" device=""/>
