@@ -11787,13 +11787,13 @@ Based on Cypress-EZ-usb-8051.pdf</description>
 <part name="RN41" library="resistor-net" deviceset="CTS742C083" device="" value="CAY16-75R0F4LF"/>
 <part name="J4" library="jumper" deviceset="SJ2W" device=""/>
 <part name="J6" library="jumper" deviceset="SJ" device="" value="UPS"/>
-<part name="R15" library="rcl" deviceset="R-EU_" device="R0603" value="10k"/>
+<part name="R14" library="rcl" deviceset="R-EU_" device="R0603" value="10k"/>
 <part name="AGND17" library="supply1" deviceset="GND" device=""/>
 <part name="AGND18" library="supply1" deviceset="GND" device=""/>
 <part name="AGND19" library="supply1" deviceset="GND" device=""/>
-<part name="R17" library="rcl" deviceset="R-EU_" device="R0603" value="10k"/>
-<part name="+3V27" library="supply1" deviceset="+3V3" device=""/>
 <part name="R16" library="rcl" deviceset="R-EU_" device="R0603" value="10k"/>
+<part name="+3V27" library="supply1" deviceset="+3V3" device=""/>
+<part name="R15" library="rcl" deviceset="R-EU_" device="R0603" value="10k"/>
 <part name="GND5" library="supply1" deviceset="GND" device=""/>
 <part name="J2" library="jumper" deviceset="SJ2W" device=""/>
 <part name="U4" library="OSSC_HDMI_Audio" deviceset="74LVC3G34" device=""/>
@@ -11851,6 +11851,10 @@ Based on Cypress-EZ-usb-8051.pdf</description>
 <part name="+3V4" library="supply1" deviceset="+3V3" device=""/>
 <part name="GND2" library="supply1@1" deviceset="GND" device=""/>
 <part name="+3V5" library="supply1" deviceset="+3V3" device=""/>
+<part name="+3V6" library="supply1" deviceset="+3V3" device=""/>
+<part name="+3V10" library="supply1" deviceset="+3V3" device=""/>
+<part name="+3V11" library="supply1" deviceset="+3V3" device=""/>
+<part name="+3V12" library="supply1" deviceset="+3V3" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -11940,13 +11944,13 @@ Based on Cypress-EZ-usb-8051.pdf</description>
 <instance part="J5" gate="-10" x="22.86" y="104.14" rot="R180"/>
 <instance part="RN41" gate="G$1" x="309.88" y="187.96"/>
 <instance part="J4" gate="G$1" x="43.18" y="66.04"/>
-<instance part="R15" gate="G$1" x="68.58" y="144.78" rot="R90"/>
+<instance part="R14" gate="G$1" x="68.58" y="144.78" rot="R90"/>
 <instance part="AGND17" gate="1" x="256.54" y="76.2" rot="R270"/>
 <instance part="AGND18" gate="1" x="302.26" y="101.6" rot="R180"/>
 <instance part="AGND19" gate="1" x="287.02" y="25.4"/>
-<instance part="R17" gate="G$1" x="226.06" y="104.14" rot="R180"/>
+<instance part="R16" gate="G$1" x="226.06" y="104.14" rot="R180"/>
 <instance part="+3V27" gate="G$1" x="68.58" y="154.94"/>
-<instance part="R16" gate="G$1" x="73.66" y="139.7" rot="R90"/>
+<instance part="R15" gate="G$1" x="73.66" y="139.7" rot="R90"/>
 <instance part="J2" gate="G$1" x="43.18" y="40.64"/>
 <instance part="U4" gate="G$1" x="281.94" y="203.2"/>
 <instance part="U4" gate="G$2" x="284.48" y="193.04"/>
@@ -11964,7 +11968,7 @@ Based on Cypress-EZ-usb-8051.pdf</description>
 <instance part="+3V8" gate="G$1" x="7.62" y="162.56"/>
 <instance part="R51" gate="G$1" x="20.32" y="121.92"/>
 <instance part="R53" gate="G$1" x="58.42" y="157.48" rot="R90"/>
-<instance part="GND19" gate="1" x="215.9" y="116.84" rot="R90"/>
+<instance part="GND19" gate="1" x="218.44" y="116.84" rot="R90"/>
 <instance part="GND20" gate="1" x="218.44" y="109.22" rot="R90"/>
 <instance part="+3V9" gate="G$1" x="238.76" y="104.14" rot="R270"/>
 <instance part="CTRL" gate="1" x="144.78" y="208.28" rot="R270"/>
@@ -11979,6 +11983,10 @@ Based on Cypress-EZ-usb-8051.pdf</description>
 <instance part="+3V4" gate="G$1" x="53.34" y="160.02"/>
 <instance part="GND2" gate="1" x="17.78" y="134.62"/>
 <instance part="+3V5" gate="G$1" x="58.42" y="167.64"/>
+<instance part="+3V6" gate="G$1" x="76.2" y="129.54" rot="R90"/>
+<instance part="+3V10" gate="G$1" x="218.44" y="73.66" rot="R270"/>
+<instance part="+3V11" gate="G$1" x="218.44" y="137.16" rot="R270"/>
+<instance part="+3V12" gate="G$1" x="165.1" y="172.72"/>
 </instances>
 <busses>
 </busses>
@@ -12104,8 +12112,10 @@ Based on Cypress-EZ-usb-8051.pdf</description>
 <pinref part="U1" gate="G$1" pin="MSEL2"/>
 <pinref part="GND19" gate="1" pin="GND"/>
 <pinref part="U1" gate="G$1" pin="INIT_DONE/IO98"/>
-<wire x1="213.36" y1="119.38" x2="213.36" y2="116.84" width="0.1524" layer="91"/>
-<junction x="213.36" y="116.84"/>
+<junction x="215.9" y="116.84"/>
+<wire x1="215.9" y1="116.84" x2="213.36" y2="116.84" width="0.1524" layer="91"/>
+<wire x1="213.36" y1="119.38" x2="215.9" y2="119.38" width="0.1524" layer="91"/>
+<wire x1="215.9" y1="119.38" x2="215.9" y2="116.84" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="U1" gate="G$1" pin="MSEL0"/>
@@ -12127,6 +12137,14 @@ Based on Cypress-EZ-usb-8051.pdf</description>
 <wire x1="213.36" y1="93.98" x2="215.9" y2="93.98" width="0.1524" layer="91"/>
 <wire x1="215.9" y1="93.98" x2="215.9" y2="96.52" width="0.1524" layer="91"/>
 <junction x="215.9" y="96.52"/>
+<pinref part="U1" gate="G$1" pin="DEV_CLRN/IO87"/>
+<wire x1="213.36" y1="91.44" x2="215.9" y2="91.44" width="0.1524" layer="91"/>
+<wire x1="215.9" y1="91.44" x2="215.9" y2="93.98" width="0.1524" layer="91"/>
+<junction x="215.9" y="93.98"/>
+<pinref part="U1" gate="G$1" pin="DEV_OE/IO86"/>
+<wire x1="213.36" y1="88.9" x2="215.9" y2="88.9" width="0.1524" layer="91"/>
+<wire x1="215.9" y1="88.9" x2="215.9" y2="91.44" width="0.1524" layer="91"/>
+<junction x="215.9" y="91.44"/>
 </segment>
 <segment>
 <pinref part="GND1" gate="1" pin="GND"/>
@@ -12274,15 +12292,15 @@ Based on Cypress-EZ-usb-8051.pdf</description>
 <wire x1="53.34" y1="152.4" x2="53.34" y2="157.48" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="R17" gate="G$1" pin="1"/>
+<pinref part="R16" gate="G$1" pin="1"/>
 <pinref part="+3V9" gate="G$1" pin="+3V3"/>
 <wire x1="231.14" y1="104.14" x2="236.22" y2="104.14" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="+3V27" gate="G$1" pin="+3V3"/>
-<pinref part="R15" gate="G$1" pin="2"/>
+<pinref part="R14" gate="G$1" pin="2"/>
 <wire x1="68.58" y1="152.4" x2="68.58" y2="149.86" width="0.1524" layer="91"/>
-<pinref part="R16" gate="G$1" pin="2"/>
+<pinref part="R15" gate="G$1" pin="2"/>
 <wire x1="73.66" y1="144.78" x2="73.66" y2="149.86" width="0.1524" layer="91"/>
 <wire x1="73.66" y1="149.86" x2="68.58" y2="149.86" width="0.1524" layer="91"/>
 <junction x="68.58" y="149.86"/>
@@ -12296,6 +12314,25 @@ Based on Cypress-EZ-usb-8051.pdf</description>
 <pinref part="R52" gate="G$1" pin="2"/>
 <pinref part="+3V8" gate="G$1" pin="+3V3"/>
 <wire x1="7.62" y1="160.02" x2="7.62" y2="157.48" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="U1" gate="G$1" pin="IO7/VREF"/>
+<pinref part="+3V6" gate="G$1" pin="+3V3"/>
+</segment>
+<segment>
+<wire x1="213.36" y1="73.66" x2="215.9" y2="73.66" width="0.1524" layer="91"/>
+<pinref part="U1" gate="G$1" pin="VREF/IO80"/>
+<pinref part="+3V10" gate="G$1" pin="+3V3"/>
+</segment>
+<segment>
+<wire x1="213.36" y1="137.16" x2="215.9" y2="137.16" width="0.1524" layer="91"/>
+<pinref part="U1" gate="G$1" pin="VREF/IO105"/>
+<pinref part="+3V11" gate="G$1" pin="+3V3"/>
+</segment>
+<segment>
+<wire x1="165.1" y1="167.64" x2="165.1" y2="170.18" width="0.1524" layer="91"/>
+<pinref part="U1" gate="G$1" pin="VREF/IO119"/>
+<pinref part="+3V12" gate="G$1" pin="+3V3"/>
 </segment>
 </net>
 <net name="N$17" class="0">
@@ -12650,14 +12687,14 @@ Based on Cypress-EZ-usb-8051.pdf</description>
 <net name="N$52" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="CONF_DONE"/>
-<pinref part="R17" gate="G$1" pin="2"/>
+<pinref part="R16" gate="G$1" pin="2"/>
 <wire x1="213.36" y1="104.14" x2="220.98" y2="104.14" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$45" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="NSTATUS"/>
-<pinref part="R16" gate="G$1" pin="1"/>
+<pinref part="R15" gate="G$1" pin="1"/>
 <wire x1="78.74" y1="124.46" x2="73.66" y2="124.46" width="0.1524" layer="91"/>
 <wire x1="73.66" y1="124.46" x2="73.66" y2="134.62" width="0.1524" layer="91"/>
 </segment>
@@ -12665,7 +12702,7 @@ Based on Cypress-EZ-usb-8051.pdf</description>
 <net name="N$8" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="NCONFIG"/>
-<pinref part="R15" gate="G$1" pin="1"/>
+<pinref part="R14" gate="G$1" pin="1"/>
 <wire x1="78.74" y1="111.76" x2="68.58" y2="111.76" width="0.1524" layer="91"/>
 <wire x1="68.58" y1="111.76" x2="68.58" y2="139.7" width="0.1524" layer="91"/>
 </segment>
