@@ -1,8 +1,9 @@
-Designator,Footprint,Mid X£¨mm£©,Mid Y£¨mm£©,Layer,Rotation
+Designator,Footprint,Mid X£¬mm£©,Mid Y£¬mm£©,Layer,Rotation
 U1,EQFP144,31.11,18.41,T,45
 U2,LQFP48,51.94,13.97,T,0
 U3,SC-70-6,46.86,27.94,T,0
 U4,SSOP-8,43.05,34.93,T,0
+U5,SO-08,5.72,14.48,B,90
 U6,SOT23-5,17.14,31.75,T,270
 U7,SOT23-5,17.14,35.56,T,270
 U8,4-SMD,7.62,10.79,T,180
