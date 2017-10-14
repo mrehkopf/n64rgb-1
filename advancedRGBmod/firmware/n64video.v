@@ -4,7 +4,7 @@
 //
 // Module Name:    n64video
 // Project Name:   Advanced RGB Mod
-// Target Devices: Max10: 10M02SCE144C8G
+// Target Devices: Max10, Cyclone IV and Cyclone 10 LP devices
 // Tool versions:  Altera Quartus Prime
 // Description:
 //
