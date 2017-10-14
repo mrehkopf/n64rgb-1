@@ -40,13 +40,15 @@ set_time_format -unit ns -decimal_places 3
 #**************************************************************
 
 create_clock -name {nCLK} -period 20.000 -waveform { 0.000 10.000 } [get_ports { nCLK }]
-create_clock -name {nCLK2} -period 240.000 -waveform { 0.000 120.000 } [get_registers {n64igr:igr|nCLK2}]
+create_clock -name {SYS_CLK} -period 20.000 -waveform { 0.000 10.000 } [get_ports { SYS_CLK }]
 
 
 #**************************************************************
 # Create Generated Clock
 #**************************************************************
 
+create_generated_clock -name {n64igr:igr|altpll_0:sys_pll|altpll:altpll_component|altpll_0_altpll:auto_generated|wire_pll1_clk[0]} -source [get_pins {igr|sys_pll|altpll_component|auto_generated|pll1|inclk[0]}] -duty_cycle 50/1 -multiply_by 2 -divide_by 25 -master_clock {SYS_CLK} [get_pins {igr|sys_pll|altpll_component|auto_generated|pll1|clk[0]}] 
+create_generated_clock -name {n64igr:igr|altpll_0:sys_pll|altpll:altpll_component|altpll_0_altpll:auto_generated|wire_pll1_clk[1]} -source [get_pins {igr|sys_pll|altpll_component|auto_generated|pll1|inclk[0]}] -duty_cycle 50/1 -multiply_by 1 -divide_by 3125 -master_clock {SYS_CLK} [get_pins {igr|sys_pll|altpll_component|auto_generated|pll1|clk[1]}] 
 
 
 #**************************************************************
@@ -59,22 +61,30 @@ create_clock -name {nCLK2} -period 240.000 -waveform { 0.000 120.000 } [get_regi
 # Set Clock Uncertainty
 #**************************************************************
 
-set_clock_uncertainty -rise_from [get_clocks {nCLK2}] -rise_to [get_clocks {nCLK2}]  0.020  
-set_clock_uncertainty -rise_from [get_clocks {nCLK2}] -fall_to [get_clocks {nCLK2}]  0.020  
-set_clock_uncertainty -rise_from [get_clocks {nCLK2}] -rise_to [get_clocks {nCLK}]  0.030  
-set_clock_uncertainty -rise_from [get_clocks {nCLK2}] -fall_to [get_clocks {nCLK}]  0.030  
-set_clock_uncertainty -fall_from [get_clocks {nCLK2}] -rise_to [get_clocks {nCLK2}]  0.020  
-set_clock_uncertainty -fall_from [get_clocks {nCLK2}] -fall_to [get_clocks {nCLK2}]  0.020  
-set_clock_uncertainty -fall_from [get_clocks {nCLK2}] -rise_to [get_clocks {nCLK}]  0.030  
-set_clock_uncertainty -fall_from [get_clocks {nCLK2}] -fall_to [get_clocks {nCLK}]  0.030  
-set_clock_uncertainty -rise_from [get_clocks {nCLK}] -rise_to [get_clocks {nCLK2}]  0.030  
-set_clock_uncertainty -rise_from [get_clocks {nCLK}] -fall_to [get_clocks {nCLK2}]  0.030  
-set_clock_uncertainty -rise_from [get_clocks {nCLK}] -rise_to [get_clocks {nCLK}]  0.020  
-set_clock_uncertainty -rise_from [get_clocks {nCLK}] -fall_to [get_clocks {nCLK}]  0.020  
-set_clock_uncertainty -fall_from [get_clocks {nCLK}] -rise_to [get_clocks {nCLK2}]  0.030  
-set_clock_uncertainty -fall_from [get_clocks {nCLK}] -fall_to [get_clocks {nCLK2}]  0.030  
-set_clock_uncertainty -fall_from [get_clocks {nCLK}] -rise_to [get_clocks {nCLK}]  0.020  
-set_clock_uncertainty -fall_from [get_clocks {nCLK}] -fall_to [get_clocks {nCLK}]  0.020  
+set_clock_uncertainty -rise_from [get_clocks {nCLK}] -rise_to [get_clocks {nCLK}]  0.040  
+set_clock_uncertainty -rise_from [get_clocks {nCLK}] -fall_to [get_clocks {nCLK}]  0.040  
+set_clock_uncertainty -fall_from [get_clocks {nCLK}] -rise_to [get_clocks {nCLK}]  0.040  
+set_clock_uncertainty -fall_from [get_clocks {nCLK}] -fall_to [get_clocks {nCLK}]  0.040  
+set_clock_uncertainty -rise_from [get_clocks {n64igr:igr|altpll_0:sys_pll|altpll:altpll_component|altpll_0_altpll:auto_generated|wire_pll1_clk[1]}] -rise_to [get_clocks {n64igr:igr|altpll_0:sys_pll|altpll:altpll_component|altpll_0_altpll:auto_generated|wire_pll1_clk[1]}]  0.020  
+set_clock_uncertainty -rise_from [get_clocks {n64igr:igr|altpll_0:sys_pll|altpll:altpll_component|altpll_0_altpll:auto_generated|wire_pll1_clk[1]}] -fall_to [get_clocks {n64igr:igr|altpll_0:sys_pll|altpll:altpll_component|altpll_0_altpll:auto_generated|wire_pll1_clk[1]}]  0.020  
+set_clock_uncertainty -fall_from [get_clocks {n64igr:igr|altpll_0:sys_pll|altpll:altpll_component|altpll_0_altpll:auto_generated|wire_pll1_clk[1]}] -rise_to [get_clocks {n64igr:igr|altpll_0:sys_pll|altpll:altpll_component|altpll_0_altpll:auto_generated|wire_pll1_clk[1]}]  0.020  
+set_clock_uncertainty -fall_from [get_clocks {n64igr:igr|altpll_0:sys_pll|altpll:altpll_component|altpll_0_altpll:auto_generated|wire_pll1_clk[1]}] -fall_to [get_clocks {n64igr:igr|altpll_0:sys_pll|altpll:altpll_component|altpll_0_altpll:auto_generated|wire_pll1_clk[1]}]  0.020  
+set_clock_uncertainty -rise_from [get_clocks {n64igr:igr|altpll_0:sys_pll|altpll:altpll_component|altpll_0_altpll:auto_generated|wire_pll1_clk[0]}] -rise_to [get_clocks {n64igr:igr|altpll_0:sys_pll|altpll:altpll_component|altpll_0_altpll:auto_generated|wire_pll1_clk[1]}]  0.020  
+set_clock_uncertainty -rise_from [get_clocks {n64igr:igr|altpll_0:sys_pll|altpll:altpll_component|altpll_0_altpll:auto_generated|wire_pll1_clk[0]}] -fall_to [get_clocks {n64igr:igr|altpll_0:sys_pll|altpll:altpll_component|altpll_0_altpll:auto_generated|wire_pll1_clk[1]}]  0.020  
+set_clock_uncertainty -rise_from [get_clocks {n64igr:igr|altpll_0:sys_pll|altpll:altpll_component|altpll_0_altpll:auto_generated|wire_pll1_clk[0]}] -rise_to [get_clocks {n64igr:igr|altpll_0:sys_pll|altpll:altpll_component|altpll_0_altpll:auto_generated|wire_pll1_clk[0]}]  0.020  
+set_clock_uncertainty -rise_from [get_clocks {n64igr:igr|altpll_0:sys_pll|altpll:altpll_component|altpll_0_altpll:auto_generated|wire_pll1_clk[0]}] -fall_to [get_clocks {n64igr:igr|altpll_0:sys_pll|altpll:altpll_component|altpll_0_altpll:auto_generated|wire_pll1_clk[0]}]  0.020  
+set_clock_uncertainty -rise_from [get_clocks {n64igr:igr|altpll_0:sys_pll|altpll:altpll_component|altpll_0_altpll:auto_generated|wire_pll1_clk[0]}] -rise_to [get_clocks {nCLK}] -setup 0.110  
+set_clock_uncertainty -rise_from [get_clocks {n64igr:igr|altpll_0:sys_pll|altpll:altpll_component|altpll_0_altpll:auto_generated|wire_pll1_clk[0]}] -rise_to [get_clocks {nCLK}] -hold 0.080  
+set_clock_uncertainty -rise_from [get_clocks {n64igr:igr|altpll_0:sys_pll|altpll:altpll_component|altpll_0_altpll:auto_generated|wire_pll1_clk[0]}] -fall_to [get_clocks {nCLK}] -setup 0.110  
+set_clock_uncertainty -rise_from [get_clocks {n64igr:igr|altpll_0:sys_pll|altpll:altpll_component|altpll_0_altpll:auto_generated|wire_pll1_clk[0]}] -fall_to [get_clocks {nCLK}] -hold 0.080  
+set_clock_uncertainty -fall_from [get_clocks {n64igr:igr|altpll_0:sys_pll|altpll:altpll_component|altpll_0_altpll:auto_generated|wire_pll1_clk[0]}] -rise_to [get_clocks {n64igr:igr|altpll_0:sys_pll|altpll:altpll_component|altpll_0_altpll:auto_generated|wire_pll1_clk[1]}]  0.020  
+set_clock_uncertainty -fall_from [get_clocks {n64igr:igr|altpll_0:sys_pll|altpll:altpll_component|altpll_0_altpll:auto_generated|wire_pll1_clk[0]}] -fall_to [get_clocks {n64igr:igr|altpll_0:sys_pll|altpll:altpll_component|altpll_0_altpll:auto_generated|wire_pll1_clk[1]}]  0.020  
+set_clock_uncertainty -fall_from [get_clocks {n64igr:igr|altpll_0:sys_pll|altpll:altpll_component|altpll_0_altpll:auto_generated|wire_pll1_clk[0]}] -rise_to [get_clocks {n64igr:igr|altpll_0:sys_pll|altpll:altpll_component|altpll_0_altpll:auto_generated|wire_pll1_clk[0]}]  0.020  
+set_clock_uncertainty -fall_from [get_clocks {n64igr:igr|altpll_0:sys_pll|altpll:altpll_component|altpll_0_altpll:auto_generated|wire_pll1_clk[0]}] -fall_to [get_clocks {n64igr:igr|altpll_0:sys_pll|altpll:altpll_component|altpll_0_altpll:auto_generated|wire_pll1_clk[0]}]  0.020  
+set_clock_uncertainty -fall_from [get_clocks {n64igr:igr|altpll_0:sys_pll|altpll:altpll_component|altpll_0_altpll:auto_generated|wire_pll1_clk[0]}] -rise_to [get_clocks {nCLK}] -setup 0.110  
+set_clock_uncertainty -fall_from [get_clocks {n64igr:igr|altpll_0:sys_pll|altpll:altpll_component|altpll_0_altpll:auto_generated|wire_pll1_clk[0]}] -rise_to [get_clocks {nCLK}] -hold 0.080  
+set_clock_uncertainty -fall_from [get_clocks {n64igr:igr|altpll_0:sys_pll|altpll:altpll_component|altpll_0_altpll:auto_generated|wire_pll1_clk[0]}] -fall_to [get_clocks {nCLK}] -setup 0.110  
+set_clock_uncertainty -fall_from [get_clocks {n64igr:igr|altpll_0:sys_pll|altpll:altpll_component|altpll_0_altpll:auto_generated|wire_pll1_clk[0]}] -fall_to [get_clocks {nCLK}] -hold 0.080  
 
 
 #**************************************************************

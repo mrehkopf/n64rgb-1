@@ -9,7 +9,7 @@
 // Tool versions:  Altera Quartus Prime
 // Description:
 //
-// Dependencies: n64igr.v     (Rev. 2.6)
+// Dependencies: n64igr.v     (Rev. 3.0)
 //               n64linedbl.v (Rev. 1.0)
 //               n64video.v   (Rev. 1.0)
 //
@@ -24,10 +24,14 @@
 //`define OPTION_INVLPF
 
 module n64advanced (
-  // N64 Video Input and IGR In- and Outputs
+  // N64 Video Input
   nCLK,
   nDSYNC,
   D_i,
+
+  // System CLK, Controller and Reset
+  SYS_CLK,
+  SYS_CLKen,
   CTRL_i,
   nRST,
 
@@ -62,8 +66,11 @@ parameter color_width_o = 8;
 input                     nCLK;
 input                     nDSYNC;
 input [color_width_i-1:0] D_i;
-input                     CTRL_i;
-inout                     nRST;
+
+input  SYS_CLK;
+output SYS_CLKen;
+input  CTRL_i;
+inout  nRST;
 
 output                        CLK_ADV712x;
 output                     nCSYNC_ADV712x;
@@ -104,10 +111,12 @@ end
 // Part 1: connect IGR module
 // ==========================
 
+assign SYS_CLKen = 1'b1;
+
 wire nForceDeBlur, nDeBlur, n15bit_mode;
 
 n64igr igr(
-  .nCLK(nCLK),
+  .SYS_CLK(SYS_CLK),
   .nRST(nRST),
   .CTRL(CTRL_i),
   .Default_DeBlur(1'b1),

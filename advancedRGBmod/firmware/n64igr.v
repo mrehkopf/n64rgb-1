@@ -4,13 +4,13 @@
 //
 // Module Name:    n64igr
 // Project Name:   n64rgb
-// Target Devices: universial
+// Target Devices: universial (PLL and 50MHz clock required)
 // Tool versions:  Altera Quartus Prime
 // Description:
 //
-// Dependencies: (none)
+// Dependencies: ip/altpll_0.qip
 //
-// Revision: 2.6
+// Revision: 3.0
 // Features: console reset
 //           override heuristic for deblur (resets on each reset and power cycle)
 //           activate / deactivate de-blur in 240p (a change overrides heuristic for de-blur)
@@ -22,7 +22,7 @@
 
 
 module n64igr (
-  nCLK,
+  SYS_CLK,
   nRST,
 
   CTRL,
@@ -36,7 +36,7 @@ module n64igr (
 );
 
 
-input nCLK;
+input SYS_CLK;
 inout nRST;
 
 input CTRL;
@@ -50,23 +50,14 @@ output reg n15bit_mode  = 1'b1;
 
 `include "igr_params.vh"
 
-  // nCLK frequency (NTSC and PAL related to console type; not to video type)
-  //   - NTSC: ~48.68MHz
-  //   -  PAL: ~49.66MHz
-  // nCLK2 is nCLK divided by 2*6
-  //   - NTSC: ~4.06MHz (~0.247us period)
-  //   -  PAL: ~4.14MHz (~0.242us period)
+wire CLK_4M;
+wire CLK_16k;
 
-  reg nCLK2 = 1'b0;               // clock with period as described
-  reg [2:0] div_clk_cnt = 3'b000; // counter to generate a clock devider 2*6
-
-  always @(negedge nCLK) begin
-    if (div_clk_cnt == 3'b101) begin
-      nCLK2 <= ~nCLK2;
-      div_clk_cnt <= 3'b000;
-    end else
-      div_clk_cnt <= div_clk_cnt + 1'b1;
-  end
+altpll_0 sys_pll(
+  .inclk0(SYS_CLK),
+  .c0(CLK_4M),
+  .c1(CLK_16k)
+);
 
 
 reg [1:0] read_state  = 2'b0; // state machine
@@ -75,11 +66,11 @@ parameter ST_WAIT4N64 = 2'b00; // wait for N64 sending request to controller
 parameter ST_N64_RD   = 2'b01; // N64 request sniffing
 parameter ST_CTRL_RD  = 2'b10; // controller response
 
-reg [3:0] sampling_point_n64  = 4'h9; // wait_cnt increased a few times since neg. edge -> sample data
-reg [3:0] sampling_point_ctrl = 4'h9; // (10 by default -> delay somewhere around 2.4us)
+reg [3:0] sampling_point_n64  = 4'h8; // wait_cnt increased a few times since neg. edge -> sample data
+reg [3:0] sampling_point_ctrl = 4'h8; // (9 by default -> delay somewhere around 2.25us)
 
 reg        prev_ctrl    =  1'b1;
-reg [11:0] wait_cnt     = 12'b0; // counter for wait state (needs appr. 1.0ms at nCLK2 clock to fill up from 0 to 4095)
+reg [11:0] wait_cnt     = 12'b0; // counter for wait state (needs appr. 1.0ms at CLK_4M clock to fill up from 0 to 4095)
 
 reg [15:0] data_stream      = 16'b0;
 reg  [3:0] data_cnt         =  4'h0;
@@ -97,7 +88,7 @@ reg nfirstboot = 1'b0;
 // 32    - Stop bit
 // (bits[0:15] used here)
 
-always @(negedge nCLK2) begin
+always @(posedge CLK_4M) begin
   case (read_state)
     ST_WAIT4N64:
       if (&wait_cnt) begin // waiting duration ends (exit wait state only if CTRL was high for a certain duration)
@@ -187,12 +178,12 @@ always @(negedge nCLK2) begin
 end
 
 reg        drv_rst =  1'b0;
-reg [17:0] rst_cnt = 18'b0; // ~65ms are needed to count from max downto 0 with nCLK2.
+reg [9:0] rst_cnt = 10'b0; // ~64ms are needed to count from max downto 0 with CLK_16k.
 
-always @(negedge nCLK2) begin
+always @(posedge CLK_16k) begin
   if (initiate_nrst == 1'b1) begin
     drv_rst <= 1'b1;      // reset system
-    rst_cnt <= 18'h3ffff;
+    rst_cnt <= 10'h3ff;
   end else if (|rst_cnt) // decrement as long as rst_cnt is not zero
     rst_cnt <= rst_cnt - 1'b1;
   else
