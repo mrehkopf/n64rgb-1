@@ -158,9 +158,11 @@ set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to UseVGA_HVSync
 
 ## Files
 ## =====
+
 set_global_assignment -name VERILOG_FILE n64advanced.v
 set_global_assignment -name VERILOG_INCLUDE_FILE igr_params.vh
 set_global_assignment -name VERILOG_FILE n64igr.v
+set_global_assignment -name QIP_FILE ip/altpll_1.qip
 set_global_assignment -name QIP_FILE ip/altpll_0.qip
 set_global_assignment -name VERILOG_FILE n64linedbl.v
 set_global_assignment -name QIP_FILE ip/ram2port_0.qip
