@@ -94,6 +94,24 @@ input       n480i_bob;
 
 // start of rtl
 
+// Part 0: Debug probes and sources
+// ================================
+
+wire [2:0] SL_debug;
+
+source_3bit_0 scanline_debug_src(
+  .source(SL_debug)
+);
+
+wire [1:0] SL_active = SL_debug[2] ? SL_debug[1:0] : SL_str;
+
+
+wire [2:0] gamma_debug;
+
+source_3bit_0 gamma_debug_src(
+  .source(gamma_debug)
+);
+
 
 // Part 1: connect IGR module
 // ==========================
@@ -134,20 +152,23 @@ n64igr igr(
 reg                     nDSYNC_r;
 reg [color_width_i-1:0] D_r;
 
-reg               [3:0] S_DBr[0:1];
-reg [color_width_i-1:0] R_DBr[0:1], G_DBr[0:1], B_DBr[0:1]; // red, green and blue data buffer
+reg               [3:0] S_DBr[0:6];
+reg [color_width_i-1:0] R_DBr[0:6], G_DBr[0:6], B_DBr[0:6]; // red, green and blue data buffer
+reg [color_width_i-1:0] R_GaBo, G_GaBo, B_GaBo;             // red, green and blue (gamma boosted)
 
 integer i;
 initial begin
   nDSYNC_r = 1'b1;
   D_r      = {color_width_i{1'b0}};
-
-  for (i = 0; i < 2; i = i+1) begin
+  for (i = 0; i < 7; i = i+1) begin
     S_DBr[i] = 4'b0000;
     R_DBr[i] = {color_width_i{1'b0}};
     G_DBr[i] = {color_width_i{1'b0}};
     B_DBr[i] = {color_width_i{1'b0}};
   end
+  R_GaBo <= {color_width_i{1'b0}};
+  G_GaBo <= {color_width_i{1'b0}};
+  B_GaBo <= {color_width_i{1'b0}};
 end
 
 // Part 2.0: Decouple signals from N64
@@ -353,6 +374,12 @@ end
 // Part 4: data demux
 // ==================
 
+wire       en_gamma_boost = gamma_debug[2];
+wire [1:0] gamma_rom_page = gamma_debug[1:0];
+
+reg  [color_width_i-1:0] addr_gamma_rom = {color_width_i{1'b0}};
+wire [color_width_i-1:0] data_gamma_rom;
+
 always @(posedge PX_CLK_4x) begin // data register management
   if (~nDSYNC_r) begin
     // shift data to output registers
@@ -365,23 +392,66 @@ always @(posedge PX_CLK_4x) begin // data register management
 
     // get new sync data
     S_DBr[0] <= D_r[3:0];
+    
+    // get gamma boosted red
+    R_GaBo <= data_gamma_rom;
   end else begin
     // demux of RGB
     case(data_cnt)
-      2'b01: R_DBr[0] <= n15bit_mode ? D_r : {D_r[6:2], 2'b00};
-      2'b10: G_DBr[0] <= n15bit_mode ? D_r : {D_r[6:2], 2'b00};
-      2'b11: B_DBr[0] <= n15bit_mode ? D_r : {D_r[6:2], 2'b00};
+      2'b01: begin
+                G_GaBo <= data_gamma_rom;
+        addr_gamma_rom <= R_DBr[1];
+              R_DBr[0] <= n15bit_mode ? D_r : {D_r[6:2], 2'b00};
+      end
+      2'b10: begin
+                B_GaBo <= data_gamma_rom;
+        addr_gamma_rom <= G_DBr[1];
+              G_DBr[0] <= n15bit_mode ? D_r : {D_r[6:2], 2'b00};
+      end
+      2'b11: begin
+        addr_gamma_rom <= B_DBr[1];
+              B_DBr[0] <= n15bit_mode ? D_r : {D_r[6:2], 2'b00};
+      end
     endcase
   end
+
+  for (i = 2; i < 6; i = i+1) begin
+    S_DBr[i] <= S_DBr[i-1];
+    R_DBr[i] <= R_DBr[i-1];
+    G_DBr[i] <= G_DBr[i-1];
+    B_DBr[i] <= B_DBr[i-1];
+  end
+
+  if (en_gamma_boost) begin
+    R_DBr[6] <= R_GaBo;
+    G_DBr[6] <= G_GaBo;
+    B_DBr[6] <= B_GaBo;
+  end else begin
+    R_DBr[6] <= R_DBr[5];
+    G_DBr[6] <= G_DBr[5];
+    B_DBr[6] <= B_DBr[5];
+  end
+
   if (~nRST) begin
-    for (i = 0; i < 2; i = i+1) begin
+    addr_gamma_rom <= {color_width_i{1'b0}};
+    for (i = 0; i < 7; i = i+1) begin
       S_DBr[i] <= 4'b0000;
       R_DBr[i] <= {color_width_i{1'b0}};
       G_DBr[i] <= {color_width_i{1'b0}};
       B_DBr[i] <= {color_width_i{1'b0}};
     end
+    R_GaBo <= {color_width_i{1'b0}};
+    G_GaBo <= {color_width_i{1'b0}};
+    B_GaBo <= {color_width_i{1'b0}};
   end
 end
+
+rom_1port_0 gamma_correction(
+  .address({gamma_rom_page,addr_gamma_rom}),
+  .clock(PX_CLK_4x),
+  .rden(en_gamma_boost),
+  .q(data_gamma_rom)
+);
 
 // Part 5: Post-Processing
 // =======================
@@ -392,7 +462,7 @@ end
 
 
 wire       nENABLE_linedbl = (n64_480i & n480i_bob) | ~n240p | ~nRST;
-wire [1:0] SL_str_dbl      = n64_480i ? 2'b11 : SL_str;
+wire [1:0] SL_str_dbl      = n64_480i ? 2'b11 : SL_active;
 
 wire [4:0] vinfo = {nENABLE_linedbl,SL_str_dbl,vmode,n64_480i};
 
@@ -405,10 +475,10 @@ n64linedbl linedoubler(
   .PX_CLK_4x(PX_CLK_4x),
   .PX_CLK_2x(PX_CLK_2x),
   .vinfo(vinfo),
-  .Sync_i(S_DBr[1]),
-  .R_i(R_DBr[1]),
-  .G_i(G_DBr[1]),
-  .B_i(B_DBr[1]),
+  .Sync_i(S_DBr[4]),
+  .R_i(R_DBr[6]),
+  .G_i(G_DBr[6]),
+  .B_i(B_DBr[6]),
   .Sync_o(Sync_tmp),
   .R_o(R_tmp),
   .G_o(G_tmp),
