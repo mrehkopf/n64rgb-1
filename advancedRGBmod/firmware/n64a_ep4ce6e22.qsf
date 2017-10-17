@@ -76,6 +76,8 @@ set_location_assignment PIN_142 -to D_i[2]
 set_location_assignment PIN_143 -to D_i[1]
 set_location_assignment PIN_144 -to D_i[0]
 
+set_location_assignment PLL_1 -to "altpll_0:vid_pll|altpll:altpll_component|altpll_0_altpll1:auto_generated|pll1"
+
 
 ## System, Controller and Reset
 ## ============================
@@ -156,24 +158,15 @@ set_location_assignment PIN_112 -to UseVGA_HVSync
 set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to UseVGA_HVSync
 
 
-## Local Flash
-## ===========
-
-set_location_assignment PIN_6 -to ~ALTERA_ASDO_DATA1~
-set_location_assignment PIN_8 -to ~ALTERA_FLASH_nCE_nCSO~
-set_location_assignment PIN_12 -to ~ALTERA_DCLK~
-set_location_assignment PIN_13 -to ~ALTERA_DATA0~
-
-
 ## Files
 ## =====
 
 set_global_assignment -name VERILOG_FILE n64advanced.v
+set_global_assignment -name QIP_FILE ip/altpll_0.qip
 set_global_assignment -name QIP_FILE ip/debug/source_3bit_0/synthesis/source_3bit_0.qip
 set_global_assignment -name VERILOG_INCLUDE_FILE igr_params.vh
 set_global_assignment -name VERILOG_FILE n64igr.v
 set_global_assignment -name QIP_FILE ip/altpll_1.qip
-set_global_assignment -name QIP_FILE ip/altpll_0.qip
 set_global_assignment -name QIP_FILE ip/rom_1port_0.qip
 set_global_assignment -name VERILOG_FILE n64linedbl.v
 set_global_assignment -name QIP_FILE ip/ram2port_0.qip

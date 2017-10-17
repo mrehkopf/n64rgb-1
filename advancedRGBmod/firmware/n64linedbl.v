@@ -19,8 +19,8 @@
 
 
 module n64linedbl(
-  PX_CLK_4x,
-  PX_CLK_2x,
+  nCLK_in,
+  CLK_out,
 
   vinfo,
 
@@ -40,8 +40,8 @@ parameter color_width_o = 8;
 
 localparam ram_depth = 11; // plus 1 due to oversampling
 
-input PX_CLK_4x;
-input PX_CLK_2x;
+input nCLK_in;
+input CLK_out;
 
 input [4:0] vinfo; // [nLinedbl,SL_str (2bits),PAL,interlaced]
 
@@ -54,6 +54,12 @@ output reg               [3:0] Sync_o;
 output reg [color_width_o-1:0]    R_o;
 output reg [color_width_o-1:0]    G_o;
 output reg [color_width_o-1:0]    B_o;
+
+reg div_2x = 1'b0;
+
+always @(negedge nCLK_in) begin
+  div_2x <= ~div_2x;
+end
 
 
 reg                 wrline = 1'b0;
@@ -84,30 +90,32 @@ reg [1:0] newFrame       = 2'b0;
 reg [1:0] start_reading_proc = 2'b00;
 
 
-always @(posedge PX_CLK_2x) begin
-  if (nVSYNC_i_buf & ~nVSYNC_i) begin
-    newFrame[0] <= ~newFrame[1];
-    if (&{nHSYNC_i_buf,~nHSYNC_i,wren,valid_line})
-      start_reading_proc[0] <= ~start_reading_proc[1];  // trigger start reading
+always @(negedge nCLK_in) begin
+  if (~div_2x) begin
+    if (nVSYNC_i_buf & ~nVSYNC_i) begin
+      newFrame[0] <= ~newFrame[1];
+      if (&{nHSYNC_i_buf,~nHSYNC_i,wren,valid_line})
+        start_reading_proc[0] <= ~start_reading_proc[1];  // trigger start reading
+    end
+
+    if (nHSYNC_i_buf & ~nHSYNC_i) begin // negedge nHSYNC -> reset wraddr and toggle wrline
+      line_width[wrline] <= wraddr[ram_depth-1:0];
+
+      wraddr <= {ram_depth{1'b0}};
+      wrline <= ~wrline;
+    end else if (wren) begin
+      wraddr <= wraddr + 1'b1;
+    end
+
+    nVSYNC_i_buf <= nVSYNC_i;
+    nHSYNC_i_buf <= nHSYNC_i;
   end
-
-  if (nHSYNC_i_buf & ~nHSYNC_i) begin // negedge nHSYNC -> reset wraddr and toggle wrline
-    line_width[wrline] <= wraddr[ram_depth-1:0];
-
-    wraddr <= {ram_depth{1'b0}};
-    wrline <= ~wrline;
-  end else if (wren) begin
-    wraddr <= wraddr + 1'b1;
-  end
-
-  nVSYNC_i_buf <= nVSYNC_i;
-  nHSYNC_i_buf <= nHSYNC_i;
 end
 
 //wire pal_mode = vinfo[1];
 //wire [ram_depth-1:0] line_width = pal_mode ? 11'd1588 : 11'd1546;
 
-always @(posedge PX_CLK_4x) begin
+always @(posedge CLK_out) begin
   if (rdrun[1]) begin
     if (rdaddr == line_width[rdline]) begin
       rdaddr   <= {ram_depth{1'b0}};
@@ -139,10 +147,10 @@ wire [color_width_i-1:0]    R_buf, G_buf, B_buf;
 ram2port_0 videobuffer(
   .data({R_i,G_i,B_i}),
   .rdaddress({rdline,rdaddr}),
-  .rdclock(PX_CLK_4x),
+  .rdclock(CLK_out),
   .wraddress({wrline,wraddr}),
-  .wrclock(PX_CLK_2x),
-  .wren(wren),
+  .wrclock(nCLK_in),
+  .wren(&{wren,~div_2x}),
   .q({R_buf,G_buf,B_buf})
 );
 
@@ -160,7 +168,7 @@ reg [2:0] nVSYNC_cnt = 3'b0;
 wire [1:0] SL_str = vinfo[3:2];
 wire nENABLE_linedbl = vinfo[4] | ~rdrun[1];
 
-always @(posedge PX_CLK_4x) begin
+always @(posedge CLK_out) begin
 
   if (rdcnt_buf ^ rdcnt) begin
     Sync_o[0] <= 1'b0;

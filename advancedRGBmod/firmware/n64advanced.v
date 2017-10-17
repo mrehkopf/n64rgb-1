@@ -149,17 +149,12 @@ n64igr igr(
 // more info: http://members.optusnet.com.au/eviltim/n64rgb/n64rgb.html
 //
 
-reg                     nDSYNC_r;
-reg [color_width_i-1:0] D_r;
-
 reg               [3:0] S_DBr[0:6];
 reg [color_width_i-1:0] R_DBr[0:6], G_DBr[0:6], B_DBr[0:6]; // red, green and blue data buffer
 reg [color_width_i-1:0] R_GaBo, G_GaBo, B_GaBo;             // red, green and blue (gamma boosted)
 
 integer i;
 initial begin
-  nDSYNC_r = 1'b1;
-  D_r      = {color_width_i{1'b0}};
   for (i = 0; i < 7; i = i+1) begin
     S_DBr[i] = 4'b0000;
     R_DBr[i] = {color_width_i{1'b0}};
@@ -171,29 +166,15 @@ initial begin
   B_GaBo <= {color_width_i{1'b0}};
 end
 
-// Part 2.0: Decouple signals from N64
-// ===================================
 
-wire PX_CLK_4x, PX_CLK_2x;
-altpll_0 vid_pll(
-  .inclk0(nCLK),
-  .areset(~nRST),
-  .c0(PX_CLK_4x),
-  .c1(PX_CLK_2x)
-);
-
-always @(posedge PX_CLK_4x) begin
-  nDSYNC_r <= nDSYNC;
-  D_r      <= D_i;
-end
 
 // Part 2.1: data counter for heuristic and de-mux
 // ===============================================
 
 reg [1:0] data_cnt = 2'b00;
 
-always @(posedge PX_CLK_4x) begin // data register management
-  if (~nDSYNC_r)
+always @(negedge nCLK) begin // data register management
+  if (~nDSYNC)
     data_cnt <= 2'b01;  // reset data counter
   else
     data_cnt <= data_cnt + 1'b1;  // increment data counter
@@ -206,10 +187,10 @@ end
 reg FrameID  = 1'b0; // 0 = even frame, 1 = odd frame; 240p: only odd frames; 480i: even and odd frames
 reg n64_480i = 1'b1;
 
-always @(posedge PX_CLK_4x) begin
-  if (~nDSYNC_r) begin
-    if (S_DBr[0][3] & ~D_r[3]) begin    // negedge at nVSYNC
-      if (S_DBr[0][1] & ~D_r[1]) begin  // negedge at nHSYNC, too -> odd frame
+always @(negedge nCLK) begin
+  if (~nDSYNC) begin
+    if (S_DBr[0][3] & ~D_i[3]) begin    // negedge at nVSYNC
+      if (S_DBr[0][1] & ~D_i[1]) begin  // negedge at nHSYNC, too -> odd frame
         n64_480i <= ~FrameID;
         FrameID  <= 1'b1;
       end else begin                    // no negedge at nHSYNC -> even frame
@@ -227,21 +208,21 @@ end
 reg [1:0] line_cnt;       // PAL: line_cnt[1:0] == 01 ; NTSC: line_cnt[1:0] = 11
 reg       vmode;          // PAL: vmode == 1          ; NTSC: vmode == 0
 reg       blur_pixel_pos; // indicates position of a potential blurry pixel
-                          // blur_pixel_pos == 0 -> pixel at D_r
+                          // blur_pixel_pos == 0 -> pixel at D_i
                           // blur_pixel_pos == 1 -> pixel at #_DBr
 
-always @(posedge PX_CLK_4x) begin
-  if (~nDSYNC_r) begin
-    if(~S_DBr[0][3] & D_r[3]) begin // posedge at nVSYNC detected - reset line_cnt and set vmode
+always @(negedge nCLK) begin
+  if (~nDSYNC) begin
+    if(~S_DBr[0][3] & D_i[3]) begin // posedge at nVSYNC detected - reset line_cnt and set vmode
       line_cnt <= 2'b00;
       vmode    <= ~line_cnt[1];
     end
 
-    if(~S_DBr[0][1] & D_r[1]) // posedge nHSYNC -> increase line_cnt
+    if(~S_DBr[0][1] & D_i[1]) // posedge nHSYNC -> increase line_cnt
       line_cnt <= line_cnt + 1'b1;
 
     if(~n64_480i) begin // 240p
-      if(~S_DBr[0][0] & D_r[0]) // posedge nCSYNC -> reset blanking
+      if(~S_DBr[0][0] & D_i[0]) // posedge nCSYNC -> reset blanking
         blur_pixel_pos <= ~vmode;
       else
         blur_pixel_pos <= ~blur_pixel_pos;
@@ -275,8 +256,8 @@ reg [`TREND_RANGE] nblur_n64_trend = init_trend;  // trend shows if the algorith
                                                   // this acts as like as a very simple mean filter
 reg nblur_n64 = 1'b1;                             // blur effect is estimated to be off within the N64 if value is 1'b1
 
-always @(posedge PX_CLK_4x) begin // estimation of blur effect
-  if (~nDSYNC_r) begin
+always @(negedge nCLK) begin // estimation of blur effect
+  if (~nDSYNC) begin
 
     if(~blur_pixel_pos) begin  // incomming (potential) blurry pixel
                                // (blur_pixel_pos changes on next @(posedge PX_CLK_4x))
@@ -297,12 +278,12 @@ always @(posedge PX_CLK_4x) begin // estimation of blur effect
       gradient_changes    <= 2'b00; // reset
     end
 
-    if(~S_DBr[0][0] & D_r[0]) begin // negedge at CSYNC detected - new line
+    if(~S_DBr[0][0] & D_i[0]) begin // negedge at CSYNC detected - new line
       run_estimation    <= 3'b000;
       nblur_est_holdoff <= 2'b00;
     end
 
-    if(S_DBr[0][3] & ~D_r[3]) begin // negedge at nVSYNC detected - new frame
+    if(S_DBr[0][3] & ~D_i[3]) begin // negedge at nVSYNC detected - new frame
       if(nblur_est_cnt[1]) begin // add to weight
         if(~&nblur_n64_trend)
           nblur_n64_trend <= nblur_n64_trend + 1'b1;
@@ -318,23 +299,23 @@ always @(posedge PX_CLK_4x) begin // estimation of blur effect
   end else if (&{S_DBr[1][3],S_DBr[1][1],S_DBr[0][3],S_DBr[0][1]}) begin
     if (blur_pixel_pos) begin
       case(data_cnt)
-          2'b01: gradient[2] <= {R_DBr[0][`CMP_RANGE] < D_r[`CMP_RANGE],
-                                 R_DBr[0][`CMP_RANGE] > D_r[`CMP_RANGE]};
-          2'b10: gradient[1] <= {G_DBr[0][`CMP_RANGE] < D_r[`CMP_RANGE],
-                                 G_DBr[0][`CMP_RANGE] > D_r[`CMP_RANGE]};
-          2'b11: gradient[0] <= {B_DBr[0][`CMP_RANGE] < D_r[`CMP_RANGE],
-                                 B_DBr[0][`CMP_RANGE] > D_r[`CMP_RANGE]};
+          2'b01: gradient[2] <= {R_DBr[0][`CMP_RANGE] < D_i[`CMP_RANGE],
+                                 R_DBr[0][`CMP_RANGE] > D_i[`CMP_RANGE]};
+          2'b10: gradient[1] <= {G_DBr[0][`CMP_RANGE] < D_i[`CMP_RANGE],
+                                 G_DBr[0][`CMP_RANGE] > D_i[`CMP_RANGE]};
+          2'b11: gradient[0] <= {B_DBr[0][`CMP_RANGE] < D_i[`CMP_RANGE],
+                                 B_DBr[0][`CMP_RANGE] > D_i[`CMP_RANGE]};
       endcase
     end else if (run_estimation[2]) begin
       case(data_cnt)
-          2'b01: if (&(gradient[2] ^ {R_DBr[0][`CMP_RANGE] < D_r[`CMP_RANGE],
-                                      R_DBr[0][`CMP_RANGE] > D_r[`CMP_RANGE]}))
+          2'b01: if (&(gradient[2] ^ {R_DBr[0][`CMP_RANGE] < D_i[`CMP_RANGE],
+                                      R_DBr[0][`CMP_RANGE] > D_i[`CMP_RANGE]}))
                    gradient_changes <= 2'b01;
-          2'b10: if (&(gradient[1] ^ {G_DBr[0][`CMP_RANGE] < D_r[`CMP_RANGE],
-                                      G_DBr[0][`CMP_RANGE] > D_r[`CMP_RANGE]}))
+          2'b10: if (&(gradient[1] ^ {G_DBr[0][`CMP_RANGE] < D_i[`CMP_RANGE],
+                                      G_DBr[0][`CMP_RANGE] > D_i[`CMP_RANGE]}))
                    gradient_changes <= gradient_changes + 1'b1;
-          2'b11: if (&(gradient[0] ^ {B_DBr[0][`CMP_RANGE] < D_r[`CMP_RANGE],
-                                      B_DBr[0][`CMP_RANGE] > D_r[`CMP_RANGE]}))
+          2'b11: if (&(gradient[0] ^ {B_DBr[0][`CMP_RANGE] < D_i[`CMP_RANGE],
+                                      B_DBr[0][`CMP_RANGE] > D_i[`CMP_RANGE]}))
                    gradient_changes <= gradient_changes + 1'b1;
       endcase
     end
@@ -358,12 +339,12 @@ wire ndo_deblur = ~nForceDeBlur ?  (n64_480i | nDeBlur) : (n64_480i | nblur_n64)
 
 reg  nblank_rgb;  // blanking of RGB pixels for de-blur
 
-always @(posedge PX_CLK_4x) begin
-  if (~nDSYNC_r)
+always @(negedge nCLK) begin
+  if (~nDSYNC)
     if(ndo_deblur)
       nblank_rgb <= 1'b1;
     else begin 
-      if(~S_DBr[0][0] & D_r[0]) // posedge nCSYNC -> reset blanking
+      if(~S_DBr[0][0] & D_i[0]) // posedge nCSYNC -> reset blanking
         nblank_rgb <= vmode;
       else
         nblank_rgb <= ~nblank_rgb;
@@ -380,8 +361,8 @@ wire [1:0] gamma_rom_page = gamma_debug[1:0];
 reg  [color_width_i-1:0] addr_gamma_rom = {color_width_i{1'b0}};
 wire [color_width_i-1:0] data_gamma_rom;
 
-always @(posedge PX_CLK_4x) begin // data register management
-  if (~nDSYNC_r) begin
+always @(negedge nCLK) begin // data register management
+  if (~nDSYNC) begin
     // shift data to output registers
     S_DBr[1] <= S_DBr[0];
     if (nblank_rgb) begin // pass RGB only if not blanked
@@ -391,7 +372,7 @@ always @(posedge PX_CLK_4x) begin // data register management
     end
 
     // get new sync data
-    S_DBr[0] <= D_r[3:0];
+    S_DBr[0] <= D_i[3:0];
     
     // get gamma boosted red
     R_GaBo <= data_gamma_rom;
@@ -401,16 +382,16 @@ always @(posedge PX_CLK_4x) begin // data register management
       2'b01: begin
                 G_GaBo <= data_gamma_rom;
         addr_gamma_rom <= R_DBr[1];
-              R_DBr[0] <= n15bit_mode ? D_r : {D_r[6:2], 2'b00};
+              R_DBr[0] <= n15bit_mode ? D_i : {D_i[6:2], 2'b00};
       end
       2'b10: begin
                 B_GaBo <= data_gamma_rom;
         addr_gamma_rom <= G_DBr[1];
-              G_DBr[0] <= n15bit_mode ? D_r : {D_r[6:2], 2'b00};
+              G_DBr[0] <= n15bit_mode ? D_i : {D_i[6:2], 2'b00};
       end
       2'b11: begin
         addr_gamma_rom <= B_DBr[1];
-              B_DBr[0] <= n15bit_mode ? D_r : {D_r[6:2], 2'b00};
+              B_DBr[0] <= n15bit_mode ? D_i : {D_i[6:2], 2'b00};
       end
     endcase
   end
@@ -448,13 +429,21 @@ end
 
 rom_1port_0 gamma_correction(
   .address({gamma_rom_page,addr_gamma_rom}),
-  .clock(PX_CLK_4x),
+  .clock(~nCLK),
   .rden(en_gamma_boost),
   .q(data_gamma_rom)
 );
 
 // Part 5: Post-Processing
 // =======================
+
+wire PX_CLK_4x;
+
+altpll_0 vid_pll(
+  .inclk0(nCLK),
+  .areset(~nRST),
+  .c0(PX_CLK_4x)
+);
 
 
 // Part 5.1: Line Multiplier
@@ -472,8 +461,8 @@ wire             [3:0] Sync_tmp;
 wire [color_width_i:0] R_tmp, G_tmp, B_tmp;
 
 n64linedbl linedoubler(
-  .PX_CLK_4x(PX_CLK_4x),
-  .PX_CLK_2x(PX_CLK_2x),
+  .nCLK_in(nCLK),
+  .CLK_out(PX_CLK_4x),
   .vinfo(vinfo),
   .Sync_i(S_DBr[4]),
   .R_i(R_DBr[6]),
