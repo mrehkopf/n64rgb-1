@@ -10,14 +10,13 @@
 //
 // Dependencies: ip/ram2port_0.qip
 //
-// Revision: 1.0
-// Features: inebuffer for - NTSC 240p -> 480p rate conversion
-//                         - PAL  288p -> 576p rate conversion
+// Revision: 1.1
+// Features: linebuffer for - NTSC 240p -> 480p rate conversion
+//                          - PAL  288p -> 576p rate conversion
 //           injection of scanlines on demand in three selectable intensities
 //
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-//`define simple_clk_mode
 
 module n64linedbl(
   PX_CLK_4x,
@@ -139,16 +138,13 @@ wire [color_width_i-1:0]    R_buf, G_buf, B_buf;
 
 ram2port_0 videobuffer(
   .data({R_i,G_i,B_i}),
-  .rdaddress({rdline,rdaddr[ram_depth-1:1]}),
+  .rdaddress({rdline,rdaddr}),
   .rdclock(PX_CLK_4x),
-  .rden(rdaddr[0]),
-  .wraddress({wrline,wraddr[ram_depth-1:1]}),
+  .wraddress({wrline,wraddr}),
   .wrclock(PX_CLK_2x),
-  .wren(&{wren,wraddr[0]}),
+  .wren(wren),
   .q({R_buf,G_buf,B_buf})
 );
-
-
 
 
 
