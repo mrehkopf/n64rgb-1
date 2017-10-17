@@ -153,7 +153,7 @@ ram2port_0 videobuffer(
 
 
 localparam nHSYNC_WIDTH     = 8'd127;
-localparam nVSYNC_WIDTH     = 3'd5;
+localparam nVSYNC_WIDTH     = 3'd3;
 localparam nVSYNC_HWIDTH_LL = 8'd191;
 
 reg rdcnt_buf = 1'b0;

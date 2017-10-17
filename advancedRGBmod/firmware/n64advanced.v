@@ -163,7 +163,7 @@ altpll_0 vid_pll(
 
 always @(posedge PX_CLK_4x) begin
   nDSYNC_r <= nDSYNC;
-  D_r     <= D_i;
+  D_r      <= D_i;
 end
 
 // Part 2.1: data counter for heuristic and de-mux
