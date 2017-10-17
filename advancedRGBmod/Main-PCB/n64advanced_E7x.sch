@@ -11855,6 +11855,7 @@ Based on Cypress-EZ-usb-8051.pdf</description>
 <part name="+3V10" library="supply1" deviceset="+3V3" device=""/>
 <part name="+3V11" library="supply1" deviceset="+3V3" device=""/>
 <part name="+3V12" library="supply1" deviceset="+3V3" device=""/>
+<part name="P_GND4" library="wirepad@1" deviceset="SMD2" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -13273,6 +13274,7 @@ Based on Cypress-EZ-usb-8051.pdf</description>
 <instance part="FB3" gate="G$1" x="50.8" y="48.26" rot="R180"/>
 <instance part="C801" gate="G$1" x="208.28" y="93.98"/>
 <instance part="FB4" gate="G$1" x="193.04" y="96.52"/>
+<instance part="P_GND4" gate="1" x="154.94" y="33.02"/>
 </instances>
 <busses>
 </busses>
@@ -13291,6 +13293,10 @@ Based on Cypress-EZ-usb-8051.pdf</description>
 <pinref part="C2" gate="G$1" pin="2"/>
 <wire x1="193.04" y1="45.72" x2="193.04" y2="43.18" width="0.1524" layer="91"/>
 <junction x="193.04" y="43.18"/>
+<pinref part="P_GND4" gate="1" pin="P"/>
+<wire x1="157.48" y1="33.02" x2="165.1" y2="33.02" width="0.1524" layer="91"/>
+<wire x1="165.1" y1="33.02" x2="165.1" y2="38.1" width="0.1524" layer="91"/>
+<junction x="165.1" y="38.1"/>
 </segment>
 <segment>
 <pinref part="C111" gate="G$1" pin="2"/>
