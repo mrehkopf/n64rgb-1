@@ -155,15 +155,12 @@ ram2port_0 videobuffer(
 );
 
 
+wire       nHSYNC_WIDTH = rdaddr[7];    // HSYNC width (effectively 64 pixel)
+wire [1:0] nVSYNC_WIDTH = 2'd3;         // three lines for VSYNC
+wire   CSYNC_post_VSYNC = &rdaddr[7:6];
 
-localparam nHSYNC_WIDTH     = 8'd127;
-localparam nVSYNC_WIDTH     = 3'd3;
-localparam nVSYNC_HWIDTH_LL = 8'd191;
-
-reg rdcnt_buf = 1'b0;
-
-reg [2:0] nVSYNC_cnt = 3'b0;
-
+reg        rdcnt_buf = 1'b0;
+reg [1:0] nVSYNC_cnt = 2'b0;
 
 wire [1:0] SL_str = vinfo[3:2];
 wire nENABLE_linedbl = vinfo[4] | ~rdrun[1];
@@ -186,16 +183,14 @@ always @(posedge CLK_out) begin
       newFrame[1] <= newFrame[0];
     end
   end else begin
-//    if (rdaddr[7:0] > nHSYNC_WIDTH)
-    if (rdaddr[7]) begin
+    if (nHSYNC_WIDTH) begin
       Sync_o[0] <= 1'b1;
       Sync_o[1] <= 1'b1;
       if (~Sync_o[3])
         Sync_o[0] <= 1'b0;
     end
 
-//    if (~|nVSYNC_cnt && rdaddr[7:0] > nVSYNC_HWIDTH_LL)
-    if ((~|nVSYNC_cnt) && (&rdaddr[7:6])) begin
+    if ((~|nVSYNC_cnt) && (CSYNC_post_VSYNC)) begin
       Sync_o[0] <= 1'b1;
       Sync_o[3] <= 1'b1;
     end

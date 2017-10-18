@@ -151,7 +151,7 @@ set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to SL_str[0]
 ## ==============================
 
 # J1:
-set_location_assignment PIN_112 -to UseVGA_HVSync
+set_location_assignment PIN_111 -to UseVGA_HVSync
 
 set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to UseVGA_HVSync
 

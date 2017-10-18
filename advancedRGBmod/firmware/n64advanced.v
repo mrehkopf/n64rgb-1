@@ -10,10 +10,10 @@
 // Description:
 //
 // Dependencies: n64igr.v     (Rev. 3.0)
-//               n64linedbl.v (Rev. 1.0)
+//               n64linedbl.v (Rev. 1.0+)
 //               n64video.v   (Rev. 1.0)
 //
-// Revision: 1.0
+// Revision: 1.1
 // Features: based on n64rgb version 2.5
 //           selectable RGB, RGsB or YPbPr
 //           linebuffer for - NTSC 240p (480i optional) -> 480p rate conversion
@@ -21,7 +21,6 @@
 //
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-//`define OPTION_INVLPF
 
 module n64advanced (
   // N64 Video Input
@@ -49,7 +48,7 @@ module n64advanced (
   nHSYNC_or_F1,
 
   // Jumper VGA Sync / Filter AddOn
-  UseVGA_HVSync, // (J1)
+  UseVGA_HVSync, // (J1) use Filter out if '0'; use /HS and /VS if '1'
 
   // Jumper Video Output Type and Scanlines
   nEN_RGsB,   // (J2) generate RGsB if '0'
@@ -83,7 +82,7 @@ output nCSYNC;
 output nVSYNC_or_F2;
 output nHSYNC_or_F1;
 
-input  UseVGA_HVSync;
+input UseVGA_HVSync;
 
 input       nEN_RGsB;
 input       nEN_YPbPr;
