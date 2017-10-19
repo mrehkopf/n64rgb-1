@@ -48,7 +48,7 @@ output reg nDeBlur      = 1'b1;
 output reg nForceDeBlur = 1'b1;
 output reg n15bit_mode  = 1'b1;
 
-`include "igr_params.vh"
+`include "vh/igr_params.vh"
 
 wire CLK_4M;
 wire CLK_16k;

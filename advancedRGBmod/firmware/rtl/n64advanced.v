@@ -9,9 +9,9 @@
 // Tool versions:  Altera Quartus Prime
 // Description:
 //
-// Dependencies: n64igr.v     (Rev. 3.0)
-//               n64linedbl.v (Rev. 1.0+)
-//               n64video.v   (Rev. 1.0)
+// Dependencies: rtl/n64igr.v     (Rev. 3.0)
+//               rtl/n64linedbl.v (Rev. 1.1)
+//               rtl/n64video.v   (Rev. 1.0)
 //
 // Revision: 1.1
 // Features: based on n64rgb version 2.5
