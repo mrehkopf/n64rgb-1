@@ -39,7 +39,6 @@
 
 set_global_assignment -name FAMILY "Cyclone IV E"
 set_global_assignment -name DEVICE EP4CE10E22C8
-set_global_assignment -name TOP_LEVEL_ENTITY n64advanced
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 17.0.2
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "08:43:25  SEPTEMBER 28, 2017"
 set_global_assignment -name LAST_QUARTUS_VERSION "17.0.2 Lite Edition"
@@ -157,16 +156,19 @@ set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to UseVGA_HVSync
 
 ## Files
 ## =====
-set_global_assignment -name VERILOG_FILE rtl/n64advanced.v
+set_global_assignment -name TOP_LEVEL_ENTITY n64a_top
+
+set_global_assignment -name VERILOG_FILE rtl/n64a_top.v
+set_global_assignment -name VERILOG_INCLUDE_FILE vh/n64a_params.vh
 set_global_assignment -name VERILOG_INCLUDE_FILE vh/igr_params.vh
-set_global_assignment -name VERILOG_FILE rtl/n64igr.v
+set_global_assignment -name VERILOG_FILE rtl/n64_igr.v
 set_global_assignment -name QIP_FILE ip/altpll_0.qip
-set_global_assignment -name VERILOG_FILE rtl/n64linedbl.v
+set_global_assignment -name VERILOG_FILE rtl/n64a_linedbl.v
 set_global_assignment -name QIP_FILE ip/ram2port_0.qip
-set_global_assignment -name VERILOG_FILE rtl/n64video.v
+set_global_assignment -name VERILOG_FILE rtl/n64a_vconv.v
 set_global_assignment -name QIP_FILE ip/altmult_add3_0.qip
 set_global_assignment -name QIP_FILE ip/altmult_add2_0.qip
-set_global_assignment -name SDC_FILE sdc/n64advanced.sdc
+set_global_assignment -name SDC_FILE sdc/n64a_sdc.sdc
 
 set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files/ep4ce10e22
 

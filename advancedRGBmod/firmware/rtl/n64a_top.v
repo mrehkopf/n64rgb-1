@@ -2,16 +2,17 @@
 // Company:  Circuit-Board.de
 // Engineer: borti4938
 //
-// Module Name:    n64advanced
-// Project Name:   Advanced RGB Mod
-// Target Devices: Cyclone IV:    EP4CE6E22, EP4CE10E22
+// Module Name:    n64a_top
+// Project Name:   N64 Advanced RGB Mod
+// Target Devices: Cyclone IV:    EP4CE6E22   , EP4CE10E22
 //                 Cyclone 10 LP: 10CL006YE144, 10CL010YE144
 // Tool versions:  Altera Quartus Prime
 // Description:
 //
-// Dependencies: rtl/n64igr.v     (Rev. 3.0)
-//               rtl/n64linedbl.v (Rev. 1.1)
-//               rtl/n64video.v   (Rev. 1.0)
+// Dependencies: rtl/n64_igr.v      (Rev. 3.0)
+//               rtl/n64a_linedbl.v (Rev. 1.1)
+//               rtl/n64a_video.v   (Rev. 1.0)
+// (more dependencies may appear in other files)
 //
 // Revision: 1.1
 // Features: based on n64rgb version 2.5
@@ -22,7 +23,7 @@
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 
-module n64advanced (
+module n64a_top (
   // N64 Video Input
   nCLK,
   nDSYNC,
@@ -59,8 +60,8 @@ module n64advanced (
 
 );
 
-parameter color_width_i = 7;
-parameter color_width_o = 8;
+`include "vh/n64a_params.vh"
+
 
 input                     nCLK;
 input                     nDSYNC;
@@ -114,7 +115,7 @@ assign SYS_CLKen = 1'b1;
 
 wire nForceDeBlur, nDeBlur, n15bit_mode;
 
-n64igr igr(
+n64_igr igr(
   .SYS_CLK(SYS_CLK),
   .nRST(nRST),
   .CTRL(CTRL_i),
@@ -372,22 +373,15 @@ end
 wire       nENABLE_linedbl = (n64_480i & n480i_bob) | ~n240p | ~nRST;
 wire [1:0] SL_str_dbl      = n64_480i ? 2'b11 : SL_str;
 
-wire [4:0] vinfo = {nENABLE_linedbl,SL_str_dbl,vmode,n64_480i};
+wire [4:0] vinfo_dbl = {nENABLE_linedbl,SL_str_dbl,vmode,n64_480i};
 
-wire             [3:0] Sync_tmp;
-wire [color_width_i:0] R_tmp, G_tmp, B_tmp;
+wire [vdata_width_o-1:0] vdata_tmp;
 
-n64linedbl linedoubler(
+n64a_linedbl linedoubler(
   .nCLK_4x(nCLK),
-  .vinfo(vinfo),
-  .Sync_i(S_DBr[1]),
-  .R_i(R_DBr[1]),
-  .G_i(G_DBr[1]),
-  .B_i(B_DBr[1]),
-  .Sync_o(Sync_tmp),
-  .R_o(R_tmp),
-  .G_o(G_tmp),
-  .B_o(B_tmp)
+  .vinfo_dbl(vinfo_dbl),
+  .vdata_i({S_DBr[1],R_DBr[1],G_DBr[1],B_DBr[1]}),
+  .vdata_o(vdata_tmp)
 );
 
 
@@ -396,17 +390,11 @@ n64linedbl linedoubler(
 
 wire [3:0] Sync_o;
 
-n64video video_converter(
+n64a_vconv video_converter(
   .nCLK(nCLK),
   .nEN_YPbPr(nEN_YPbPr),    // enables color transformation on '0'
-  .Sync_i(Sync_tmp),
-  .R_i(R_tmp),
-  .G_i(G_tmp),
-  .B_i(B_tmp),
-  .Sync_o(Sync_o),
-  .V1_o(V1_o),
-  .V2_o(V2_o),
-  .V3_o(V3_o)
+  .vdata_i(vdata_tmp),
+  .vdata_o({Sync_o,V1_o,V2_o,V3_o})
 );
 
 // Part 5.3: assign final outputs
