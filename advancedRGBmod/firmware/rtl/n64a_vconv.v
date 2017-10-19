@@ -8,7 +8,8 @@
 // Tool versions:  Altera Quartus Prime
 // Description:
 //
-// Dependencies: ip/altmult_add3_0.qip
+// Dependencies: vh/n64a_params.vh
+//               ip/altmult_add3_0.qip
 //               ip/altmult_add2_0.qip
 //
 // Revision: 1.0

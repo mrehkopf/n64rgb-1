@@ -9,9 +9,12 @@
 // Tool versions:  Altera Quartus Prime
 // Description:
 //
-// Dependencies: rtl/n64_igr.v      (Rev. 3.0)
-//               rtl/n64a_linedbl.v (Rev. 1.1)
-//               rtl/n64a_video.v   (Rev. 1.0)
+// Dependencies: vh/n64a_params.vh
+//               rtl/n64_igr.v        (Rev. 3.0)
+//               rtl/n64_vinfo_ext.v  (Rev. 1.0)
+//               rtl/n64_deblur.v     (Rev. 1.0)
+//               rtl/n64a_linedbl.v   (Rev. 1.1)
+//               rtl/n64a_video.v     (Rev. 1.0)
 // (more dependencies may appear in other files)
 //
 // Revision: 1.1
@@ -118,7 +121,7 @@ source_3bit_0 gamma_debug_src(
 
 assign SYS_CLKen = 1'b1;
 
-wire nForceDeBlur, nDeBlur, n15bit_mode;
+wire nForceDeBlur, nDeBlurMan, n15bit_mode;
 
 n64_igr igr(
   .SYS_CLK(SYS_CLK),
@@ -127,7 +130,7 @@ n64_igr igr(
   .Default_DeBlur(1'b1),
   .Default_nForceDeBlur(1'b1),
   .nForceDeBlur(nForceDeBlur),
-  .nDeBlur(nDeBlur),
+  .nDeBlur(nDeBlurMan),
   .n15bit_mode(n15bit_mode)
 );
 
@@ -167,189 +170,38 @@ initial begin
 end
 
 
+// Part 2: get all of the vinfo needed for further processing
+// ==========================================================
 
-// Part 2.1: data counter for heuristic and de-mux
-// ===============================================
+wire [1:0] data_cnt;
+wire       n64_480i;
+wire       vmode;             // PAL: vmode == 1          ; NTSC: vmode == 0
+wire       blurry_pixel_pos;  // indicates position of a potential blurry pixel
 
-reg [1:0] data_cnt = 2'b00;
-
-always @(negedge nCLK) begin // data register management
-  if (~nDSYNC)
-    data_cnt <= 2'b01;  // reset data counter
-  else
-    data_cnt <= data_cnt + 1'b1;  // increment data counter
-end
-
-
-// Part 2.2: estimation of 240p/288p
-// =================================
-
-reg FrameID  = 1'b0; // 0 = even frame, 1 = odd frame; 240p: only odd frames; 480i: even and odd frames
-reg n64_480i = 1'b1;
-
-always @(negedge nCLK) begin
-  if (~nDSYNC) begin
-    if (S_DBr[0][3] & ~D_i[3]) begin    // negedge at nVSYNC
-      if (S_DBr[0][1] & ~D_i[1]) begin  // negedge at nHSYNC, too -> odd frame
-        n64_480i <= ~FrameID;
-        FrameID  <= 1'b1;
-      end else begin                    // no negedge at nHSYNC -> even frame
-        n64_480i <= 1'b1;
-        FrameID  <= 1'b0;
-      end
-    end
-  end
-end
+n64_vinfo_ext get_vinfo(
+  .nCLK(nCLK),
+  .nDSYNC(nDSYNC),
+  .Sync_pre(S_DBr[0]),
+  .D_i(D_i),
+  .vinfo_o({data_cnt,n64_480i,vmode,blurry_pixel_pos})
+);
 
 
-// Part 2.3: determine vmode
-// =========================
+// Part 3: DeBlur Management (incl. heuristic)
+// ===========================================
 
-reg [1:0] line_cnt;         // PAL: line_cnt[1:0] == 01 ; NTSC: line_cnt[1:0] = 11
-reg       vmode;            // PAL: vmode == 1          ; NTSC: vmode == 0
-reg       blurry_pixel_pos; // indicates position of a potential blurry pixel
-                            // blurry_pixel_pos == 0 -> pixel at D_i
-                            // blurry_pixel_pos == 1 -> pixel at #_DBr
+wire nblank_rgb;
 
-always @(negedge nCLK) begin
-  if (~nDSYNC) begin
-    if(~S_DBr[0][3] & D_i[3]) begin // posedge at nVSYNC detected - reset line_cnt and set vmode
-      line_cnt <= 2'b00;
-      vmode    <= ~line_cnt[1];
-    end
-
-    if(~S_DBr[0][1] & D_i[1]) // posedge nHSYNC -> increase line_cnt
-      line_cnt <= line_cnt + 1'b1;
-
-    if(~n64_480i) begin // 240p
-      if(~S_DBr[0][0] & D_i[0]) // posedge nCSYNC -> reset blanking
-        blurry_pixel_pos <= ~vmode;
-      else
-        blurry_pixel_pos <= ~blurry_pixel_pos;
-    end else
-      blurry_pixel_pos <= 1'b1;
-  end
-end
-
-
-// Part 3.1: heuristic guess in 240p/288p if blur is used by the N64
-// =================================================================
-
-`define CMP_RANGE 6:5 // evaluate gradients in this range (shall include the MSB)
-
-`define TREND_RANGE    8:0      // width of the trend filter
-`define NBLUR_TH_BIT   8        // MSB
-parameter init_trend = 9'h100;  // initial value (shall have MSB set, zero else)
-
-reg [1:0] nblur_est_cnt     = 2'b00;  // register to estimate whether blur is used or not by the N64
-reg [1:0] nblur_est_holdoff = 2'b00;  // Holf Off the nblur_est_cnt (removes ripples e.g. due to light effects)
-
-reg [2:0] run_estimation = 3'b000;    // run counter or not (run_estimation[2] decides); do not use pixels at border
-
-reg [1:0] gradient[2:0];  // shows the (sharp) gradient direction between neighbored pixels
-                          // gradient[x][1]   = 1 -> decreasing intensity
-                          // gradient[x][0]   = 1 -> increasing intensity
-                          // else                 -> constant
-reg [1:0] gradient_changes = 2'b00;
-
-reg [`TREND_RANGE] nblur_n64_trend = init_trend;  // trend shows if the algorithm tends to estimate more blur enabled rather than disabled
-                                                  // this acts as like as a very simple mean filter
-reg nblur_n64 = 1'b1;                             // blur effect is estimated to be off within the N64 if value is 1'b1
-
-always @(negedge nCLK) begin // estimation of blur effect
-  if (~nDSYNC) begin
-
-    if(~blurry_pixel_pos) begin  // incomming (potential) blurry pixel
-                                 // (blurry_pixel_pos changes on next @(negedge nCLK))
-
-      run_estimation[2:1] <= run_estimation[1:0]; // deblur estimation counter is
-      run_estimation[0]   <= 1'b1;                // starts a bit delayed in each line
-
-      if (|nblur_est_holdoff) // hold_off? if yes, increment it until overflow back to zero
-        nblur_est_holdoff <= nblur_est_holdoff + 1'b1;
-
-
-      if (&gradient_changes) begin  // evaluate gradients: &gradient_changes == all color components changed the gradient
-        if (~nblur_est_cnt[1] & ~|nblur_est_holdoff)
-          nblur_est_cnt <= nblur_est_cnt +1'b1;
-        nblur_est_holdoff <= 2'b01;
-      end
-
-      gradient_changes    <= 2'b00; // reset
-    end
-
-    if(~S_DBr[0][0] & D_i[0]) begin // negedge at CSYNC detected - new line
-      run_estimation    <= 3'b000;
-      nblur_est_holdoff <= 2'b00;
-    end
-
-    if(S_DBr[0][3] & ~D_i[3]) begin // negedge at nVSYNC detected - new frame
-      if(nblur_est_cnt[1]) begin // add to weight
-        if(~&nblur_n64_trend)
-          nblur_n64_trend <= nblur_n64_trend + 1'b1;
-      end else begin// subtract
-        if(|nblur_n64_trend)
-          nblur_n64_trend <= nblur_n64_trend - 1'b1;
-      end
-
-      nblur_n64     <= nblur_n64_trend[`NBLUR_TH_BIT];
-      nblur_est_cnt <= 2'b00;
-    end
-
-  end else if (&{S_DBr[1][3],S_DBr[1][1],S_DBr[0][3],S_DBr[0][1]}) begin
-    if (blurry_pixel_pos) begin
-      case(data_cnt)
-          2'b01: gradient[2] <= {R_DBr[0][`CMP_RANGE] < D_i[`CMP_RANGE],
-                                 R_DBr[0][`CMP_RANGE] > D_i[`CMP_RANGE]};
-          2'b10: gradient[1] <= {G_DBr[0][`CMP_RANGE] < D_i[`CMP_RANGE],
-                                 G_DBr[0][`CMP_RANGE] > D_i[`CMP_RANGE]};
-          2'b11: gradient[0] <= {B_DBr[0][`CMP_RANGE] < D_i[`CMP_RANGE],
-                                 B_DBr[0][`CMP_RANGE] > D_i[`CMP_RANGE]};
-      endcase
-    end else if (run_estimation[2]) begin
-      case(data_cnt)
-          2'b01: if (&(gradient[2] ^ {R_DBr[0][`CMP_RANGE] < D_i[`CMP_RANGE],
-                                      R_DBr[0][`CMP_RANGE] > D_i[`CMP_RANGE]}))
-                   gradient_changes <= 2'b01;
-          2'b10: if (&(gradient[1] ^ {G_DBr[0][`CMP_RANGE] < D_i[`CMP_RANGE],
-                                      G_DBr[0][`CMP_RANGE] > D_i[`CMP_RANGE]}))
-                   gradient_changes <= gradient_changes + 1'b1;
-          2'b11: if (&(gradient[0] ^ {B_DBr[0][`CMP_RANGE] < D_i[`CMP_RANGE],
-                                      B_DBr[0][`CMP_RANGE] > D_i[`CMP_RANGE]}))
-                   gradient_changes <= gradient_changes + 1'b1;
-      endcase
-    end
-  end else begin
-    run_estimation  <= 3'b0;
-    gradient[2]     <= 2'b0;
-    gradient[1]     <= 2'b0;
-    gradient[0]     <= 2'b0;
-  end
-  if (~nRST | n64_480i) begin
-    nblur_n64_trend <= init_trend;
-    nblur_n64       <= 1'b1;
-  end
-end
-
-
-// Part 3.2: blanking management
-// =============================
-
-wire ndo_deblur = ~nForceDeBlur ?  (n64_480i | nDeBlur) : (n64_480i | nblur_n64); // force de-blur option for 240p? -> yes: enable it if user wants to | no: enable de-blur depending on estimation
-
-reg  nblank_rgb;  // blanking of RGB pixels for de-blur
-
-always @(negedge nCLK) begin
-  if (~nDSYNC)
-    if(ndo_deblur)
-      nblank_rgb <= 1'b1;
-    else begin 
-      if(~S_DBr[0][0] & D_i[0]) // posedge nCSYNC -> reset blanking
-        nblank_rgb <= vmode;
-      else
-        nblank_rgb <= ~nblank_rgb;
-    end
-end
+n64_deblur deblur_management(
+  .nCLK(nCLK),
+  .nDSYNC(nDSYNC),
+  .nRST(nRST),
+  .deblurparams({data_cnt,n64_480i,vmode,blurry_pixel_pos,nForceDeBlur,nDeBlurMan}),
+  .vdata_sync_2pre(S_DBr[1]),
+  .vdata_pre({S_DBr[0],R_DBr[0],G_DBr[0],B_DBr[0]}),
+  .vdata_cur(D_i),
+  .nblank_rgb(nblank_rgb)
+);
 
 
 // Part 4: data demux

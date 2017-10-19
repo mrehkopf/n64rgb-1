@@ -8,7 +8,8 @@
 // Tool versions:  Altera Quartus Prime
 // Description:
 //
-// Dependencies: ip/altpll_0.qip
+// Dependencies: vh/igr_params.vh
+//               ip/altpll_0.qip
 //
 // Revision: 3.0
 // Features: console reset
@@ -35,6 +36,8 @@ module n64_igr (
   n15bit_mode
 );
 
+`include "vh/igr_params.vh"
+
 
 input SYS_CLK;
 inout nRST;
@@ -48,7 +51,6 @@ output reg nDeBlur      = 1'b1;
 output reg nForceDeBlur = 1'b1;
 output reg n15bit_mode  = 1'b1;
 
-`include "vh/igr_params.vh"
 
 wire CLK_4M;
 wire CLK_16k;
