@@ -39,7 +39,6 @@
 
 set_global_assignment -name FAMILY "Cyclone IV E"
 set_global_assignment -name DEVICE EP4CE6E22C8
-set_global_assignment -name TOP_LEVEL_ENTITY n64advanced
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 17.0.2
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "08:47:44  SEPTEMBER 28, 2017"
 set_global_assignment -name LAST_QUARTUS_VERSION "17.0.2 Lite Edition"
@@ -159,19 +158,22 @@ set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to UseVGA_HVSync
 
 ## Files
 ## =====
-set_global_assignment -name VERILOG_FILE rtl/n64advanced.v
-set_global_assignment -name QIP_FILE ip/altpll_0.qip
-set_global_assignment -name QIP_FILE ip/debug/source_3bit_0/synthesis/source_3bit_0.qip
+set_global_assignment -name TOP_LEVEL_ENTITY n64a_top
+
+set_global_assignment -name VERILOG_FILE rtl/n64a_top.v
+set_global_assignment -name VERILOG_INCLUDE_FILE vh/n64a_params.vh
 set_global_assignment -name VERILOG_INCLUDE_FILE vh/igr_params.vh
-set_global_assignment -name VERILOG_FILE rtl/n64igr.v
+set_global_assignment -name QIP_FILE ip/debug/source_3bit_0/synthesis/source_3bit_0.qip
+set_global_assignment -name VERILOG_FILE rtl/n64_igr.v
 set_global_assignment -name QIP_FILE ip/altpll_1.qip
 set_global_assignment -name QIP_FILE ip/rom_1port_0.qip
-set_global_assignment -name VERILOG_FILE rtl/n64linedbl.v
+set_global_assignment -name QIP_FILE ip/altpll_0.qip
+set_global_assignment -name VERILOG_FILE rtl/n64a_linedbl.v
 set_global_assignment -name QIP_FILE ip/ram2port_0.qip
-set_global_assignment -name VERILOG_FILE rtl/n64video.v
+set_global_assignment -name VERILOG_FILE rtl/n64a_vconv.v
 set_global_assignment -name QIP_FILE ip/altmult_add3_0.qip
 set_global_assignment -name QIP_FILE ip/altmult_add2_0.qip
-set_global_assignment -name SDC_FILE sdc/n64advanced.sdc
+set_global_assignment -name SDC_FILE sdc/n64a_sdc.sdc
 
 set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files/ep4ce6e22
 
@@ -221,9 +223,6 @@ set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "NO HEAT SINK WITH STI
 set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
 set_global_assignment -name CYCLONEIII_CONFIGURATION_DEVICE EPCS16
 set_global_assignment -name DEVICE_FILTER_PIN_COUNT 144
-set_global_assignment -name ENABLE_CONFIGURATION_PINS OFF
-set_global_assignment -name ENABLE_BOOT_SEL_PIN OFF
-set_global_assignment -name POWER_DEFAULT_INPUT_IO_TOGGLE_RATE 25%
 set_global_assignment -name FORCE_CONFIGURATION_VCCIO ON
 set_global_assignment -name CONFIGURATION_VCCIO_LEVEL 3.3V
 set_global_assignment -name RESERVE_DATA0_AFTER_CONFIGURATION "COMPILER CONFIGURED"

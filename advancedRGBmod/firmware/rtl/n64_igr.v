@@ -2,8 +2,8 @@
 // Company:  Circuit-Board.de
 // Engineer: borti4938
 //
-// Module Name:    n64igr
-// Project Name:   n64rgb
+// Module Name:    n64_igr
+// Project Name:   N64 Advanced RGB Mod
 // Target Devices: universial (PLL and 50MHz clock required)
 // Tool versions:  Altera Quartus Prime
 // Description:
@@ -21,7 +21,7 @@
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 
-module n64igr (
+module n64_igr (
   SYS_CLK,
   nRST,
 
