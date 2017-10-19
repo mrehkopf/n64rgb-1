@@ -2,16 +2,17 @@
 // Company:  Circuit-Board.de
 // Engineer: borti4938
 //
-// Module Name:    n64advanced
-// Project Name:   Advanced RGB Mod
-// Target Devices: Cyclone IV:    EP4CE6E22, EP4CE10E22
+// Module Name:    n64a_top
+// Project Name:   N64 Advanced RGB Mod
+// Target Devices: Cyclone IV:    EP4CE6E22   , EP4CE10E22
 //                 Cyclone 10 LP: 10CL006YE144, 10CL010YE144
 // Tool versions:  Altera Quartus Prime
 // Description:
 //
-// Dependencies: rtl/n64igr.v     (Rev. 3.0)
-//               rtl/n64linedbl.v (Rev. 1.1)
-//               rtl/n64video.v   (Rev. 1.0)
+// Dependencies: rtl/n64_igr.v      (Rev. 3.0)
+//               rtl/n64a_linedbl.v (Rev. 1.1)
+//               rtl/n64a_video.v   (Rev. 1.0)
+// (more dependencies may appear in other files)
 //
 // Revision: 1.1
 // Features: based on n64rgb version 2.5
@@ -22,7 +23,7 @@
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 
-module n64advanced (
+module n64a_top (
   // N64 Video Input
   nCLK,
   nDSYNC,
@@ -59,8 +60,8 @@ module n64advanced (
 
 );
 
-parameter color_width_i = 7;
-parameter color_width_o = 8;
+`include "vh/n64a_params.vh"
+
 
 input                     nCLK;
 input                     nDSYNC;
@@ -114,7 +115,7 @@ assign SYS_CLKen = 1'b1;
 
 wire nForceDeBlur, nDeBlur, n15bit_mode;
 
-n64igr igr(
+n64_igr igr(
   .SYS_CLK(SYS_CLK),
   .nRST(nRST),
   .CTRL(CTRL_i),
@@ -181,11 +182,11 @@ end
 // Part 2.3: determine vmode
 // =========================
 
-reg [1:0] line_cnt;       // PAL: line_cnt[1:0] == 01 ; NTSC: line_cnt[1:0] = 11
-reg       vmode;          // PAL: vmode == 1          ; NTSC: vmode == 0
-reg       blur_pixel_pos; // indicates position of a potential blurry pixel
-                          // blur_pixel_pos == 0 -> pixel at D_i
-                          // blur_pixel_pos == 1 -> pixel at #_DBr
+reg [1:0] line_cnt;         // PAL: line_cnt[1:0] == 01 ; NTSC: line_cnt[1:0] = 11
+reg       vmode;            // PAL: vmode == 1          ; NTSC: vmode == 0
+reg       blurry_pixel_pos; // indicates position of a potential blurry pixel
+                            // blurry_pixel_pos == 0 -> pixel at D_i
+                            // blurry_pixel_pos == 1 -> pixel at #_DBr
 
 always @(negedge nCLK) begin
   if (~nDSYNC) begin
@@ -199,11 +200,11 @@ always @(negedge nCLK) begin
 
     if(~n64_480i) begin // 240p
       if(~S_DBr[0][0] & D_i[0]) // posedge nCSYNC -> reset blanking
-        blur_pixel_pos <= ~vmode;
+        blurry_pixel_pos <= ~vmode;
       else
-        blur_pixel_pos <= ~blur_pixel_pos;
+        blurry_pixel_pos <= ~blurry_pixel_pos;
     end else
-      blur_pixel_pos <= 1'b1;
+      blurry_pixel_pos <= 1'b1;
   end
 end
 
@@ -235,8 +236,8 @@ reg nblur_n64 = 1'b1;                             // blur effect is estimated to
 always @(negedge nCLK) begin // estimation of blur effect
   if (~nDSYNC) begin
 
-    if(~blur_pixel_pos) begin  // incomming (potential) blurry pixel
-                               // (blur_pixel_pos changes on next @(negedge nCLK))
+    if(~blurry_pixel_pos) begin  // incomming (potential) blurry pixel
+                               // (blurry_pixel_pos changes on next @(negedge nCLK))
 
       run_estimation[2:1] <= run_estimation[1:0]; // deblur estimation counter is
       run_estimation[0]   <= 1'b1;                // starts a bit delayed in each line
@@ -273,7 +274,7 @@ always @(negedge nCLK) begin // estimation of blur effect
     end
 
   end else if (&{S_DBr[1][3],S_DBr[1][1],S_DBr[0][3],S_DBr[0][1]}) begin
-    if (blur_pixel_pos) begin
+    if (blurry_pixel_pos) begin
       case(data_cnt)
           2'b01: gradient[2] <= {R_DBr[0][`CMP_RANGE] < D_i[`CMP_RANGE],
                                  R_DBr[0][`CMP_RANGE] > D_i[`CMP_RANGE]};
@@ -372,22 +373,15 @@ end
 wire       nENABLE_linedbl = (n64_480i & n480i_bob) | ~n240p | ~nRST;
 wire [1:0] SL_str_dbl      = n64_480i ? 2'b11 : SL_str;
 
-wire [4:0] vinfo = {nENABLE_linedbl,SL_str_dbl,vmode,n64_480i};
+wire [4:0] vinfo_dbl = {nENABLE_linedbl,SL_str_dbl,vmode,n64_480i};
 
-wire             [3:0] Sync_tmp;
-wire [color_width_i:0] R_tmp, G_tmp, B_tmp;
+wire [vdata_width_o-1:0] vdata_tmp;
 
-n64linedbl linedoubler(
+n64a_linedbl linedoubler(
   .nCLK_4x(nCLK),
-  .vinfo(vinfo),
-  .Sync_i(S_DBr[1]),
-  .R_i(R_DBr[1]),
-  .G_i(G_DBr[1]),
-  .B_i(B_DBr[1]),
-  .Sync_o(Sync_tmp),
-  .R_o(R_tmp),
-  .G_o(G_tmp),
-  .B_o(B_tmp)
+  .vinfo_dbl(vinfo_dbl),
+  .vdata_i({S_DBr[1],R_DBr[1],G_DBr[1],B_DBr[1]}),
+  .vdata_o(vdata_tmp)
 );
 
 
@@ -396,17 +390,11 @@ n64linedbl linedoubler(
 
 wire [3:0] Sync_o;
 
-n64video video_converter(
+n64a_vconv video_converter(
   .nCLK(nCLK),
   .nEN_YPbPr(nEN_YPbPr),    // enables color transformation on '0'
-  .Sync_i(Sync_tmp),
-  .R_i(R_tmp),
-  .G_i(G_tmp),
-  .B_i(B_tmp),
-  .Sync_o(Sync_o),
-  .V1_o(V1_o),
-  .V2_o(V2_o),
-  .V3_o(V3_o)
+  .vdata_i(vdata_tmp),
+  .vdata_o({Sync_o,V1_o,V2_o,V3_o})
 );
 
 // Part 5.3: assign final outputs
