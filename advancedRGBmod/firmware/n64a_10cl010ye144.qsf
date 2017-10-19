@@ -163,6 +163,8 @@ set_global_assignment -name VERILOG_INCLUDE_FILE vh/n64a_params.vh
 set_global_assignment -name VERILOG_INCLUDE_FILE vh/igr_params.vh
 set_global_assignment -name VERILOG_FILE rtl/n64_igr.v
 set_global_assignment -name QIP_FILE ip/altpll_0.qip
+set_global_assignment -name VERILOG_FILE rtl/n64_vinfo_ext.v
+set_global_assignment -name VERILOG_FILE rtl/n64_deblur.v
 set_global_assignment -name VERILOG_FILE rtl/n64a_linedbl.v
 set_global_assignment -name QIP_FILE ip/ram2port_0.qip
 set_global_assignment -name VERILOG_FILE rtl/n64a_vconv.v

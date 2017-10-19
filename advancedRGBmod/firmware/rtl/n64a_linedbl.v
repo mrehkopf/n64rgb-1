@@ -8,7 +8,8 @@
 // Tool versions:  Altera Quartus Prime
 // Description:    simple line-multiplying
 //
-// Dependencies: ip/ram2port_0.qip
+// Dependencies: vh/n64a_params.vh
+//               ip/ram2port_0.qip
 //
 // Revision: 1.1
 // Features: linebuffer for - NTSC 240p -> 480p rate conversion
