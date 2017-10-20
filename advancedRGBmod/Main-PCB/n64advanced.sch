@@ -5869,7 +5869,7 @@ Metric Code Size 3225</description>
 </deviceset>
 </devicesets>
 </library>
-<library name="wirepad" urn="urn:adsk.eagle:library:412">
+<library name="wirepad">
 <description>&lt;b&gt;Single Pads&lt;/b&gt;&lt;p&gt;
 &lt;author&gt;Created by librarian@cadsoft.de&lt;/author&gt;</description>
 <packages>
@@ -11089,7 +11089,7 @@ http://www.micrel.com&lt;p&gt;
 </deviceset>
 </devicesets>
 </library>
-<library name="wirepad">
+<library name="wirepad@1">
 <description>&lt;b&gt;Single Pads&lt;/b&gt;&lt;p&gt;
 &lt;author&gt;Created by librarian@cadsoft.de&lt;/author&gt;</description>
 <packages>
@@ -11127,7 +11127,7 @@ http://www.micrel.com&lt;p&gt;
 </deviceset>
 </devicesets>
 </library>
-<library name="crystal-geyer_V1_0" urn="urn:adsk.eagle:library:203">
+<library name="crystal-geyer_V1_0">
 <description>&lt;BR&gt;&lt;big&gt;&lt;b&gt;GEYER ELECTRONIC --- Your producer for quartz crystals and oscillators&lt;/B&gt;&lt;/big&gt;&lt;br&gt;&lt;Hr&gt;
 
 Version 1.0, 07.06.2016
@@ -11158,7 +11158,7 @@ Please contact us for more information.&lt;br&gt;&lt;BR&gt;&lt;br&gt;
 &lt;HR&gt;
 Copyright: Geyer-Electronic</description>
 <packages>
-<package name="2.0X1.6_KXO-V94" urn="urn:adsk.eagle:footprint:11888/1" library_version="1">
+<package name="2.0X1.6_KXO-V94">
 <description>4 Pad</description>
 <text x="-1.311" y="1.038" size="1.016" layer="25">&gt;NAME</text>
 <text x="-1.311" y="-2.084" size="1.016" layer="27">&gt;VALUE</text>
@@ -11179,7 +11179,7 @@ Copyright: Geyer-Electronic</description>
 <smd name="4" x="-0.7" y="0.55" dx="0.95" dy="0.8" layer="1"/>
 <circle x="-0.6" y="-0.4" radius="0.2" width="0" layer="51"/>
 </package>
-<package name="2.5X2.0_KXO-V95" urn="urn:adsk.eagle:footprint:11889/1" library_version="1">
+<package name="2.5X2.0_KXO-V95">
 <description>4 Pad</description>
 <text x="-1.511" y="1.338" size="1.016" layer="25">&gt;NAME</text>
 <text x="-1.611" y="-2.284" size="1.016" layer="27">&gt;VALUE</text>
@@ -11200,7 +11200,7 @@ Copyright: Geyer-Electronic</description>
 <smd name="4" x="-0.85" y="0.675" dx="1.2" dy="1" layer="1"/>
 <circle x="-0.85" y="-0.6" radius="0.2" width="0" layer="51"/>
 </package>
-<package name="3.2X2.5_KXO-V96" urn="urn:adsk.eagle:footprint:11890/1" library_version="1">
+<package name="3.2X2.5_KXO-V96">
 <description>4 Pad</description>
 <smd name="4" x="-1.15" y="0.9" dx="1.3" dy="1.1" layer="1"/>
 <smd name="2" x="1.15" y="-0.9" dx="1.3" dy="1.1" layer="1"/>
@@ -11222,7 +11222,7 @@ Copyright: Geyer-Electronic</description>
 <text x="-1.15" y="0.65" size="0.4064" layer="51">KXO-V96</text>
 <text x="-0.35" y="0.2" size="0.3048" layer="51" ratio="19">RG</text>
 </package>
-<package name="5.0X3.2_KXO-V99" urn="urn:adsk.eagle:footprint:11892/1" library_version="1">
+<package name="5.0X3.2_KXO-V99">
 <description>4 Pad</description>
 <smd name="4" x="-1.25" y="1.15" dx="1.6" dy="1.25" layer="1"/>
 <smd name="2" x="1.25" y="-1.15" dx="1.6" dy="1.25" layer="1"/>
@@ -11246,7 +11246,7 @@ Copyright: Geyer-Electronic</description>
 <wire x1="2.15" y1="-1.6" x2="2.5" y2="-1.6" width="0.1524" layer="21"/>
 <wire x1="2.15" y1="1.6" x2="2.5" y2="1.6" width="0.1524" layer="21"/>
 </package>
-<package name="7.0X5.08_KXO-(V)97" urn="urn:adsk.eagle:footprint:11891/1" library_version="1">
+<package name="7.0X5.08_KXO-(V)97">
 <description>4 Pad</description>
 <smd name="4" x="-2.54" y="2.1" dx="1.8" dy="2" layer="1"/>
 <smd name="2" x="2.54" y="-2.1" dx="1.8" dy="2" layer="1"/>
@@ -11267,25 +11267,8 @@ Copyright: Geyer-Electronic</description>
 <wire x1="3.5" y1="-1" x2="3.5" y2="1" width="0.1524" layer="21"/>
 </package>
 </packages>
-<packages3d>
-<package3d name="2.0X1.6_KXO-V94" urn="urn:adsk.eagle:package:11940/1" type="box" library_version="1">
-<description>4 Pad</description>
-</package3d>
-<package3d name="2.5X2.0_KXO-V95" urn="urn:adsk.eagle:package:11943/1" type="box" library_version="1">
-<description>4 Pad</description>
-</package3d>
-<package3d name="3.2X2.5_KXO-V96" urn="urn:adsk.eagle:package:11941/1" type="box" library_version="1">
-<description>4 Pad</description>
-</package3d>
-<package3d name="5.0X3.2_KXO-V99" urn="urn:adsk.eagle:package:11948/1" type="box" library_version="1">
-<description>4 Pad</description>
-</package3d>
-<package3d name="7.0X5.08_KXO-(V)97" urn="urn:adsk.eagle:package:11945/1" type="box" library_version="1">
-<description>4 Pad</description>
-</package3d>
-</packages3d>
 <symbols>
-<symbol name="QG" urn="urn:adsk.eagle:symbol:11887/1" library_version="1">
+<symbol name="QG">
 <wire x1="-7.62" y1="7.62" x2="-7.62" y2="-7.62" width="0.4064" layer="94"/>
 <wire x1="7.62" y1="-7.62" x2="-7.62" y2="-7.62" width="0.4064" layer="94"/>
 <wire x1="7.62" y1="-7.62" x2="7.62" y2="0" width="0.4064" layer="94"/>
@@ -11325,7 +11308,7 @@ Copyright: Geyer-Electronic</description>
 </symbol>
 </symbols>
 <devicesets>
-<deviceset name="KXO-PXO/XO-V" urn="urn:adsk.eagle:component:11975/1" prefix="Q" uservalue="yes" library_version="1">
+<deviceset name="KXO-PXO/XO-V" prefix="Q" uservalue="yes">
 <description>&lt;P&gt;
 
 &lt;table border=0 cellspacing=0 cellpadding=0 width="80%" cellpaddding=0&gt;
@@ -11510,9 +11493,6 @@ Created 2016-06-07, Hans Locher&lt;br&gt;
 <connect gate="G$1" pin="TS" pad="1"/>
 <connect gate="G$1" pin="VDD" pad="4"/>
 </connects>
-<package3dinstances>
-<package3dinstance package3d_urn="urn:adsk.eagle:package:11940/1"/>
-</package3dinstances>
 <technologies>
 <technology name=""/>
 </technologies>
@@ -11524,9 +11504,6 @@ Created 2016-06-07, Hans Locher&lt;br&gt;
 <connect gate="G$1" pin="TS" pad="1"/>
 <connect gate="G$1" pin="VDD" pad="4"/>
 </connects>
-<package3dinstances>
-<package3dinstance package3d_urn="urn:adsk.eagle:package:11943/1"/>
-</package3dinstances>
 <technologies>
 <technology name=""/>
 </technologies>
@@ -11538,9 +11515,6 @@ Created 2016-06-07, Hans Locher&lt;br&gt;
 <connect gate="G$1" pin="TS" pad="1"/>
 <connect gate="G$1" pin="VDD" pad="4"/>
 </connects>
-<package3dinstances>
-<package3dinstance package3d_urn="urn:adsk.eagle:package:11941/1"/>
-</package3dinstances>
 <technologies>
 <technology name=""/>
 </technologies>
@@ -11552,9 +11526,6 @@ Created 2016-06-07, Hans Locher&lt;br&gt;
 <connect gate="G$1" pin="TS" pad="1"/>
 <connect gate="G$1" pin="VDD" pad="4"/>
 </connects>
-<package3dinstances>
-<package3dinstance package3d_urn="urn:adsk.eagle:package:11948/1"/>
-</package3dinstances>
 <technologies>
 <technology name=""/>
 </technologies>
@@ -11566,9 +11537,6 @@ Created 2016-06-07, Hans Locher&lt;br&gt;
 <connect gate="G$1" pin="TS" pad="1"/>
 <connect gate="G$1" pin="VDD" pad="4"/>
 </connects>
-<package3dinstances>
-<package3dinstance package3d_urn="urn:adsk.eagle:package:11945/1"/>
-</package3dinstances>
 <technologies>
 <technology name=""/>
 </technologies>
@@ -11731,31 +11699,31 @@ Based on Cypress-EZ-usb-8051.pdf</description>
 <part name="R31" library="rcl" deviceset="R-EU_" device="R0603" value="4k7"/>
 <part name="FB1" library="rcl" deviceset="R-EU_" device="R0603" value="MPZ1608S221A"/>
 <part name="GND15" library="supply1" deviceset="GND" device=""/>
-<part name="P_VCC_3V" library="wirepad" deviceset="SMD2" device=""/>
-<part name="P_GND0" library="wirepad" deviceset="SMD2" device=""/>
-<part name="D0" library="wirepad" library_urn="urn:adsk.eagle:library:412" deviceset="SMD1" device="" value=""/>
-<part name="D1" library="wirepad" library_urn="urn:adsk.eagle:library:412" deviceset="SMD1" device="" value=""/>
-<part name="D2" library="wirepad" library_urn="urn:adsk.eagle:library:412" deviceset="SMD1" device="" value=""/>
-<part name="D3" library="wirepad" library_urn="urn:adsk.eagle:library:412" deviceset="SMD1" device="" value=""/>
-<part name="D4" library="wirepad" library_urn="urn:adsk.eagle:library:412" deviceset="SMD1" device="" value=""/>
-<part name="D5" library="wirepad" library_urn="urn:adsk.eagle:library:412" deviceset="SMD1" device="" value=""/>
-<part name="D6" library="wirepad" library_urn="urn:adsk.eagle:library:412" deviceset="SMD1" device="" value=""/>
+<part name="P_VCC_3V" library="wirepad@1" deviceset="SMD2" device=""/>
+<part name="P_GND0" library="wirepad@1" deviceset="SMD2" device=""/>
+<part name="D0" library="wirepad" deviceset="SMD1" device="" value=""/>
+<part name="D1" library="wirepad" deviceset="SMD1" device="" value=""/>
+<part name="D2" library="wirepad" deviceset="SMD1" device="" value=""/>
+<part name="D3" library="wirepad" deviceset="SMD1" device="" value=""/>
+<part name="D4" library="wirepad" deviceset="SMD1" device="" value=""/>
+<part name="D5" library="wirepad" deviceset="SMD1" device="" value=""/>
+<part name="D6" library="wirepad" deviceset="SMD1" device="" value=""/>
 <part name="C1" library="rcl" deviceset="C-EU" device="C0805" value="47u"/>
 <part name="C101" library="rcl" deviceset="C-EU" device="C0805" value="10u"/>
 <part name="RN10" library="resistor-net" deviceset="CTS742C083" device="" value="CAY16-47R0F4LF"/>
 <part name="RN11" library="resistor-net" deviceset="CTS742C083" device="" value="CAY16-47R0F4LF"/>
 <part name="RN12" library="resistor-net" deviceset="CTS742C083" device="" value="CAY16-47R0F4LF"/>
-<part name="DSYNC#" library="wirepad" library_urn="urn:adsk.eagle:library:412" deviceset="SMD1" device="" value=""/>
-<part name="CLOCK#" library="wirepad" library_urn="urn:adsk.eagle:library:412" deviceset="SMD1" device="" value=""/>
+<part name="DSYNC#" library="wirepad" deviceset="SMD1" device="" value=""/>
+<part name="CLOCK#" library="wirepad" deviceset="SMD1" device="" value=""/>
 <part name="GND11" library="supply1" deviceset="GND" device=""/>
 <part name="GND12" library="supply1" deviceset="GND" device=""/>
 <part name="U2" library="analog-devices" deviceset="ADV7123" device="" value="ADV7125/ADV7123"/>
-<part name="R/PR" library="wirepad" deviceset="SMD2" device=""/>
-<part name="G/Y" library="wirepad" deviceset="SMD2" device=""/>
-<part name="B/PB" library="wirepad" deviceset="SMD2" device=""/>
+<part name="R/PR" library="wirepad@1" deviceset="SMD2" device=""/>
+<part name="G/Y" library="wirepad@1" deviceset="SMD2" device=""/>
+<part name="B/PB" library="wirepad@1" deviceset="SMD2" device=""/>
 <part name="FB2" library="rcl" deviceset="R-EU_" device="R0603" value="MPZ1608S221A"/>
-<part name="P_VCC_5V" library="wirepad" deviceset="SMD2" device=""/>
-<part name="P_GND2" library="wirepad" deviceset="SMD2" device=""/>
+<part name="P_VCC_5V" library="wirepad@1" deviceset="SMD2" device=""/>
+<part name="P_GND2" library="wirepad@1" deviceset="SMD2" device=""/>
 <part name="C2" library="rcl" deviceset="C-EU" device="C0805" value="47u"/>
 <part name="P+1" library="supply1" deviceset="+5V" device=""/>
 <part name="+3V1" library="supply1" deviceset="+3V3" device=""/>
@@ -11774,16 +11742,16 @@ Based on Cypress-EZ-usb-8051.pdf</description>
 <part name="AGND11" library="supply1" deviceset="GND" device=""/>
 <part name="AGND12" library="supply1" deviceset="GND" device=""/>
 <part name="R33" library="rcl" deviceset="R-EU_" device="R0603" value="75"/>
-<part name="CS75#" library="wirepad" deviceset="SMD2" device=""/>
+<part name="CS75#" library="wirepad@1" deviceset="SMD2" device=""/>
 <part name="P+6" library="supply1" deviceset="+5V" device=""/>
 <part name="U3" library="st-microelectronics" deviceset="TSH122" device="ICT"/>
 <part name="C33" library="rcl@1" deviceset="C-EU" device="C1210" value="33u"/>
 <part name="C34" library="rcl" deviceset="C-EU" device="C1206" value="22u"/>
 <part name="C301" library="rcl" deviceset="C-EU" device="C0805" value="10u"/>
 <part name="C302" library="rcl" deviceset="C-EU" device="C0603" value="0.01u"/>
-<part name="CS#" library="wirepad" deviceset="SMD2" device=""/>
-<part name="HS#" library="wirepad" deviceset="SMD2" device=""/>
-<part name="VS#" library="wirepad" deviceset="SMD2" device=""/>
+<part name="CS#" library="wirepad@1" deviceset="SMD2" device=""/>
+<part name="HS#" library="wirepad@1" deviceset="SMD2" device=""/>
+<part name="VS#" library="wirepad@1" deviceset="SMD2" device=""/>
 <part name="R21" library="rcl" deviceset="R-EU_" device="R0603" value="530/560"/>
 <part name="AGND9" library="supply1" deviceset="GND" device=""/>
 <part name="R22" library="rcl" deviceset="R-EU_" device="R0603" value="4k7"/>
@@ -11815,8 +11783,8 @@ Based on Cypress-EZ-usb-8051.pdf</description>
 <part name="GND26" library="supply1" deviceset="GND" device=""/>
 <part name="J5" library="con-3m" deviceset="2510-" device="" value=""/>
 <part name="C109" library="rcl" deviceset="C-EU" device="C0603" value="0.1u"/>
-<part name="P_GND3" library="wirepad" deviceset="SMD2" device=""/>
-<part name="P_GND1" library="wirepad" deviceset="SMD2" device=""/>
+<part name="P_GND3" library="wirepad@1" deviceset="SMD2" device=""/>
+<part name="P_GND1" library="wirepad@1" deviceset="SMD2" device=""/>
 <part name="RN41" library="resistor-net" deviceset="CTS742C083" device="" value="CAY16-75R0F4LF"/>
 <part name="J4" library="jumper" deviceset="SJ2W" device=""/>
 <part name="J6" library="jumper" deviceset="SJ" device="" value="UPS"/>
@@ -11870,16 +11838,16 @@ Based on Cypress-EZ-usb-8051.pdf</description>
 <part name="C142" library="rcl" deviceset="C-EU" device="C0603" value="0.1u"/>
 <part name="C501" library="rcl" deviceset="C-EU" device="C0603" value="0.1u"/>
 <part name="FB3" library="rcl" deviceset="R-EU_" device="R0603" value="MPZ1608S221A"/>
-<part name="CTRL" library="wirepad" deviceset="SMD2" device=""/>
-<part name="/RST" library="wirepad" deviceset="SMD2" device=""/>
-<part name="/COLD" library="wirepad" deviceset="SMD2" device=""/>
+<part name="CTRL" library="wirepad@1" deviceset="SMD2" device=""/>
+<part name="/RST" library="wirepad@1" deviceset="SMD2" device=""/>
+<part name="/COLD" library="wirepad@1" deviceset="SMD2" device=""/>
 <part name="GND1" library="supply1" deviceset="GND" device=""/>
 <part name="C801" library="rcl" deviceset="C-EU" device="C0603" value="0.01u"/>
 <part name="FB4" library="rcl" deviceset="R-EU_" device="R0603" value="MPZ1608S221A"/>
 <part name="RN23" library="resistor-net" deviceset="CTS742C083" device="" value="CAY16-75R0F4LF"/>
 <part name="AGND2" library="supply1" deviceset="GND" device=""/>
 <part name="AGND1" library="supply1" deviceset="GND" device=""/>
-<part name="U8" library="crystal-geyer_V1_0" library_urn="urn:adsk.eagle:library:203" deviceset="KXO-PXO/XO-V" device="96" package3d_urn="urn:adsk.eagle:package:11941/1"/>
+<part name="U8" library="crystal-geyer_V1_0" deviceset="KXO-PXO/XO-V" device="96"/>
 <part name="U5" library="cypress" deviceset="S25FLXXX" device="SO8-DUAL"/>
 <part name="+3V4" library="supply1" deviceset="+3V3" device=""/>
 <part name="GND2" library="supply1@1" deviceset="GND" device=""/>
@@ -11888,7 +11856,7 @@ Based on Cypress-EZ-usb-8051.pdf</description>
 <part name="+3V10" library="supply1" deviceset="+3V3" device=""/>
 <part name="+3V11" library="supply1" deviceset="+3V3" device=""/>
 <part name="+3V12" library="supply1" deviceset="+3V3" device=""/>
-<part name="P_GND4" library="wirepad" deviceset="SMD2" device=""/>
+<part name="P_GND4" library="wirepad@1" deviceset="SMD2" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -13755,21 +13723,6 @@ Based on Cypress-EZ-usb-8051.pdf</description>
 <note version="6.3" minversion="6.2.2" severity="warning">
 Since Version 6.2.2 text objects can contain more than one line,
 which will not be processed correctly with this version.
-</note>
-<note version="8.2" severity="warning">
-Since Version 8.2, EAGLE supports online libraries. The ids
-of those online libraries will not be understood (or retained)
-with this version.
-</note>
-<note version="8.3" severity="warning">
-Since Version 8.3, EAGLE supports URNs for individual library
-assets (packages, symbols, and devices). The URNs of those assets
-will not be understood (or retained) with this version.
-</note>
-<note version="8.3" severity="warning">
-Since Version 8.3, EAGLE supports the association of 3D packages
-with devices in libraries, schematics, and board files. Those 3D
-packages will not be understood (or retained) with this version.
 </note>
 </compatibility>
 </eagle>
