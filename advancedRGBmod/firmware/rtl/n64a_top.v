@@ -97,17 +97,11 @@ input       n480i_bob;
 
 // start of rtl
 
-reg               [3:0] S_DBr[0:1];
-reg [color_width_i-1:0] R_DBr[0:1], G_DBr[0:1], B_DBr[0:1]; // red, green and blue data buffer
+reg [`vdata_i_full] vdata_ir[0:1]; // buffer for sync, red, green and blue
 
-integer i;
 initial begin
-  for (i = 0; i < 2; i = i+1) begin
-    S_DBr[i] = 4'b0000;
-    R_DBr[i] = {color_width_i{1'b0}};
-    G_DBr[i] = {color_width_i{1'b0}};
-    B_DBr[i] = {color_width_i{1'b0}};
-  end
+  vdata_ir[0] = {vdata_width_i{1'b0}};
+  vdata_ir[1] = {vdata_width_i{1'b0}};
 end
 
 
@@ -159,7 +153,7 @@ wire       blurry_pixel_pos;  // indicates position of a potential blurry pixel
 n64_vinfo_ext get_vinfo(
   .nCLK(nCLK),
   .nDSYNC(nDSYNC),
-  .Sync_pre(S_DBr[0]),
+  .Sync_pre(vdata_ir[0][`vdata_i_s]),
   .D_i(D_i),
   .vinfo_o({data_cnt,n64_480i,vmode,blurry_pixel_pos})
 );
@@ -175,8 +169,8 @@ n64_deblur deblur_management(
   .nDSYNC(nDSYNC),
   .nRST(nRST),
   .deblurparams({data_cnt,n64_480i,vmode,blurry_pixel_pos,nForceDeBlur,nDeBlurMan}),
-  .vdata_sync_2pre(S_DBr[1]),
-  .vdata_pre({S_DBr[0],R_DBr[0],G_DBr[0],B_DBr[0]}),
+  .vdata_sync_2pre(vdata_ir[1][`vdata_i_s]),
+  .vdata_pre(vdata_ir[0]),
   .vdata_cur(D_i),
   .nblank_rgb(nblank_rgb)
 );
@@ -188,30 +182,23 @@ n64_deblur deblur_management(
 always @(negedge nCLK) begin // data register management
   if (~nDSYNC) begin
     // shift data to output registers
-    S_DBr[1] <= S_DBr[0];
-    if (nblank_rgb) begin // pass RGB only if not blanked
-      R_DBr[1] <= R_DBr[0];
-      G_DBr[1] <= G_DBr[0];
-      B_DBr[1] <= B_DBr[0];
-    end
+      vdata_ir[1][`vdata_i_s] <= vdata_ir[0][`vdata_i_s];
+    if (nblank_rgb) // pass RGB only if not blanked
+      vdata_ir[1][`vdata_i_c] <= vdata_ir[0][`vdata_i_c];
 
     // get new sync data
-    S_DBr[0] <= D_i[3:0];
+    vdata_ir[0][`vdata_i_s] <= D_i[3:0];
   end else begin
     // demux of RGB
     case(data_cnt)
-      2'b01: R_DBr[0] <= n15bit_mode ? D_i : {D_i[6:2], 2'b00};
-      2'b10: G_DBr[0] <= n15bit_mode ? D_i : {D_i[6:2], 2'b00};
-      2'b11: B_DBr[0] <= n15bit_mode ? D_i : {D_i[6:2], 2'b00};
+      2'b01: vdata_ir[0][`vdata_i_r] <= n15bit_mode ? D_i : {D_i[6:2], 2'b00};
+      2'b10: vdata_ir[0][`vdata_i_g] <= n15bit_mode ? D_i : {D_i[6:2], 2'b00};
+      2'b11: vdata_ir[0][`vdata_i_b] <= n15bit_mode ? D_i : {D_i[6:2], 2'b00};
     endcase
   end
   if (~nRST) begin
-    for (i = 0; i < 2; i = i+1) begin
-      S_DBr[i] <= 4'b0000;
-      R_DBr[i] <= {color_width_i{1'b0}};
-      G_DBr[i] <= {color_width_i{1'b0}};
-      B_DBr[i] <= {color_width_i{1'b0}};
-    end
+    vdata_ir[0] <= {vdata_width_i{1'b0}};
+    vdata_ir[1] <= {vdata_width_i{1'b0}};
   end
 end
 
@@ -233,7 +220,7 @@ wire [vdata_width_o-1:0] vdata_tmp;
 n64a_linedbl linedoubler(
   .nCLK_4x(nCLK),
   .vinfo_dbl(vinfo_dbl),
-  .vdata_i({S_DBr[1],R_DBr[1],G_DBr[1],B_DBr[1]}),
+  .vdata_i(vdata_ir[1]),
   .vdata_o(vdata_tmp)
 );
 
