@@ -162,17 +162,17 @@ n64_vinfo_ext get_vinfo(
 // Part 3: DeBlur Management (incl. heuristic)
 // ===========================================
 
-wire nblank_rgb;
+wire ndo_deblur, nblank_rgb;
 
 n64_deblur deblur_management(
   .nCLK(nCLK),
   .nDSYNC(nDSYNC),
   .nRST(nRST),
-  .deblurparams({data_cnt,n64_480i,vmode,blurry_pixel_pos,nForceDeBlur,nDeBlurMan}),
   .vdata_sync_2pre(vdata_ir[1][`vdata_i_s]),
   .vdata_pre(vdata_ir[0]),
   .vdata_cur(D_i),
-  .nblank_rgb(nblank_rgb)
+  .deblurparams_i({data_cnt,n64_480i,vmode,blurry_pixel_pos,nForceDeBlur,nDeBlurMan}),
+  .deblurparams_o({ndo_deblur,nblank_rgb})
 );
 
 
@@ -182,8 +182,9 @@ n64_deblur deblur_management(
 always @(negedge nCLK) begin // data register management
   if (~nDSYNC) begin
     // shift data to output registers
-      vdata_ir[1][`vdata_i_s] <= vdata_ir[0][`vdata_i_s];
-    if (nblank_rgb) // pass RGB only if not blanked
+    if(ndo_deblur)        // deblur inactive
+      vdata_ir[1][`vdata_i_full] <= vdata_ir[0][`vdata_i_full];
+    else if (nblank_rgb)  // deblur active: pass RGB only if not blanked
       vdata_ir[1][`vdata_i_c] <= vdata_ir[0][`vdata_i_c];
 
     // get new sync data
@@ -192,7 +193,11 @@ always @(negedge nCLK) begin // data register management
     // demux of RGB
     case(data_cnt)
       2'b01: vdata_ir[0][`vdata_i_r] <= n15bit_mode ? D_i : {D_i[6:2], 2'b00};
-      2'b10: vdata_ir[0][`vdata_i_g] <= n15bit_mode ? D_i : {D_i[6:2], 2'b00};
+      2'b10: begin
+        vdata_ir[0][`vdata_i_g] <= n15bit_mode ? D_i : {D_i[6:2], 2'b00};
+        if(~ndo_deblur)
+          vdata_ir[1][`vdata_i_s] <= vdata_ir[0][`vdata_i_s];
+      end
       2'b11: vdata_ir[0][`vdata_i_b] <= n15bit_mode ? D_i : {D_i[6:2], 2'b00};
     endcase
   end
