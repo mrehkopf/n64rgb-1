@@ -36,16 +36,16 @@ input nCLK;
 
 input nEN_YPbPr;
 
-input  [`vdata_o_full] vdata_i;
-output [`vdata_o_full] vdata_o;
+input  [`VDATA_O_FU_SLICE] vdata_i;
+output [`VDATA_O_FU_SLICE] vdata_o;
 
 
 // pre-assignments
 
-wire                        [3:0] S_i = vdata_i[`vdata_o_s];
-wire unsigned [color_width_o-1:0] R_i = vdata_i[`vdata_o_r];
-wire unsigned [color_width_o-1:0] G_i = vdata_i[`vdata_o_g];
-wire unsigned [color_width_o-1:0] B_i = vdata_i[`vdata_o_b];
+wire                        [3:0] S_i = vdata_i[`VDATA_O_SY_SLICE];
+wire unsigned [color_width_o-1:0] R_i = vdata_i[`VDATA_O_RE_SLICE];
+wire unsigned [color_width_o-1:0] G_i = vdata_i[`VDATA_O_GR_SLICE];
+wire unsigned [color_width_o-1:0] B_i = vdata_i[`VDATA_O_BL_SLICE];
 
 reg                        [3:0]  S_o = 4'h0;
 reg unsigned [color_width_o-1:0] V1_o = {color_width_o{1'b0}};
@@ -145,7 +145,7 @@ wire [color_width_o+1:0] Pr_addmult = {1'b0,R[2],1'b0}- Pr_nPart_addmult[msb_vo+
 
 // get final results:
 
-wire [color_width_o-1:0]  Y_tmp =  Y_addmult[msb_vo:lsb_vo] +  Y_addmult[lsb_vo-1];
+wire [color_width_o-1:0]  Y_tmp =  Y_addmult[msb_vo:lsb_vo]     +  Y_addmult[lsb_vo-1];
 wire [color_width_o  :0] Pb_tmp = Pb_addmult[color_width_o+1:1] + Pb_addmult[0];
 wire [color_width_o  :0] Pr_tmp = Pr_addmult[color_width_o+1:1] + Pr_addmult[0];
 

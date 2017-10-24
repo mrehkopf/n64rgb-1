@@ -97,7 +97,7 @@ input       n480i_bob;
 
 // start of rtl
 
-reg [`vdata_i_full] vdata_ir[0:1]; // buffer for sync, red, green and blue
+reg [`VDATA_I_FU_SLICE] vdata_ir[0:1]; // buffer for sync, red, green and blue
 
 initial begin
   vdata_ir[0] = {vdata_width_i{1'b0}};
@@ -153,7 +153,7 @@ wire       blurry_pixel_pos;  // indicates position of a potential blurry pixel
 n64_vinfo_ext get_vinfo(
   .nCLK(nCLK),
   .nDSYNC(nDSYNC),
-  .Sync_pre(vdata_ir[0][`vdata_i_s]),
+  .Sync_pre(vdata_ir[0][`VDATA_I_SY_SLICE]),
   .D_i(D_i),
   .vinfo_o({data_cnt,n64_480i,vmode,blurry_pixel_pos})
 );
@@ -168,7 +168,7 @@ n64_deblur deblur_management(
   .nCLK(nCLK),
   .nDSYNC(nDSYNC),
   .nRST(nRST),
-  .vdata_sync_2pre(vdata_ir[1][`vdata_i_s]),
+  .vdata_sync_2pre(vdata_ir[1][`VDATA_I_SY_SLICE]),
   .vdata_pre(vdata_ir[0]),
   .vdata_cur(D_i),
   .deblurparams_i({data_cnt,n64_480i,vmode,blurry_pixel_pos,nForceDeBlur,nDeBlurMan}),
@@ -183,22 +183,22 @@ always @(negedge nCLK) begin // data register management
   if (~nDSYNC) begin
     // shift data to output registers
     if(ndo_deblur)        // deblur inactive
-      vdata_ir[1][`vdata_i_full] <= vdata_ir[0][`vdata_i_full];
+      vdata_ir[1][`VDATA_I_FU_SLICE] <= vdata_ir[0][`VDATA_I_FU_SLICE];
     else if (nblank_rgb)  // deblur active: pass RGB only if not blanked
-      vdata_ir[1][`vdata_i_c] <= vdata_ir[0][`vdata_i_c];
+      vdata_ir[1][`VDATA_I_CO_SLICE] <= vdata_ir[0][`VDATA_I_CO_SLICE];
 
     // get new sync data
-    vdata_ir[0][`vdata_i_s] <= D_i[3:0];
+    vdata_ir[0][`VDATA_I_SY_SLICE] <= D_i[3:0];
   end else begin
     // demux of RGB
     case(data_cnt)
-      2'b01: vdata_ir[0][`vdata_i_r] <= n15bit_mode ? D_i : {D_i[6:2], 2'b00};
+      2'b01: vdata_ir[0][`VDATA_I_RE_SLICE] <= n15bit_mode ? D_i : {D_i[6:2], 2'b00};
       2'b10: begin
-        vdata_ir[0][`vdata_i_g] <= n15bit_mode ? D_i : {D_i[6:2], 2'b00};
+        vdata_ir[0][`VDATA_I_GR_SLICE] <= n15bit_mode ? D_i : {D_i[6:2], 2'b00};
         if(~ndo_deblur)
-          vdata_ir[1][`vdata_i_s] <= vdata_ir[0][`vdata_i_s];
+          vdata_ir[1][`VDATA_I_SY_SLICE] <= vdata_ir[0][`VDATA_I_SY_SLICE];
       end
-      2'b11: vdata_ir[0][`vdata_i_b] <= n15bit_mode ? D_i : {D_i[6:2], 2'b00};
+      2'b11: vdata_ir[0][`VDATA_I_BL_SLICE] <= n15bit_mode ? D_i : {D_i[6:2], 2'b00};
     endcase
   end
   if (~nRST) begin
