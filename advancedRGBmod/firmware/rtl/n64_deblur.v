@@ -38,7 +38,7 @@ input nRST;
 
 
 input               [3:0] vdata_sync_2pre;  // need just sync bits in common order
-input     [`vdata_i_full] vdata_pre;        // whole vector
+input [`VDATA_I_FU_SLICE] vdata_pre;        // whole vector
 input [color_width_i-1:0] vdata_cur;        // current D_i input
 
 input  [6:0] deblurparams_i;  // order: data_cnt,n64_480i,vmode,blurry_pixel_pos,nForceDeBlur,nDeBlurMan
@@ -62,9 +62,9 @@ wire nCSYNC_pre  = vdata_pre[3*color_width_i];
 
 wire act_window = &{nVSYNC_2pre,nHSYNC_2pre,nVSYNC_pre,nHSYNC_pre};
 
-wire [color_width_i-1:0] R_pre = vdata_pre[3*color_width_i-1:2*color_width_i];
-wire [color_width_i-1:0] G_pre = vdata_pre[2*color_width_i-1:  color_width_i];
-wire [color_width_i-1:0] B_pre = vdata_pre[  color_width_i-1:0];
+wire [color_width_i-1:0] R_pre = vdata_pre[`VDATA_I_RE_SLICE];
+wire [color_width_i-1:0] G_pre = vdata_pre[`VDATA_I_GR_SLICE];
+wire [color_width_i-1:0] B_pre = vdata_pre[`VDATA_I_BL_SLICE];
 
 
 // some more definitions for the heuristics

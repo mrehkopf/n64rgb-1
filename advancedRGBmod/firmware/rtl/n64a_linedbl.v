@@ -41,8 +41,8 @@ input CLK_out;
 
 input [4:0] vinfo_dbl; // [nLinedbl,SL_str (2bits),PAL,interlaced]
 
-input  [`vdata_i_full] vdata_i;
-output [`vdata_o_full] vdata_o;
+input  [`VDATA_I_FU_SLICE] vdata_i;
+output [`VDATA_O_FU_SLICE] vdata_o;
 
 
 // pre-assignments
@@ -50,9 +50,9 @@ output [`vdata_o_full] vdata_o;
 wire nVS_i = vdata_i[3*color_width_i+3];
 wire nHS_i = vdata_i[3*color_width_i+1];
 
-wire [color_width_i-1:0] R_i = vdata_i[`vdata_i_r];
-wire [color_width_i-1:0] G_i = vdata_i[`vdata_i_g];
-wire [color_width_i-1:0] B_i = vdata_i[`vdata_i_b];
+wire [color_width_i-1:0] R_i = vdata_i[`VDATA_I_RE_SLICE];
+wire [color_width_i-1:0] G_i = vdata_i[`VDATA_I_GR_SLICE];
+wire [color_width_i-1:0] B_i = vdata_i[`VDATA_I_BL_SLICE];
 
 reg               [3:0] S_o;
 reg [color_width_o-1:0] R_o;
@@ -264,7 +264,7 @@ always @(posedge CLK_out) begin
     end
 
   if (nENABLE_linedbl) begin
-    S_o <= vdata_i[`vdata_i_s];
+    S_o <= vdata_i[`VDATA_I_SY_SLICE];
     R_o <= {R_i,1'b0};
     G_o <= {G_i,1'b0};
     B_o <= {B_i,1'b0};
