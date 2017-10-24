@@ -21,13 +21,12 @@ module n64_deblur (
 
   nRST,
 
-  deblurparams,
-
   vdata_sync_2pre,
   vdata_pre,
   vdata_cur,
 
-  nblank_rgb
+  deblurparams_i,
+  deblurparams_o
 );
 
 `include "vh/n64a_params.vh"
@@ -37,23 +36,23 @@ input nDSYNC;
 
 input nRST;
 
-input [6:0] deblurparams; // order: data_cnt,n64_480i,vmode,blurry_pixel_pos,nForceDeBlur,nDeBlurMan
 
 input               [3:0] vdata_sync_2pre;  // need just sync bits in common order
 input     [`vdata_i_full] vdata_pre;        // whole vector
 input [color_width_i-1:0] vdata_cur;        // current D_i input
 
-output reg nblank_rgb = 1'b1; // blanking of RGB pixels for de-blur
+input  [6:0] deblurparams_i;  // order: data_cnt,n64_480i,vmode,blurry_pixel_pos,nForceDeBlur,nDeBlurMan
+output [1:0] deblurparams_o;  // order: nblank_rgb,ndo_deblur
 
 
 // some pre-assignments and definitions
 
-wire   [1:0] data_cnt = deblurparams[6:5];
-wire         n64_480i = deblurparams[  4];
-wire            vmode = deblurparams[  3];
-wire blurry_pixel_pos = deblurparams[  2];
-wire     nForceDeBlur = deblurparams[  1];
-wire       nDeBlurMan = deblurparams[  0];
+wire   [1:0] data_cnt = deblurparams_i[6:5];
+wire         n64_480i = deblurparams_i[  4];
+wire            vmode = deblurparams_i[  3];
+wire blurry_pixel_pos = deblurparams_i[  2];
+wire     nForceDeBlur = deblurparams_i[  1];
+wire       nDeBlurMan = deblurparams_i[  0];
 
 wire nVSYNC_2pre = vdata_sync_2pre[3];
 wire nHSYNC_2pre = vdata_sync_2pre[1];
@@ -176,6 +175,8 @@ end
 wire ndo_deblur = ~nForceDeBlur ?  (n64_480i | nDeBlurMan) :
                                    (n64_480i | nblur_n64);    // force de-blur option for 240p? -> yes: enable it if user wants to | no: enable de-blur depending on estimation
 
+reg nblank_rgb = 1'b1; // blanking of RGB pixels for de-blur
+
 always @(negedge nCLK) begin
   if (~nDSYNC)
     if(ndo_deblur)
@@ -188,5 +189,9 @@ always @(negedge nCLK) begin
     end
 end
 
+
+// post-assignment
+
+assign deblurparams_o = {nblank_rgb,ndo_deblur};
 
 endmodule
