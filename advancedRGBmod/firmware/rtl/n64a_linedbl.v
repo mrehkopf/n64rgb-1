@@ -174,8 +174,8 @@ ram2port_0 videobuffer_0(
   .data({R_i,G_i,B_i}),
   .rdaddress(rdaddr),
   .rden(&{rden[0],~rdline}),
-  .wraddress({wrline,wraddr}),
-  .wren(&{wren,~line_overflow,~div_2x}),
+  .wraddress(wraddr),
+  .wren(&{wren,~wrline,~line_overflow,~div_2x}),
   .q({R_buf[0],G_buf[0],B_buf[0]})
 );
 
@@ -184,8 +184,8 @@ ram2port_0 videobuffer_1(
   .data({R_i,G_i,B_i}),
   .rdaddress(rdaddr),
   .rden(&{rden[0],rdline}),
-  .wraddress({wrline,wraddr}),
-  .wren(&{wren,~line_overflow,~div_2x}),
+  .wraddress(wraddr),
+  .wren(&{wren,wrline,~line_overflow,~div_2x}),
   .q({R_buf[1],G_buf[1],B_buf[1]})
 );
 
