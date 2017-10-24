@@ -137,7 +137,7 @@ always @(posedge CLK_out) begin
     if (rdhcnt == line_width[rdline]) begin
       rdhcnt   <= {ram_depth{1'b0}};
       if (rdcnt)
-        rdline <= ~wrline;
+        rdline <= wrline;
       rdcnt <= ~rdcnt;
     end else begin
       rdhcnt <= rdhcnt + 1'b1;
@@ -157,7 +157,7 @@ always @(posedge CLK_out) begin
     end
   end else if (rdrun[0] && wrhcnt[3]) begin
     rdrun[1] <= 1'b1;
-    rdcnt    <= 1'b0;
+    rdcnt    <= 1'b1;
     rdline   <= ~wrline;
     rdhcnt   <= {ram_depth{1'b0}};
   end else if (^start_reading_proc) begin
@@ -168,28 +168,17 @@ always @(posedge CLK_out) begin
   start_reading_proc[1] <= start_reading_proc[0];
 end
 
-wire [color_width_i-1:0] R_buf[0:1], G_buf[0:1], B_buf[0:1];
+wire [color_width_i-1:0] R_buf, G_buf, B_buf;
 
 ram2port_0 videobuffer_0(
   .data({R_i,G_i,B_i}),
   .rdaddress(rdaddr),
   .rdclock(CLK_out),
-  .rden(&{rden[0],~rdline}),
+  .rden(&{rden[0]}),
   .wraddress(wraddr),
   .wrclock(~nCLK_in),
-  .wren(&{wren,~wrline,~line_overflow,~div_2x}),
-  .q({R_buf[0],G_buf[0],B_buf[0]})
-);
-
-ram2port_0 videobuffer_1(
-  .data({R_i,G_i,B_i}),
-  .rdaddress(rdaddr),
-  .rdclock(CLK_out),
-  .rden(&{rden[0],rdline}),
-  .wraddress(wraddr),
-  .wrclock(~nCLK_in),
-  .wren(&{wren,wrline,~line_overflow,~div_2x}),
-  .q({R_buf[1],G_buf[1],B_buf[1]})
+  .wren(&{wren,~line_overflow,~div_2x}),
+  .q({R_buf,G_buf,B_buf})
 );
 
 
@@ -240,22 +229,22 @@ always @(posedge CLK_out) begin
       if (rdcnt) begin
         case (SL_str)
           2'b11: begin
-            R_o <= {R_buf[rdline],1'b0};
-            G_o <= {G_buf[rdline],1'b0};
-            B_o <= {B_buf[rdline],1'b0};
+            R_o <= {R_buf,1'b0};
+            G_o <= {G_buf,1'b0};
+            B_o <= {B_buf,1'b0};
           end
           2'b10: begin
-            R_o <= {1'b0,R_buf[rdline][color_width_i-1:0]} +
-                   {2'b00,R_buf[rdline][color_width_i-1:1]};
-            G_o <= {1'b0,G_buf[rdline][color_width_i-1:0]} +
-                   {2'b00,G_buf[rdline][color_width_i-1:1]};
-            B_o <= {1'b0,B_buf[rdline][color_width_i-1:0]} +
-                   {2'b00,B_buf[rdline][color_width_i-1:1]};
+            R_o <= {1'b0 ,R_buf[color_width_i-1:0]} +
+                   {2'b00,R_buf[color_width_i-1:1]};
+            G_o <= {1'b0 ,G_buf[color_width_i-1:0]} +
+                   {2'b00,G_buf[color_width_i-1:1]};
+            B_o <= {1'b0 ,B_buf[color_width_i-1:0]} +
+                   {2'b00,B_buf[color_width_i-1:1]};
           end
           2'b01: begin
-            R_o <= {1'b0,R_buf[rdline][color_width_i-1:0]};
-            G_o <= {1'b0,G_buf[rdline][color_width_i-1:0]};
-            B_o <= {1'b0,B_buf[rdline][color_width_i-1:0]};
+            R_o <= {1'b0,R_buf[color_width_i-1:0]};
+            G_o <= {1'b0,G_buf[color_width_i-1:0]};
+            B_o <= {1'b0,B_buf[color_width_i-1:0]};
           end
           2'b00: begin
             R_o <= {color_width_o{1'b0}};
@@ -264,9 +253,9 @@ always @(posedge CLK_out) begin
           end
         endcase
       end else begin
-        R_o <= {R_buf[rdline],1'b0};
-        G_o <= {G_buf[rdline],1'b0};
-        B_o <= {B_buf[rdline],1'b0};
+        R_o <= {R_buf,1'b0};
+        G_o <= {G_buf,1'b0};
+        B_o <= {B_buf,1'b0};
       end
     end else begin
       R_o <= {color_width_o{1'b0}};
