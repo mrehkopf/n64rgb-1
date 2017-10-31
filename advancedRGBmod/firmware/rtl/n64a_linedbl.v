@@ -174,7 +174,7 @@ ram2port_0 videobuffer_0(
   .data({R_i,G_i,B_i}),
   .rdaddress(rdaddr),
   .rdclock(CLK_out),
-  .rden(&{rden[0]}),
+  .rden(rden[0]),
   .wraddress(wraddr),
   .wrclock(~nCLK_in),
   .wren(&{wren,~line_overflow,~div_2x}),
@@ -182,12 +182,13 @@ ram2port_0 videobuffer_0(
 );
 
 
-wire       nHS_WIDTH = rdhcnt[7];    // HSYNC width (effectively 64 pixel)
-wire [1:0] nVS_WIDTH = 2'd3;         // three lines for VSYNC
-wire   CS_post_VSYNC = &rdhcnt[7:6];
-
 reg     rdcnt_buf = 1'b0;
+reg [7:0] nHS_cnt = 8'd0;
 reg [1:0] nVS_cnt = 2'b0;
+
+wire [7:0] nHS_WIDTH = 8'd127;       // HSYNC width (effectively 64 pixel)
+wire [1:0] nVS_WIDTH = 2'd2;         // three lines for VSYNC
+wire    CSen_lineend = ((rdhcnt + 2'b11) > (line_width[rdline] - {3'b000,nHS_WIDTH}));
 
 wire    [1:0] SL_str = vinfo_dbl[3:2];
 wire nENABLE_linedbl = vinfo_dbl[4] | ~rdrun[1];
@@ -199,27 +200,28 @@ always @(posedge CLK_out) begin
     S_o[1] <= 1'b0;
     S_o[2] <= 1'b1; // dummy
 
-    if (|nVS_cnt) begin
-      nVS_cnt <= nVS_cnt - 1'b1;
-      S_o[0]  <= 1'b1;
-    end
+    nHS_cnt <= nHS_WIDTH;
 
     if (^newFrame) begin
       nVS_cnt  <= nVS_WIDTH;
       S_o[3]   <= 1'b0;
       newFrame[1] <= newFrame[0];
+    end else if (|nVS_cnt) begin
+      nVS_cnt <= nVS_cnt - 1'b1;
+    end else begin
+      S_o[3] <= 1'b1;
     end
   end else begin
-    if (nHS_WIDTH) begin
-      S_o[0] <= 1'b1;
+    if (|nHS_cnt) begin
+      nHS_cnt <= nHS_cnt - 1'b1;
+    end else begin
       S_o[1] <= 1'b1;
-      if (~S_o[3])
-        S_o[0] <= 1'b0;
+      if (S_o[3])
+        S_o[0] <= 1'b1;
     end
-
-    if ((~|nVS_cnt) && (CS_post_VSYNC)) begin
+    
+    if (CSen_lineend) begin
       S_o[0] <= 1'b1;
-      S_o[3] <= 1'b1;
     end
   end
 
