@@ -30,9 +30,6 @@ module n64a_linedbl(
 
 `include "vh/n64a_params.vh"
 
-`define HSTART 11'd109
-`define HSTOP  11'd1532
-
 localparam ram_depth = 11; // plus 1 due to oversampling
 
 input nCLK_4x;
@@ -52,13 +49,15 @@ wire [color_width_i-1:0] R_i = vdata_i[`VDATA_I_RE_SLICE];
 wire [color_width_i-1:0] G_i = vdata_i[`VDATA_I_GR_SLICE];
 wire [color_width_i-1:0] B_i = vdata_i[`VDATA_I_BL_SLICE];
 
-reg               [3:0] S_o;
-reg [color_width_o-1:0] R_o;
-reg [color_width_o-1:0] G_o;
-reg [color_width_o-1:0] B_o;
 
+wire nENABLE_linedbl = vinfo_dbl[4] | ~rdrun[1];
+wire [1:0] SL_str = vinfo_dbl[3:2];
+
+wire pal_mode = vinfo_dbl[1];
+wire n64_480i = vinfo_dbl[0];
 
 // start of rtl
+
 
 reg div_2x = 1'b0;
 
@@ -66,13 +65,20 @@ always @(negedge nCLK_4x) begin
   div_2x <= ~div_2x;
 end
 
+
+reg [ram_depth-1:0] hstart = `HSTART_NTSC_480I;
+reg [ram_depth-1:0] hstop  = `HSTOP_NTSC;
+
+reg [6:0] nHS_width = `HS_WIDTH_NTSC_480I;
+
+
 reg                 wren   = 1'b0;
 reg                 wrline = 1'b0;
 reg [ram_depth-1:0] wrhcnt = {ram_depth{1'b0}};
 reg [ram_depth-1:0] wraddr = {ram_depth{1'b0}};
 
 wire line_overflow = &{wrhcnt[ram_depth-1],wrhcnt[ram_depth-2],wrhcnt[ram_depth-5]};  // close approach for NTSC and PAL
-wire valid_line    = wrhcnt > `HSTOP;                                                 // for evaluation
+wire valid_line    = wrhcnt > hstop;                                                  // for evaluation
 
 
 reg [ram_depth-1:0] line_width[0:1];
@@ -92,9 +98,36 @@ reg [1:0] start_reading_proc = 2'b00;
 always @(negedge nCLK_4x) begin
   if (~div_2x) begin
     if (nVS_i_buf & ~nVS_i) begin
+      // trigger new frame
       newFrame[0] <= ~newFrame[1];
+
+      // trigger read start
       if (&{nHS_i_buf,~nHS_i,~line_overflow,valid_line})
-        start_reading_proc[0] <= ~start_reading_proc[1];  // trigger start reading
+        start_reading_proc[0] <= ~start_reading_proc[1];
+
+      // set new info
+      case({pal_mode,n64_480i})
+        2'b00: begin
+            hstart    <= `HSTART_NTSC_240P;
+            hstop     <= `HSTOP_NTSC;
+            nHS_width <= `HS_WIDTH_NTSC_240P;
+          end
+        2'b01: begin
+            hstart    <= `HSTART_NTSC_480I;
+            hstop     <= `HSTOP_NTSC;
+            nHS_width <= `HS_WIDTH_NTSC_480I;
+          end
+        2'b10: begin
+            hstart    <= `HSTART_PAL_288P;
+            hstop     <= `HSTOP_PAL;
+            nHS_width <= `HS_WIDTH_PAL_288P;
+          end
+        2'b11: begin
+            hstart    <= `HSTART_PAL_576I;
+            hstop     <= `HSTOP_PAL;
+            nHS_width <= `HS_WIDTH_PAL_576I;
+          end
+      endcase
     end
 
     if (nHS_i_buf & ~nHS_i) begin // negedge nHSYNC -> reset wrhcnt and toggle wrline
@@ -106,10 +139,10 @@ always @(negedge nCLK_4x) begin
       wrhcnt <= wrhcnt + 1'b1;
     end
 
-    if (wrhcnt == `HSTART) begin
+    if (wrhcnt == hstart) begin
       wren   <= 1'b1;
       wraddr <= {ram_depth{1'b0}};
-    end else if (wrhcnt > `HSTART && wrhcnt < `HSTOP) begin
+    end else if (wrhcnt > hstart && wrhcnt < hstop) begin
       wraddr <= wraddr + 1'b1;
     end else begin
       wren   <= 1'b0;
@@ -121,7 +154,6 @@ always @(negedge nCLK_4x) begin
   end
 end
 
-//wire pal_mode = vinfo_dbl[1];
 
 reg           [2:0] rden     = 3'b0;
 reg           [1:0] rdrun    = 2'b00;
@@ -144,10 +176,10 @@ always @(negedge nCLK_4x) begin
       rdrun <= 2'b00;
     end
 
-    if (rdhcnt == `HSTART) begin
+    if (rdhcnt == hstart) begin
       rden[0] <= 1'b1;
       rdaddr  <= {ram_depth{1'b0}};
-    end else if (rdhcnt > `HSTART && rdhcnt < `HSTOP) begin
+    end else if (rdhcnt > hstart && rdhcnt < hstop) begin
       rdaddr <= rdaddr + 1'b1;
     end else begin
       rden[0] <= 1'b0;
@@ -190,16 +222,16 @@ ram2port_0 videobuffer_1(
 );
 
 
-wire       nHS_WIDTH = rdhcnt[7];    // HSYNC width (effectively 64 pixel)
-wire [1:0] nVS_WIDTH = 2'd3;         // three lines for VSYNC
-wire   CS_post_VSYNC = &rdhcnt[7:6];
-
-
-reg        rdcnt_buf = 1'b0;
+reg     rdcnt_buf = 1'b0;
+reg [7:0] nHS_cnt = 8'd0;
 reg [1:0] nVS_cnt = 2'b0;
 
-wire [1:0] SL_str = vinfo_dbl[3:2];
-wire nENABLE_linedbl = vinfo_dbl[4] | ~rdrun[1];
+wire CSen_lineend = ((rdhcnt + 2'b11) > (line_width[rdline] - nHS_width));
+
+reg               [3:0] S_o;
+reg [color_width_o-1:0] R_o;
+reg [color_width_o-1:0] G_o;
+reg [color_width_o-1:0] B_o;
 
 always @(negedge nCLK_4x) begin
 
@@ -208,27 +240,28 @@ always @(negedge nCLK_4x) begin
     S_o[1] <= 1'b0;
     S_o[2] <= 1'b1; // dummy
 
-    if (|nVS_cnt) begin
-      nVS_cnt <= nVS_cnt - 1'b1;
-      S_o[0]  <= 1'b1;
-    end
+    nHS_cnt <= nHS_width;
 
     if (^newFrame) begin
-      nVS_cnt  <= nVS_WIDTH;
+      nVS_cnt  <= `VS_WIDTH;
       S_o[3]   <= 1'b0;
       newFrame[1] <= newFrame[0];
+    end else if (|nVS_cnt) begin
+      nVS_cnt <= nVS_cnt - 1'b1;
+    end else begin
+      S_o[3] <= 1'b1;
     end
   end else begin
-    if (nHS_WIDTH) begin
-      S_o[0] <= 1'b1;
+    if (|nHS_cnt) begin
+      nHS_cnt <= nHS_cnt - 1'b1;
+    end else begin
       S_o[1] <= 1'b1;
-      if (~S_o[3])
-        S_o[0] <= 1'b0;
+      if (S_o[3])
+        S_o[0] <= 1'b1;
     end
-
-    if ((~|nVS_cnt) && (CS_post_VSYNC)) begin
+    
+    if (CSen_lineend) begin
       S_o[0] <= 1'b1;
-      S_o[3] <= 1'b1;
     end
   end
 
