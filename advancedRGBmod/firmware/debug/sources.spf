@@ -1,0 +1,125 @@
+<session jtag_chain="USB-Blaster [USB-0]" jtag_device="@1: 10CL006(Y|Z)/10CL010(Y|Z)/.. (0x020F10DD)">
+  <display_attributes is_max_probe_read_interval="1" is_write_immediate="1" probe_read_interval="1" probe_read_interval_units="s"/>
+  <instance enable_logging="true" entity_name="" is_auto_node="true" name="">
+    <node_ip_info instance_id="0" mfg_id="110" node_id="9" version="0"/>
+    <sources>
+      <source name="Scanlines[0] = strength lsb" value="false"/>
+      <source name="Scanlines[1] = strength msb" value="false"/>
+      <source name="Scanlines[2] = overwrite jumper" value="false"/>
+    </sources>
+    <probes/>
+    <view>
+      <view_node expanded="true" group_name="Scanlines" index="0" lsb_to_msb="false" node_type="source" radix="bin" view_type="group_header"/>
+      <view_node expanded="true" index="2" node_type="source" view_type="group_member"/>
+      <view_node expanded="true" index="1" node_type="source" view_type="group_member"/>
+      <view_node expanded="true" index="0" node_type="source" view_type="group_member"/>
+    </view>
+    <log data="" max_size="8" size="0" time="" width="3"/>
+  </instance>
+  <instance enable_logging="true" entity_name="" is_auto_node="true" name="">
+    <node_ip_info instance_id="1" mfg_id="110" node_id="9" version="0"/>
+    <sources>
+      <source name="Gamma[0] = table lsb" value="false"/>
+      <source name="Gamme[1] = table msb" value="false"/>
+      <source name="Gamme[2] = force" value="false"/>
+    </sources>
+    <probes/>
+    <view>
+      <view_node expanded="true" group_name="Gamma" index="0" lsb_to_msb="false" node_type="source" radix="bin" view_type="group_header"/>
+      <view_node expanded="true" index="2" node_type="source" view_type="group_member"/>
+      <view_node expanded="true" index="1" node_type="source" view_type="group_member"/>
+      <view_node expanded="true" index="0" node_type="source" view_type="group_member"/>
+    </view>
+    <log data="" max_size="8" size="0" time="" width="3"/>
+  </instance>
+  <instance enable_logging="true" entity_name="" is_auto_node="true" name="">
+    <node_ip_info instance_id="2" mfg_id="110" node_id="9" version="0"/>
+    <sources>
+      <source name="source[0]" value="true"/>
+      <source name="source[1]" value="false"/>
+      <source name="source[2]" value="true"/>
+      <source name="source[3]" value="true"/>
+      <source name="source[4]" value="false"/>
+      <source name="source[5]" value="true"/>
+      <source name="source[6]" value="true"/>
+      <source name="source[7]" value="false"/>
+      <source name="source[8]" value="false"/>
+      <source name="source[9]" value="false"/>
+      <source name="source[10]" value="false"/>
+    </sources>
+    <probes/>
+    <view>
+      <view_node expanded="false" group_name="HSTART" index="0" lsb_to_msb="false" node_type="source" radix="unsigned" view_type="group_header"/>
+      <view_node expanded="true" index="10" node_type="source" view_type="group_member"/>
+      <view_node expanded="true" index="9" node_type="source" view_type="group_member"/>
+      <view_node expanded="true" index="8" node_type="source" view_type="group_member"/>
+      <view_node expanded="true" index="7" node_type="source" view_type="group_member"/>
+      <view_node expanded="true" index="6" node_type="source" view_type="group_member"/>
+      <view_node expanded="true" index="5" node_type="source" view_type="group_member"/>
+      <view_node expanded="true" index="4" node_type="source" view_type="group_member"/>
+      <view_node expanded="true" index="3" node_type="source" view_type="group_member"/>
+      <view_node expanded="true" index="2" node_type="source" view_type="group_member"/>
+      <view_node expanded="true" index="1" node_type="source" view_type="group_member"/>
+      <view_node expanded="true" index="0" node_type="source" view_type="group_member"/>
+    </view>
+    <log data="" max_size="8" size="0" time="" width="11"/>
+  </instance>
+  <instance enable_logging="true" entity_name="" is_auto_node="true" name="">
+    <node_ip_info instance_id="3" mfg_id="110" node_id="9" version="0"/>
+    <sources>
+      <source name="source[0]" value="false"/>
+      <source name="source[1]" value="false"/>
+      <source name="source[2]" value="true"/>
+      <source name="source[3]" value="true"/>
+      <source name="source[4]" value="true"/>
+      <source name="source[5]" value="true"/>
+      <source name="source[6]" value="true"/>
+      <source name="source[7]" value="true"/>
+      <source name="source[8]" value="true"/>
+      <source name="source[9]" value="false"/>
+      <source name="source[10]" value="true"/>
+    </sources>
+    <probes/>
+    <view>
+      <view_node expanded="false" group_name="HSTOP" index="0" lsb_to_msb="false" node_type="source" radix="unsigned" view_type="group_header"/>
+      <view_node expanded="true" index="10" node_type="source" view_type="group_member"/>
+      <view_node expanded="true" index="9" node_type="source" view_type="group_member"/>
+      <view_node expanded="true" index="8" node_type="source" view_type="group_member"/>
+      <view_node expanded="true" index="7" node_type="source" view_type="group_member"/>
+      <view_node expanded="true" index="6" node_type="source" view_type="group_member"/>
+      <view_node expanded="true" index="5" node_type="source" view_type="group_member"/>
+      <view_node expanded="true" index="4" node_type="source" view_type="group_member"/>
+      <view_node expanded="true" index="3" node_type="source" view_type="group_member"/>
+      <view_node expanded="true" index="2" node_type="source" view_type="group_member"/>
+      <view_node expanded="true" index="1" node_type="source" view_type="group_member"/>
+      <view_node expanded="true" index="0" node_type="source" view_type="group_member"/>
+    </view>
+    <log data="" max_size="8" size="0" time="" width="11"/>
+  </instance>
+  <instance enable_logging="true" entity_name="" is_auto_node="true" name="">
+    <node_ip_info instance_id="4" mfg_id="110" node_id="9" version="0"/>
+    <sources>
+      <source name="source[0]" value="true"/>
+      <source name="source[1]" value="true"/>
+      <source name="source[2]" value="true"/>
+      <source name="source[3]" value="true"/>
+      <source name="source[4]" value="true"/>
+      <source name="source[5]" value="true"/>
+      <source name="source[6]" value="true"/>
+      <source name="source[7]" value="false"/>
+    </sources>
+    <probes/>
+    <view>
+      <view_node expanded="false" group_name="HS_WIDTH" index="0" lsb_to_msb="false" node_type="source" radix="unsigned" view_type="group_header"/>
+      <view_node expanded="true" index="7" node_type="source" view_type="group_member"/>
+      <view_node expanded="true" index="6" node_type="source" view_type="group_member"/>
+      <view_node expanded="true" index="5" node_type="source" view_type="group_member"/>
+      <view_node expanded="true" index="4" node_type="source" view_type="group_member"/>
+      <view_node expanded="true" index="3" node_type="source" view_type="group_member"/>
+      <view_node expanded="true" index="2" node_type="source" view_type="group_member"/>
+      <view_node expanded="true" index="1" node_type="source" view_type="group_member"/>
+      <view_node expanded="true" index="0" node_type="source" view_type="group_member"/>
+    </view>
+    <log data="" max_size="8" size="0" time="" width="8"/>
+  </instance>
+</session>
