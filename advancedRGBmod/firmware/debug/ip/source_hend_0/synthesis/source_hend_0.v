@@ -13,7 +13,7 @@ module source_hend_0 (
 		.instance_id             ("NONE"),
 		.probe_width             (0),
 		.source_width            (11),
-		.source_initial_value    ("5FC"),
+		.source_initial_value    ("600"),
 		.enable_metastability    ("NO")
 	) in_system_sources_probes_0 (
 		.source     (source), // sources.source

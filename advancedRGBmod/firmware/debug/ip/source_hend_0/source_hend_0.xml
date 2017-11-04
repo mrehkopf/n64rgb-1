@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <deploy
- date="2017.11.02.20:24:28"
+ date="2017.11.04.19:25:12"
  outputDirectory="F:/Documents/Workspaces/GitHub/N64RGB/advancedRGBmod/firmware/debug/ip/source_hend_0/">
  <perimeter>
   <parameter
@@ -41,12 +41,12 @@
  </perimeter>
  <entity
    path=""
-   parameterizationKey="source_hend_0:1.0:AUTO_DEVICE=EP4CE6E22C8,AUTO_DEVICE_FAMILY=Cyclone IV E,AUTO_DEVICE_SPEEDGRADE=8,AUTO_GENERATION_ID=1509650667,AUTO_UNIQUE_ID=(altera_in_system_sources_probes:17.0:create_source_clock=false,create_source_clock_enable=false,device_family=Cyclone IV E,enable_metastability=NO,gui_use_auto_index=true,instance_id=NONE,probe_width=0,sld_auto_instance_index=YES,sld_instance_index=0,source_initial_value=5FC,source_width=11)"
+   parameterizationKey="source_hend_0:1.0:AUTO_DEVICE=EP4CE6E22C8,AUTO_DEVICE_FAMILY=Cyclone IV E,AUTO_DEVICE_SPEEDGRADE=8,AUTO_GENERATION_ID=1509819912,AUTO_UNIQUE_ID=(altera_in_system_sources_probes:17.0:create_source_clock=false,create_source_clock_enable=false,device_family=Cyclone IV E,enable_metastability=NO,gui_use_auto_index=true,instance_id=NONE,probe_width=0,sld_auto_instance_index=YES,sld_instance_index=0,source_initial_value=600,source_width=11)"
    instancePathKey="source_hend_0"
    kind="source_hend_0"
    version="1.0"
    name="source_hend_0">
-  <parameter name="AUTO_GENERATION_ID" value="1509650667" />
+  <parameter name="AUTO_GENERATION_ID" value="1509819912" />
   <parameter name="AUTO_DEVICE" value="EP4CE6E22C8" />
   <parameter name="AUTO_DEVICE_FAMILY" value="Cyclone IV E" />
   <parameter name="AUTO_UNIQUE_ID" value="" />
@@ -91,14 +91,14 @@
  </entity>
  <entity
    path="submodules/"
-   parameterizationKey="altera_in_system_sources_probes:17.0:create_source_clock=false,create_source_clock_enable=false,device_family=Cyclone IV E,enable_metastability=NO,gui_use_auto_index=true,instance_id=NONE,probe_width=0,sld_auto_instance_index=YES,sld_instance_index=0,source_initial_value=5FC,source_width=11"
+   parameterizationKey="altera_in_system_sources_probes:17.0:create_source_clock=false,create_source_clock_enable=false,device_family=Cyclone IV E,enable_metastability=NO,gui_use_auto_index=true,instance_id=NONE,probe_width=0,sld_auto_instance_index=YES,sld_instance_index=0,source_initial_value=600,source_width=11"
    instancePathKey="source_hend_0:.:in_system_sources_probes_0"
    kind="altera_in_system_sources_probes"
    version="17.0"
    name="altsource_probe_top">
   <parameter name="create_source_clock" value="false" />
   <parameter name="instance_id" value="NONE" />
-  <parameter name="source_initial_value" value="5FC" />
+  <parameter name="source_initial_value" value="600" />
   <parameter name="sld_auto_instance_index" value="YES" />
   <parameter name="sld_instance_index" value="0" />
   <parameter name="probe_width" value="0" />

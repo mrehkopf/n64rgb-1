@@ -13,7 +13,7 @@ module source_hs_width_0 (
 		.instance_id             ("NONE"),
 		.probe_width             (0),
 		.source_width            (8),
-		.source_initial_value    ("7F"),
+		.source_initial_value    ("70"),
 		.enable_metastability    ("NO")
 	) in_system_sources_probes_0 (
 		.source     (source), // sources.source

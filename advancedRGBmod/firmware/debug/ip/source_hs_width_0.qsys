@@ -6,7 +6,7 @@
    version="1.0"
    description=""
    tags="INTERNAL_COMPONENT=true"
-   categories="" />
+   categories="System" />
  <parameter name="bonusData"><![CDATA[bonusData 
 {
    element in_system_sources_probes_0
@@ -59,7 +59,7 @@
   <parameter name="instance_id" value="NONE" />
   <parameter name="probe_width" value="0" />
   <parameter name="sld_instance_index" value="0" />
-  <parameter name="source_initial_value" value="7F" />
+  <parameter name="source_initial_value" value="70" />
   <parameter name="source_width" value="8" />
  </module>
  <interconnectRequirement for="$system" name="qsys_mm.clockCrossingAdapter" value="HANDSHAKE" />

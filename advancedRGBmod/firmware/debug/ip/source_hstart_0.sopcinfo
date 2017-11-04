@@ -5,11 +5,11 @@
  version="1.0"
  fabric="QSYS">
  <!-- Format version 17.0 602 (Future versions may contain additional information.) -->
- <!-- 2017.11.02.20:22:45 -->
+ <!-- 2017.11.04.19:26:20 -->
  <!-- A collection of modules and connections -->
  <parameter name="AUTO_GENERATION_ID">
   <type>java.lang.Integer</type>
-  <value>1509650564</value>
+  <value>1509819980</value>
   <derived>false</derived>
   <enabled>true</enabled>
   <visible>false</visible>
@@ -147,7 +147,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="source_initial_value">
    <type>java.lang.String</type>
-   <value>6D</value>
+   <value>e6</value>
    <derived>false</derived>
    <enabled>true</enabled>
    <visible>true</visible>
