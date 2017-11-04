@@ -93,7 +93,7 @@ set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to nRST
 ## =======================
 set_location_assignment PIN_43 -to CLK_ADV712x
 set_location_assignment PIN_59 -to nCSYNC_ADV712x
-# set_location_assignment PIN_60 -to nBLANK_ADV712x
+set_location_assignment PIN_60 -to nBLANK_ADV712x
 set_location_assignment PIN_46 -to V3_o[7]
 set_location_assignment PIN_49 -to V3_o[6]
 set_location_assignment PIN_50 -to V3_o[5]
@@ -175,6 +175,8 @@ set_global_assignment -name QIP_FILE ip/ram2port_0.qip
 set_global_assignment -name QIP_FILE debug/ip/source_hstart_0/synthesis/source_hstart_0.qip
 set_global_assignment -name QIP_FILE debug/ip/source_hend_0/synthesis/source_hend_0.qip
 set_global_assignment -name QIP_FILE debug/ip/source_hs_width_0/synthesis/source_hs_width_0.qip
+set_global_assignment -name QIP_FILE debug/ip/source_vs_fp_0/synthesis/source_vs_fp_0.qip
+set_global_assignment -name QIP_FILE debug/ip/source_vs_bp_0/synthesis/source_vs_bp_0.qip
 set_global_assignment -name VERILOG_FILE rtl/n64a_vconv.v
 set_global_assignment -name QIP_FILE ip/altmult_add3_0.qip
 set_global_assignment -name QIP_FILE ip/altmult_add2_0.qip
@@ -192,7 +194,7 @@ set_instance_assignment -name CURRENT_STRENGTH_NEW "MINIMUM CURRENT" -to nRST
 
 set_instance_assignment -name CURRENT_STRENGTH_NEW "MINIMUM CURRENT" -to CLK_ADV712x
 set_instance_assignment -name CURRENT_STRENGTH_NEW "MINIMUM CURRENT" -to nCSYNC_ADV712x
-# set_instance_assignment -name CURRENT_STRENGTH_NEW MINIMUM CURRENT" -to nBLANK_ADV712x
+set_instance_assignment -name CURRENT_STRENGTH_NEW "MINIMUM CURRENT" -to nBLANK_ADV712x
 set_instance_assignment -name CURRENT_STRENGTH_NEW "MINIMUM CURRENT" -to V3_o[7]
 set_instance_assignment -name CURRENT_STRENGTH_NEW "MINIMUM CURRENT" -to V3_o[6]
 set_instance_assignment -name CURRENT_STRENGTH_NEW "MINIMUM CURRENT" -to V3_o[5]

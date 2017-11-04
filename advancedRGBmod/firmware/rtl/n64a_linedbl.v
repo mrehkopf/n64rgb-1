@@ -36,7 +36,7 @@ module n64a_linedbl(
 //                        // (atm a compromise between NTSC and PAL)
 
 //`define nHS_WIDTH 8'd127  // HSYNC width (effectively 64 pixel)
-`define nVS_WIDTH 2'd2    // three lines for VSYNC
+`define nVS_WIDTH 2'd3    // three lines for VSYNC
 
 wire [10:0] HSTART;
 wire [10:0] HSTOP;
@@ -50,6 +50,16 @@ source_hend_0 set_hstop(
 wire [7:0] nHS_WIDTH;
 source_hs_width_0 set_nhs_width(
   .source(nHS_WIDTH)
+);
+
+wire [3:0] nVS_FP;
+source_vs_fp_0 set_nvs_fp(
+  .source(nVS_FP)
+);
+
+wire [5:0] nVS_BP;
+source_vs_bp_0 set_nvs_bp(
+  .source(nVS_BP)
 );
 
 localparam ram_depth = 11; // plus 1 due to oversampling
@@ -144,7 +154,6 @@ always @(negedge nCLK_in) begin
   end
 end
 
-//wire pal_mode = vinfo_dbl[1];
 
 reg           [2:0] rden     = 3'b0;
 reg           [1:0] rdrun    = 2'b00;
@@ -207,32 +216,40 @@ ram2port_0 videobuffer_0(
 
 reg     rdcnt_buf = 1'b0;
 reg [7:0] nHS_cnt = 8'd0;
-reg [1:0] nVS_cnt = 2'b0;
+reg [9:0] vcnt    = 10'd1;
 
 //wire CSen_lineend = ((rdhcnt + 2'b11) > (line_width[rdline] - {3'b000,`nHS_WIDTH}));
-wire CSen_lineend = ((rdhcnt + 2'b11) > (line_width[rdline] - {3'b000,nHS_WIDTH}));
+wire CSen_lineend = ((rdhcnt + 2'b11) > (line_width[rdline] - nHS_WIDTH));
 
 wire    [1:0] SL_str = vinfo_dbl[3:2];
 wire nENABLE_linedbl = vinfo_dbl[4] | ~rdrun[1];
+
+wire pal_mode = vinfo_dbl[1];
+wire n64_480i = vinfo_dbl[0];
+
+wire [9:0] num_of_lines = pal_mode ? (n64_480i ? `LINES_PAL_576I_DBL  : `LINES_PAL_288P_DBL) :
+                                     (n64_480i ? `LINES_NTSC_480I_DBL : `LINES_NTSC_240P_DBL);
+
+wire v_nblank = (vcnt < `nVS_WIDTH + nVS_BP) || (vcnt > num_of_lines - nVS_FP);
+
 
 always @(posedge CLK_out) begin
 
   if (rdcnt_buf ^ rdcnt) begin
     S_o[0] <= 1'b0;
     S_o[1] <= 1'b0;
-    S_o[2] <= 1'b1; // dummy
 
 //    nHS_cnt <= `nHS_WIDTH;
     nHS_cnt <= nHS_WIDTH;
 
     if (^newFrame) begin
-      nVS_cnt  <= `nVS_WIDTH;
+      vcnt <= 10'd1;
       S_o[3]   <= 1'b0;
       newFrame[1] <= newFrame[0];
-    end else if (|nVS_cnt) begin
-      nVS_cnt <= nVS_cnt - 1'b1;
     end else begin
-      S_o[3] <= 1'b1;
+      if (vcnt == `nVS_WIDTH)
+        S_o[3] <= 1'b1;
+      vcnt <= vcnt + 1'b1;
     end
   end else begin
     if (|nHS_cnt) begin
@@ -247,6 +264,11 @@ always @(posedge CLK_out) begin
       S_o[0] <= 1'b1;
     end
   end
+
+  if (v_nblank)
+    S_o[2] <= 1'b0;
+  else
+    S_o[2] <= rden[2];
 
     rdcnt_buf <= rdcnt;
 
