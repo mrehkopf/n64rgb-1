@@ -52,7 +52,7 @@ end
 // =======================
 
 reg FrameID  = 1'b0; // 0 = even frame, 1 = odd frame; 240p: only odd frames; 480i: even and odd frames
-reg n64_480i = 1'b1;
+reg n64_480i = 1'b1; // 0 = 240p/288p , 1= 480i/576i
 
 always @(negedge nCLK) begin
   if (~nDSYNC) begin
@@ -72,8 +72,8 @@ end
 // determine vmode and blurry pixel position
 // =========================================
 
-reg [1:0] line_cnt;         // PAL: line_cnt[1:0] == 01 ; NTSC: line_cnt[1:0] = 11
-reg       vmode;            // PAL: vmode == 1          ; NTSC: vmode == 0
+reg [1:0] line_cnt;         // PAL: line_cnt[1:0] == 0x ; NTSC: line_cnt[1:0] = 1x
+reg       vmode = 1'b0;     // PAL: vmode == 1          ; NTSC: vmode == 0
 reg       blurry_pixel_pos; // indicates position of a potential blurry pixel
                             // blurry_pixel_pos == 0 -> pixel at D_i
                             // blurry_pixel_pos == 1 -> pixel at previous RGB data
