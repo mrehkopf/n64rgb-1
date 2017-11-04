@@ -41,7 +41,7 @@ module n64a_top (
   // Video Output to ADV712x
      CLK_ADV712x,
   nCSYNC_ADV712x,
-  nBLANK_ADV712x,
+//   nBLANK_ADV712x,
   V3_o,     // video component data vector 3 (B or Pr)
   V2_o,     // video component data vector 2 (G or Y)
   V1_o,     // video component data vector 1 (R or Pb)
@@ -77,7 +77,7 @@ inout  nRST;
 
 output                        CLK_ADV712x;
 output                     nCSYNC_ADV712x;
-output                     nBLANK_ADV712x;
+// output                     nBLANK_ADV712x;
 output [color_width_o-1:0] V3_o;
 output [color_width_o-1:0] V2_o;
 output [color_width_o-1:0] V1_o;
@@ -312,7 +312,7 @@ n64a_vconv video_converter(
 // ===========================
 assign    CLK_ADV712x = PX_CLK_4x;
 assign nCSYNC_ADV712x = nEN_RGsB & nEN_YPbPr ? 1'b0  : Sync_o[0];
-assign nBLANK_ADV712x = Sync_o[2];
+// assign nBLANK_ADV712x = Sync_o[2];
 
 // Filter Add On:
 // =============================

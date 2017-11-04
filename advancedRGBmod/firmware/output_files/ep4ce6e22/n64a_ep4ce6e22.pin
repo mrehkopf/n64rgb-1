@@ -128,7 +128,7 @@ VCCIO4                       : 56        : power  :                   : 3.3V    
 GND                          : 57        : gnd    :                   :         :           :                
 RESERVED_INPUT_WITH_WEAK_PULLUP : 58        :        :                   :         : 4         :                
 nCSYNC_ADV712x               : 59        : output : 3.3-V LVTTL       :         : 4         : Y              
-nBLANK_ADV712x               : 60        : output : 3.3-V LVTTL       :         : 4         : Y              
+RESERVED_INPUT_WITH_WEAK_PULLUP : 60        :        :                   :         : 4         :                
 VCCINT                       : 61        : power  :                   : 1.2V    :           :                
 VCCIO4                       : 62        : power  :                   : 3.3V    : 4         :                
 GND                          : 63        : gnd    :                   :         :           :                

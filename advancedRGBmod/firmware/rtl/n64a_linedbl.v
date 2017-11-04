@@ -52,16 +52,6 @@ source_hs_width_0 set_nhs_width(
   .source(nHS_WIDTH)
 );
 
-wire [3:0] nVS_FP;
-source_vs_fp_0 set_nvs_fp(
-  .source(nVS_FP)
-);
-
-wire [5:0] nVS_BP;
-source_vs_bp_0 set_nvs_bp(
-  .source(nVS_BP)
-);
-
 localparam ram_depth = 11; // plus 1 due to oversampling
 
 input nCLK_in;
@@ -224,20 +214,13 @@ wire CSen_lineend = ((rdhcnt + 2'b11) > (line_width[rdline] - nHS_WIDTH));
 wire    [1:0] SL_str = vinfo_dbl[3:2];
 wire nENABLE_linedbl = vinfo_dbl[4] | ~rdrun[1];
 
-wire pal_mode = vinfo_dbl[1];
-wire n64_480i = vinfo_dbl[0];
-
-wire [9:0] num_of_lines = pal_mode ? (n64_480i ? `LINES_PAL_576I_DBL  : `LINES_PAL_288P_DBL) :
-                                     (n64_480i ? `LINES_NTSC_480I_DBL : `LINES_NTSC_240P_DBL);
-
-wire v_nblank = (vcnt < `nVS_WIDTH + nVS_BP) || (vcnt > num_of_lines - nVS_FP);
-
 
 always @(posedge CLK_out) begin
 
   if (rdcnt_buf ^ rdcnt) begin
     S_o[0] <= 1'b0;
     S_o[1] <= 1'b0;
+    S_o[2] <= 1'b1; // dummy
 
 //    nHS_cnt <= `nHS_WIDTH;
     nHS_cnt <= nHS_WIDTH;
@@ -264,11 +247,6 @@ always @(posedge CLK_out) begin
       S_o[0] <= 1'b1;
     end
   end
-
-  if (v_nblank)
-    S_o[2] <= 1'b0;
-  else
-    S_o[2] <= rden[2];
 
     rdcnt_buf <= rdcnt;
 
