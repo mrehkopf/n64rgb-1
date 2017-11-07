@@ -9,9 +9,10 @@
 // Description:    simple line-multiplying
 //
 // Dependencies: vh/n64a_params.vh
+//               ip/altpll_0.qip
 //               ip/ram2port_0.qip
 //
-// Revision: 1.1
+// Revision: 1.2
 // Features: linebuffer for - NTSC 240p -> 480p rate conversion
 //                          - PAL  288p -> 576p rate conversion
 //           injection of scanlines on demand in three selectable intensities
@@ -22,6 +23,7 @@
 module n64a_linedbl(
   nCLK_in,
   CLK_out,
+  nRST,
 
   vinfo_dbl,
 
@@ -33,8 +35,9 @@ module n64a_linedbl(
 
 localparam ram_depth = 11; // plus 1 due to oversampling
 
-input nCLK_in;
-input CLK_out;
+input  nCLK_in;
+output CLK_out;
+input  nRST;
 
 input [4:0] vinfo_dbl; // [nLinedbl,SL_str (2bits),PAL,interlaced]
 
@@ -50,7 +53,6 @@ wire nHS_i = vdata_i[3*color_width_i+1];
 wire [color_width_i-1:0] R_i = vdata_i[`VDATA_I_RE_SLICE];
 wire [color_width_i-1:0] G_i = vdata_i[`VDATA_I_GR_SLICE];
 wire [color_width_i-1:0] B_i = vdata_i[`VDATA_I_BL_SLICE];
-
 
 wire nENABLE_linedbl = vinfo_dbl[4] | ~rdrun[1];
 wire [1:0] SL_str = vinfo_dbl[3:2];
@@ -68,6 +70,17 @@ always @(negedge nCLK_in) begin
 end
 
 
+wire PX_CLK_4x, PLL_locked;
+altpll_0 vid_pll(
+  .inclk0(nCLK_in),
+  .areset(~nRST),
+  .locked(PLL_locked),
+  .c0(PX_CLK_4x)
+);
+
+wire RST = ~(nRST && PLL_locked);
+
+
 reg [ram_depth-1:0] hstart = `HSTART_NTSC_480I;
 reg [ram_depth-1:0] hstop  = `HSTOP_NTSC;
 
@@ -76,7 +89,7 @@ reg [6:0] nHS_width = `HS_WIDTH_NTSC_480I;
 
 reg                 wren   = 1'b0;
 reg                 wrline = 1'b0;
-reg [ram_depth-1:0] wrhcnt = {ram_depth{1'b0}};
+reg [ram_depth-1:0] wrhcnt = {ram_depth{1'b1}};
 reg [ram_depth-1:0] wraddr = {ram_depth{1'b0}};
 
 wire line_overflow = &{wrhcnt[ram_depth-1],wrhcnt[ram_depth-2],wrhcnt[ram_depth-5]};  // close approach for NTSC and PAL
@@ -93,8 +106,9 @@ reg  nVS_i_buf = 1'b0;
 reg  nHS_i_buf = 1'b0;
 
 
-reg [1:0] newFrame       = 2'b0;
-reg [1:0] start_reading_proc = 2'b00;
+reg [1:0]     newFrame = 2'b0;
+reg [1:0] start_rdproc = 2'b00;
+reg [1:0]  stop_rdproc = 2'b00;
 
 
 always @(negedge nCLK_in) begin
@@ -105,7 +119,7 @@ always @(negedge nCLK_in) begin
 
       // trigger read start
       if (&{nHS_i_buf,~nHS_i,~line_overflow,valid_line})
-        start_reading_proc[0] <= ~start_reading_proc[1];
+        start_rdproc[0] <= ~start_rdproc[1];
 
       // set new info
       case({pal_mode,n64_480i})
@@ -154,6 +168,16 @@ always @(negedge nCLK_in) begin
     nVS_i_buf <= nVS_i;
     nHS_i_buf <= nHS_i;
   end
+
+  if (RST) begin
+        newFrame[0] <= newFrame[1];
+    start_rdproc[0] <= start_rdproc[1];
+     stop_rdproc[0] <= ~stop_rdproc[1];
+
+    wren   <= 1'b0;
+    wrline <= 1'b0;
+    wrhcnt <= {ram_depth{1'b1}};
+  end
 end
 
 
@@ -161,10 +185,10 @@ reg           [2:0] rden     = 3'b0;
 reg           [1:0] rdrun    = 2'b00;
 reg                 rdcnt    = 1'b0;
 reg                 rdline   = 1'b0;
-reg [ram_depth-1:0] rdhcnt   = {ram_depth{1'b0}};
+reg [ram_depth-1:0] rdhcnt   = {ram_depth{1'b1}};
 reg [ram_depth-1:0] rdaddr   = {ram_depth{1'b0}};
 
-always @(posedge CLK_out) begin
+always @(posedge PX_CLK_4x) begin
   if (rdrun[1]) begin
     if (rdhcnt == line_width[rdline]) begin
       rdhcnt   <= {ram_depth{1'b0}};
@@ -192,12 +216,19 @@ always @(posedge CLK_out) begin
     rdcnt    <= 1'b1;
     rdline   <= ~wrline;
     rdhcnt   <= {ram_depth{1'b0}};
-  end else if (^start_reading_proc) begin
+  end else if (^start_rdproc) begin
     rdrun[0] <= 1'b1;
   end
-
+  
   rden[2:1] <= rden[1:0];
-  start_reading_proc[1] <= start_reading_proc[0];
+
+  if (^stop_rdproc) begin
+    rden  <= 3'b0;
+    rdrun <= 2'b0;
+  end
+
+  start_rdproc[1] <= start_rdproc[0];
+   stop_rdproc[1] <=  stop_rdproc[0];
 end
 
 
@@ -206,7 +237,7 @@ wire [color_width_i-1:0] R_buf, G_buf, B_buf;
 ram2port_0 videobuffer_0(
   .data({R_i,G_i,B_i}),
   .rdaddress(rdaddr),
-  .rdclock(CLK_out),
+  .rdclock(PX_CLK_4x),
   .rden(rden[0]),
   .wraddress(wraddr),
   .wrclock(~nCLK_in),
@@ -226,7 +257,7 @@ reg [color_width_o-1:0] R_o;
 reg [color_width_o-1:0] G_o;
 reg [color_width_o-1:0] B_o;
 
-always @(posedge CLK_out) begin
+always @(posedge PX_CLK_4x) begin
 
   if (rdcnt_buf ^ rdcnt) begin
     S_o[0] <= 1'b0;
@@ -309,6 +340,7 @@ end
 
 // post-assignment
 
+assign CLK_out = PX_CLK_4x;
 assign vdata_o = {S_o,R_o,G_o,B_o};
 
 endmodule 

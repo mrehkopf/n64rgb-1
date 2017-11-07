@@ -37,6 +37,7 @@ parameter vdata_width_o = 4 + 3*color_width_o;
   `define VDATA_O_GR_SLICE  2*color_width_o-1:  color_width_o
   `define VDATA_O_BL_SLICE    color_width_o-1:0
 
+
   `define HSTART_NTSC_240P  11'd240
   `define HSTART_NTSC_480I  11'd230
   `define HSTOP_NTSC        11'd1496

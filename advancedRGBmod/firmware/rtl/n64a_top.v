@@ -267,18 +267,10 @@ rom_1port_0 gamma_correction(
 // Part 5: Post-Processing
 // =======================
 
-wire PX_CLK_4x;
-
-altpll_0 vid_pll(
-  .inclk0(nCLK),
-  .areset(~nRST),
-  .c0(PX_CLK_4x)
-);
-
-
 // Part 5.1: Line Multiplier
 // =========================
 
+wire CLK_out;
 
 wire       nENABLE_linedbl = (n64_480i & n480i_bob) | ~n240p | ~nRST;
 wire [1:0] SL_str_dbl      = n64_480i ? 2'b11 : SL_active;
@@ -289,7 +281,8 @@ wire [vdata_width_o-1:0] vdata_tmp;
 
 n64a_linedbl linedoubler(
   .nCLK_in(nCLK),
-  .CLK_out(PX_CLK_4x),
+  .CLK_out(CLK_out),
+  .nRST(nRST),
   .vinfo_dbl(vinfo_dbl),
   .vdata_i(vdata_ir[6]),
   .vdata_o(vdata_tmp)
@@ -302,7 +295,7 @@ n64a_linedbl linedoubler(
 wire [3:0] Sync_o;
 
 n64a_vconv video_converter(
-  .CLK(PX_CLK_4x),
+  .CLK(CLK_out),
   .nEN_YPbPr(nEN_YPbPr),    // enables color transformation on '0'
   .vdata_i(vdata_tmp),
   .vdata_o({Sync_o,V1_o,V2_o,V3_o})
@@ -310,7 +303,7 @@ n64a_vconv video_converter(
 
 // Part 5.3: assign final outputs
 // ===========================
-assign    CLK_ADV712x = PX_CLK_4x;
+assign    CLK_ADV712x = CLK_out;
 assign nCSYNC_ADV712x = nEN_RGsB & nEN_YPbPr ? 1'b0  : Sync_o[0];
 // assign nBLANK_ADV712x = Sync_o[2];
 
