@@ -100,20 +100,52 @@ input       n480i_bob;
 // Part 0: Debug probes and sources
 // ================================
 
-wire [2:0] SL_debug;
+wire [2:0] Linedoubler_debug;
+source_3bit_0 Linedoubler_debug_src(
+  .source(Linedoubler_debug)
+);
 
+// bit assignment for Linedoubler_debug[2:0]:
+// 2 - 0 = use J4 setting         | 1 = use debug setting
+// 1 - 0 = disable lineX2         | 1 = enable lineX2
+// 0 - 0 = enable 480i bob-deint. | 1 = output 480i
+
+
+wire [2:0] SL_debug;
 source_3bit_0 scanline_debug_src(
   .source(SL_debug)
 );
+
+// bit assignment for SL_debug[2:0]:
+// 2   - 0 = use J3 setting | 1 = use debug setting
+// 1:0 - Scanline strength (00, 01, 10, 11 = 100%, 50%, 25%, 0%)
 
 wire [1:0] SL_active = SL_debug[2] ? SL_debug[1:0] : SL_str;
 
 
 wire [2:0] gamma_debug;
-
 source_3bit_0 gamma_debug_src(
   .source(gamma_debug)
 );
+
+// bit assignment for gamma_debug[2:0]:
+// 2   - use gamma table (don't use gamma table means gamma = 1.0)
+// 1:0 - 00 = 0.8
+//       01 = 0.9
+//       10 = 1.1
+//       11 = 1.2
+
+
+
+wire [2:0] DeBlur_15bitmode_debug;
+source_3bit_0 DeBlur_15bitmode_debug_src(
+  .source(DeBlur_15bitmode_debug)
+);
+
+// bit assignment for DeBlur_15bitmode_debug[2:0]:
+// 2 - 0 = use IGR setting | 1 = use debug setting
+// 1 - 0 = force de-blur   | 1 = don't use de-blur (replaces nDeBlurMan)
+// 0 - 0 = 15bit mode      | 1 = 21bit mode        (replaces n15bit_mode)
 
 
 // Part 1: connect IGR module
@@ -121,7 +153,7 @@ source_3bit_0 gamma_debug_src(
 
 assign SYS_CLKen = 1'b1;
 
-wire nForceDeBlur, nDeBlurMan, n15bit_mode;
+wire nForceDeBlur_tmp, nDeBlurMan_tmp, n15bit_mode_tmp;
 
 n64_igr igr(
   .SYS_CLK(SYS_CLK),
@@ -129,10 +161,14 @@ n64_igr igr(
   .CTRL(CTRL_i),
   .Default_DeBlur(1'b1),
   .Default_nForceDeBlur(1'b1),
-  .nForceDeBlur(nForceDeBlur),
-  .nDeBlur(nDeBlurMan),
-  .n15bit_mode(n15bit_mode)
+  .nForceDeBlur(nForceDeBlur_tmp),
+  .nDeBlur(nDeBlurMan_tmp),
+  .n15bit_mode(n15bit_mode_tmp)
 );
+
+wire nForceDeBlur = DeBlur_15bitmode_debug[2] ? 1'b0 : nForceDeBlur_tmp;
+wire nDeBlurMan   = DeBlur_15bitmode_debug[2] ? DeBlur_15bitmode_debug[1] : nDeBlurMan_tmp;
+wire n15bit_mode  = DeBlur_15bitmode_debug[2] ? DeBlur_15bitmode_debug[0] : n15bit_mode_tmp;
 
 
 // Part 2 - 4: RGB Demux with De-Blur Add-On
@@ -272,7 +308,12 @@ rom_1port_0 gamma_correction(
 
 wire CLK_out;
 
-wire       nENABLE_linedbl = (n64_480i & n480i_bob) | ~n240p | ~nRST;
+wire     n240p_debug = Linedoubler_debug[2] ? Linedoubler_debug[1] : n240p;
+wire n480i_bob_debug = Linedoubler_debug[2] ? Linedoubler_debug[0] : n480i_bob;
+
+wire       nENABLE_linedbl = (n64_480i & n480i_bob_debug) | ~n240p_debug | ~nRST;
+
+// wire       nENABLE_linedbl = (n64_480i & n480i_bob) | ~n240p | ~nRST;
 wire [1:0] SL_str_dbl      = n64_480i ? 2'b11 : SL_active;
 
 wire [4:0] vinfo_dbl = {nENABLE_linedbl,SL_str_dbl,vmode,n64_480i};
