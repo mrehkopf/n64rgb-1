@@ -52,8 +52,7 @@ output reg nForceDeBlur = 1'b1;
 output reg n15bit_mode  = 1'b1;
 
 
-wire CLK_4M;
-wire CLK_16k;
+wire CLK_4M, CLK_16k;
 
 altpll_1 sys_pll(
   .inclk0(SYS_CLK),
@@ -160,10 +159,6 @@ always @(posedge CLK_4M) begin
   prev_ctrl <= CTRL;
 
   if (nRST == 1'b0) begin
-`ifdef OPTION_INVLPF
-    InvLPF      <= 1'b0;
-`endif
-
     nForceDeBlur <= Default_nForceDeBlur;
 
     read_state    <= ST_WAIT4N64;
