@@ -41,7 +41,7 @@ set_global_assignment -name FAMILY "Cyclone 10 LP"
 set_global_assignment -name DEVICE 10CL010YE144C8G
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 17.0.2
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "09:03:44  SEPTEMBER 28, 2017"
-set_global_assignment -name LAST_QUARTUS_VERSION "17.0.2 Lite Edition"
+set_global_assignment -name LAST_QUARTUS_VERSION "17.1.0 Lite Edition"
 set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
 set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
 set_global_assignment -name ERROR_CHECK_FREQUENCY_DIVISOR 1
@@ -73,6 +73,8 @@ set_location_assignment PIN_141 -to D_i[3]
 set_location_assignment PIN_142 -to D_i[2]
 set_location_assignment PIN_143 -to D_i[1]
 set_location_assignment PIN_144 -to D_i[0]
+
+set_location_assignment PLL_1 -to "n64a_linedbl:linedoubler|altpll_0:vid_pll|altpll:altpll_component|altpll_0_altpll:auto_generated|pll1"
 
 
 ## System, Controller and Reset
@@ -162,14 +164,15 @@ set_global_assignment -name VERILOG_FILE rtl/n64a_top.v
 set_global_assignment -name VERILOG_INCLUDE_FILE vh/n64a_params.vh
 set_global_assignment -name VERILOG_INCLUDE_FILE vh/igr_params.vh
 set_global_assignment -name VERILOG_FILE rtl/n64_igr.v
-set_global_assignment -name QIP_FILE ip/altpll_0.qip
+set_global_assignment -name QIP_FILE ip/Cyclone10LP/altpll_1.qip
+set_global_assignment -name QIP_FILE ip/Cyclone10LP/altpll_0.qip
 set_global_assignment -name VERILOG_FILE rtl/n64_vinfo_ext.v
 set_global_assignment -name VERILOG_FILE rtl/n64_deblur.v
 set_global_assignment -name VERILOG_FILE rtl/n64a_linedbl.v
-set_global_assignment -name QIP_FILE ip/ram2port_0.qip
+set_global_assignment -name QIP_FILE ip/Cyclone10LP/ram2port_0.qip
 set_global_assignment -name VERILOG_FILE rtl/n64a_vconv.v
-set_global_assignment -name QIP_FILE ip/altmult_add3_0.qip
-set_global_assignment -name QIP_FILE ip/altmult_add2_0.qip
+set_global_assignment -name QIP_FILE ip/Cyclone10LP/altmult_add3_0.qip
+set_global_assignment -name QIP_FILE ip/Cyclone10LP/altmult_add2_0.qip
 set_global_assignment -name SDC_FILE sdc/n64a_sdc.sdc
 
 set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files/10cl010ye144

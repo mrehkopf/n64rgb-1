@@ -8,6 +8,7 @@
 *.sof
 *.srf
 *.summary
+*.qdf
 *.qws
 *_description.txt
 db/
