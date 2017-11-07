@@ -9,6 +9,7 @@
 // Description:    simple line-multiplying
 //
 // Dependencies: vh/n64a_params.vh
+//               ip/altpll_0.qip
 //               ip/ram2port_0.qip
 //
 // Revision: 1.1
@@ -20,7 +21,9 @@
 
 
 module n64a_linedbl(
-  nCLK_4x,
+  nCLK_in,
+  CLK_out,
+  nRST,
 
   vinfo_dbl,
 
@@ -32,7 +35,9 @@ module n64a_linedbl(
 
 localparam ram_depth = 11; // plus 1 due to oversampling
 
-input nCLK_4x;
+input  nCLK_in;
+output CLK_out;
+input  nRST;
 
 input [4:0] vinfo_dbl; // [nLinedbl,SL_str (2bits),PAL,interlaced]
 
@@ -56,12 +61,12 @@ wire [1:0] SL_str = vinfo_dbl[3:2];
 wire pal_mode = vinfo_dbl[1];
 wire n64_480i = vinfo_dbl[0];
 
-// start of rtl
 
+// start of rtl
 
 reg div_2x = 1'b0;
 
-always @(negedge nCLK_4x) begin
+always @(negedge nCLK_in) begin
   div_2x <= ~div_2x;
 end
 
@@ -95,7 +100,7 @@ reg [1:0] newFrame       = 2'b0;
 reg [1:0] start_reading_proc = 2'b00;
 
 
-always @(negedge nCLK_4x) begin
+always @(negedge nCLK_in) begin
   if (~div_2x) begin
     if (nVS_i_buf & ~nVS_i) begin
       // trigger new frame
@@ -155,6 +160,13 @@ always @(negedge nCLK_4x) begin
 end
 
 
+wire PX_CLK_4x;
+altpll_0 vid_pll(
+  .inclk0(nCLK_in),
+  .areset(~nRST),
+  .c0(PX_CLK_4x)
+);
+
 reg           [2:0] rden     = 3'b0;
 reg           [1:0] rdrun    = 2'b00;
 reg                 rdcnt    = 1'b0;
@@ -162,7 +174,7 @@ reg                 rdline   = 1'b0;
 reg [ram_depth-1:0] rdhcnt   = {ram_depth{1'b0}};
 reg [ram_depth-1:0] rdaddr   = {ram_depth{1'b0}};
 
-always @(negedge nCLK_4x) begin
+always @(posedge PX_CLK_4x) begin
   if (rdrun[1]) begin
     if (rdhcnt == line_width[rdline]) begin
       rdhcnt   <= {ram_depth{1'b0}};
@@ -202,21 +214,23 @@ end
 wire [color_width_i-1:0] R_buf[0:1], G_buf[0:1], B_buf[0:1];
 
 ram2port_0 videobuffer_0(
-  .clock(~nCLK_4x),
   .data({R_i,G_i,B_i}),
   .rdaddress(rdaddr),
+  .rdclock(PX_CLK_4x),
   .rden(&{rden[0],~rdline}),
   .wraddress(wraddr),
+  .wrclock(~nCLK_in),
   .wren(&{wren,~wrline,~line_overflow,~div_2x}),
   .q({R_buf[0],G_buf[0],B_buf[0]})
 );
 
 ram2port_0 videobuffer_1(
-  .clock(~nCLK_4x),
   .data({R_i,G_i,B_i}),
   .rdaddress(rdaddr),
+  .rdclock(PX_CLK_4x),
   .rden(&{rden[0],rdline}),
   .wraddress(wraddr),
+  .wrclock(~nCLK_in),
   .wren(&{wren,wrline,~line_overflow,~div_2x}),
   .q({R_buf[1],G_buf[1],B_buf[1]})
 );
@@ -233,7 +247,7 @@ reg [color_width_o-1:0] R_o;
 reg [color_width_o-1:0] G_o;
 reg [color_width_o-1:0] B_o;
 
-always @(negedge nCLK_4x) begin
+always @(posedge PX_CLK_4x) begin
 
   if (rdcnt_buf ^ rdcnt) begin
     S_o[0] <= 1'b0;
@@ -316,6 +330,7 @@ end
 
 // post-assignment
 
+assign CLK_out = PX_CLK_4x;
 assign vdata_o = {S_o,R_o,G_o,B_o};
 
 endmodule 

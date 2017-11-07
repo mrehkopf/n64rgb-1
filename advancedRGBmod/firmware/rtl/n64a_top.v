@@ -214,6 +214,7 @@ end
 // Part 5.1: Line Multiplier
 // =========================
 
+wire CLK_out;
 
 wire       nENABLE_linedbl = (n64_480i & n480i_bob) | ~n240p | ~nRST;
 wire [1:0] SL_str_dbl      = n64_480i ? 2'b11 : SL_str;
@@ -223,7 +224,9 @@ wire [4:0] vinfo_dbl = {nENABLE_linedbl,SL_str_dbl,vmode,n64_480i};
 wire [vdata_width_o-1:0] vdata_tmp;
 
 n64a_linedbl linedoubler(
-  .nCLK_4x(nCLK),
+  .nCLK_in(nCLK),
+  .CLK_out(CLK_out),
+  .nRST(nRST),
   .vinfo_dbl(vinfo_dbl),
   .vdata_i(vdata_ir[1]),
   .vdata_o(vdata_tmp)
@@ -236,7 +239,7 @@ n64a_linedbl linedoubler(
 wire [3:0] Sync_o;
 
 n64a_vconv video_converter(
-  .nCLK(nCLK),
+  .CLK(CLK_out),
   .nEN_YPbPr(nEN_YPbPr),    // enables color transformation on '0'
   .vdata_i(vdata_tmp),
   .vdata_o({Sync_o,V1_o,V2_o,V3_o})
@@ -244,7 +247,7 @@ n64a_vconv video_converter(
 
 // Part 5.3: assign final outputs
 // ===========================
-assign    CLK_ADV712x = ~nCLK;
+assign    CLK_ADV712x = CLK_out;
 assign nCSYNC_ADV712x = nEN_RGsB & nEN_YPbPr ? 1'b0  : Sync_o[0];
 //assign nBLANK_ADV712x = 1'b1;
 

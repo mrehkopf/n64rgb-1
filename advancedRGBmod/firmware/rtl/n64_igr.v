@@ -9,7 +9,7 @@
 // Description:
 //
 // Dependencies: vh/igr_params.vh
-//               ip/altpll_0.qip
+//               ip/altpll_1.qip
 //
 // Revision: 3.0
 // Features: console reset
@@ -55,7 +55,7 @@ output reg n15bit_mode  = 1'b1;
 wire CLK_4M;
 wire CLK_16k;
 
-altpll_0 sys_pll(
+altpll_1 sys_pll(
   .inclk0(SYS_CLK),
   .c0(CLK_4M),
   .c1(CLK_16k)
