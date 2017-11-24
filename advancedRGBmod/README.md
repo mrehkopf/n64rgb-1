@@ -103,9 +103,31 @@ The video DAC does not use any filtering. In general, this is also not needed. I
 The filter addon is based on a THS7368, where the video channels with selectable filter are used. As the filter is selected over the same pins as HSYNC and VSYNC, the addon is not compatible to VGA.
 
 
-## Firmware / Technical Information
+## Technical Information
 
-Firmware programming file depends on the FPGA you use. Please keep that in mind and select the programming file you need..
+A complete installation and setup guide to this modding kit is provided in the main folder of the repository. Here are some additional short notes.
+
+### Checklist: How to build the project
+
+- Use PCB files to order your own PCB or simply use the shared project(s) on OSHPark
+- Source the components you need, e.g. from Mouser or Digikey
+- Wait for everything to arrive
+- Assemble your PCB
+- Set all jumpers
+- Flash the firmware to the serial flash device
+  * You need a Altera USB Blaster
+  * Use the JIC programming file if you want to program the serial flash over the FPGA or the SOF file if you have a AS programming adapter for the serial flash
+  * The serial flash / board needs to be powered; so you may consider to install the PCB into your N64 first and then use the N64 for powering the board
+  * If you want to build an adapter, you may take a look onto [my DIY adapter](https://oshpark.com/shared_projects/mEwjoesz) at [my profile on OSHPark](https://oshpark.com/profiles/borti4938)
+- Install the modding board:
+  * Installation description is part of the guide located in the top folder.
+  * However an installation guide of a simalar product made by viletim is provided [here](http://etim.net.au/n64rgb/). The minor differences / extra pads are as follows:
+    * decide on you own whether you want to use the analog part with 5V (connect 5V to the appropriate pad) or with 3.3V (short jumper _J6_). **Don't connect 5V and close J5.**
+	* Pad *C*: currently unused. Leave it unconnected
+    * Pad *Rst#*: connect this pad to the PIF-NUS pin 27
+    * Pad *Ctrl*: connect this pin to the middle pin of the controller port you want to use for the IGR functions (controller port 1 is probably connected to PIF-NUS pin 16; check that before soldering a wire)
+  * You have to be aware of the pinout of your video-encoder build into your N64. Pads on the DIY modding board are labeled.
+  * If you have a MAV-NUS in your N64, you may want to use either the DIY break out board provided with this project and on OSHPark or buy a [flex cable from viletims shop](http://etim.net.au/shop/shop.php?crn=209&rn=555&action=show_detail)
 
 ### Jumpers
 
@@ -150,27 +172,6 @@ _J5_ is the JTAG connector.
 
 #### J6 (Power supply of analog outputs)
 The analog part can be power with **either** 3.3V **or** 5V. If you want to power this part of the PCB with 3.3V, close J5 and leave pad . If you want to power this part with 5V, leave _J6_ opened and connect pad _5V_ to +5V power rail of the N64. **NEVER connect 5V and close J5.**
-
-### How to build the project
-
-- Use PCB files to order your own PCB or simply use the shared project(s) on OSHPark
-- Source the components you need, e.g. from Mouser or Digikey
-- Wait for everything to arrive
-- Assemble your PCB
-- Set all jumpers
-- Flash the firmware to the serial flash device
-  * You need a Altera USB Blaster
-  * Use the JIC programming file if you want to program the serial flash over the FPGA or the SOF file if you have a AS programming adapter for the serial flash
-  * The serial flash / board needs to be powered; so you may consider to install the PCB into your N64 first and then use the N64 for powering the board
-  * If you want to build an adapter, you may take a look onto [my DIY adapter](https://oshpark.com/shared_projects/mEwjoesz) at [my profile on OSHPark](https://oshpark.com/profiles/borti4938)
-- Install the modding board:
-  * Installation is similar to the [installation of viletims board](http://etim.net.au/n64rgb/). The minor differences / extra pads are as follows:
-    * decide on you own whether you want to use the analog part with 5V (connect 5V to the appropriate pad) or with 3.3V (short jumper _J6_). **Don't connect 5V and close J5.**
-	* Pad *C*: currently unused. Leave it unconnected
-    * Pad *Rst#*: connect this pad to the PIF-NUS pin 27
-    * Pad *Ctrl*: connect this pin to the middle pin of the controller port you want to use for the IGR functions (controller port 1 is probably connected to PIF-NUS pin 16; check that before soldering a wire)
-  * You have to be aware of the pinout of your video-encoder build into your N64. Pads on the DIY modding board are labeled.
-  * If you have a MAV-NUS in your N64, you may want to use either the DIY break out board provided with this project and on OSHPark or buy a [flex cable from viletims shop](http://etim.net.au/shop/shop.php?crn=209&rn=555&action=show_detail)
 
 ### Source the PCB
 
