@@ -53,6 +53,8 @@ module n64a_top (
 
   // Jumper VGA Sync / Filter AddOn
   UseVGA_HVSync, // (J1) use Filter out if '0'; use /HS and /VS if '1'
+  nFilterBypass, // (J1) bypass filter if '0'; set filter as output if '1'
+                 //      (only applicable if UseVGA_HVSync is '0')
 
   // Jumper Video Output Type and Scanlines
   nEN_RGsB,   // (J2) generate RGsB if '0'
@@ -87,6 +89,7 @@ output nVSYNC_or_F2;
 output nHSYNC_or_F1;
 
 input UseVGA_HVSync;
+input nFilterBypass;
 
 input       nEN_RGsB;
 input       nEN_YPbPr;
@@ -265,9 +268,9 @@ assign nCSYNC_ADV712x = nEN_RGsB & nEN_YPbPr ? 1'b0  : Sync_o[0];
 
 assign nCSYNC       = Sync_o[0];
 
-assign nVSYNC_or_F2 = UseVGA_HVSync   ? Sync_o[3] :
-                      nENABLE_linedbl ? 1'b0 : 1'b1;
-assign nHSYNC_or_F1 = UseVGA_HVSync   ? Sync_o[1] :
-                                        1'b0;
+assign nVSYNC_or_F2 = UseVGA_HVSync                     ? Sync_o[3] :
+                      (nFilterBypass & nENABLE_linedbl) ? 1'b0 : 1'b1;
+assign nHSYNC_or_F1 = UseVGA_HVSync                     ? Sync_o[1] :
+                      nFilterBypass                     ? 1'b0 : 1'b1;
 
 endmodule

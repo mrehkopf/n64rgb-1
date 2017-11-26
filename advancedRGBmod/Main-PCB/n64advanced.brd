@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="8.4.2">
+<eagle version="8.4.3">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -5041,7 +5041,7 @@ design rules under a new name.</description>
 <wire x1="29.502153125" y1="30.988" x2="28.993678125" y2="31.496475" width="0.2032" layer="1"/>
 <wire x1="30.226" y1="30.988" x2="29.502153125" y2="30.988" width="0.2032" layer="1"/>
 </signal>
-<signal name="NC">
+<signal name="FIL_BYPASS">
 <contactref element="J1" pad="1"/>
 <contactref element="U1" pad="112"/>
 <wire x1="32.512" y1="35.687" x2="32.512" y2="33.528" width="0.2032" layer="1"/>
