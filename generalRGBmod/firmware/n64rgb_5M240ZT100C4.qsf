@@ -42,7 +42,7 @@ set_global_assignment -name DEVICE 5M240ZT100C4
 set_global_assignment -name TOP_LEVEL_ENTITY n64rgb
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 15.1.2
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "12:42:21  APRIL 19, 2017"
-set_global_assignment -name LAST_QUARTUS_VERSION "17.0.2 Lite Edition"
+set_global_assignment -name LAST_QUARTUS_VERSION "17.1.0 Lite Edition"
 set_global_assignment -name VERILOG_FILE n64rgb.v
 set_global_assignment -name VERILOG_FILE n64igr.v
 set_global_assignment -name VERILOG_INCLUDE_FILE igr_params.vh
@@ -63,6 +63,8 @@ set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to nRST_nManualDB
 set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to CTRL_nAutoDB
 set_location_assignment PIN_12 -to nCLK
 set_location_assignment PIN_14 -to nDSYNC
+set_instance_assignment -name GLOBAL_SIGNAL GLOBAL_CLOCK -to nCLK
+set_instance_assignment -name GLOBAL_SIGNAL GLOBAL_CLOCK -to nDSYNC
 set_location_assignment PIN_21 -to D_i[0]
 set_location_assignment PIN_20 -to D_i[1]
 set_location_assignment PIN_19 -to D_i[2]
