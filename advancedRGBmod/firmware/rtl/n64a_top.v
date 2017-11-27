@@ -107,6 +107,24 @@ initial begin
   vdata_ir[1] = {vdata_width_i{1'b0}};
 end
 
+// Part 0: determine jumper set
+// ============================
+
+reg nfirstboot = 1'b0;
+reg UseJumperSet;
+
+always @(negedge nCLK) begin
+  if (~nfirstboot) begin
+    UseJumperSet <= nRST;  // fallback if reset pressed on power cycle
+    nfirstboot <= 1'b1;
+  end
+end
+
+// fallback only to 240p and RGB
+// (sync output on G/Y in any case to see at least something even with a component cable)
+
+wire nEN_YPbPr_active = UseJumperSet ? nEN_YPbPr : 1'b1;
+wire n240p_active     = UseJumperSet ? n240p     : 1'b0;
 
 // Part 1: connect IGR module
 // ==========================
@@ -219,7 +237,7 @@ end
 
 wire CLK_out;
 
-wire       nENABLE_linedbl = (n64_480i & n480i_bob) | ~n240p | ~nRST;
+wire       nENABLE_linedbl = (n64_480i & n480i_bob) | ~n240p_active | ~nRST;
 wire [1:0] SL_str_dbl      = n64_480i ? 2'b11 : SL_str;
 
 wire [4:0] vinfo_dbl = {nENABLE_linedbl,SL_str_dbl,vmode,n64_480i};
@@ -243,7 +261,7 @@ wire [3:0] Sync_o;
 
 n64a_vconv video_converter(
   .CLK(CLK_out),
-  .nEN_YPbPr(nEN_YPbPr),    // enables color transformation on '0'
+  .nEN_YPbPr(nEN_YPbPr_active),    // enables color transformation on '0'
   .vdata_i(vdata_tmp),
   .vdata_o({Sync_o,V1_o,V2_o,V3_o})
 );
@@ -251,7 +269,7 @@ n64a_vconv video_converter(
 // Part 5.3: assign final outputs
 // ===========================
 assign    CLK_ADV712x = CLK_out;
-assign nCSYNC_ADV712x = nEN_RGsB & nEN_YPbPr ? 1'b0  : Sync_o[0];
+assign nCSYNC_ADV712x = nEN_RGsB & nEN_YPbPr ? 1'b0  : Sync_o[0]; // output sync on G/Y even in fallbac mode
 //assign nBLANK_ADV712x = 1'b1;
 
 // Filter Add On:
