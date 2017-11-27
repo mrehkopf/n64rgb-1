@@ -3932,7 +3932,7 @@ design rules under a new name.</description>
 <element name="R15" library="rcl" package="R0603" value="10k" x="14.224" y="14.478" smashed="yes" rot="R180"/>
 <element name="R16" library="rcl" package="R0603" value="10k" x="39.497" y="29.21" smashed="yes" rot="R270"/>
 <element name="R51" library="rcl" package="R0603" value="25" x="10.16" y="11.303" smashed="yes" rot="MR180"/>
-<element name="R21" library="rcl" package="R0603" value="530/560" x="53.34" y="19.05" smashed="yes" rot="MR0"/>
+<element name="R21" library="rcl" package="R0603" value="518/515" x="53.34" y="19.05" smashed="yes" rot="MR0"/>
 <element name="R22" library="rcl" package="R0603" value="4k7" x="54.864" y="21.844" smashed="yes" rot="MR90"/>
 <element name="R53" library="rcl" package="R0603" value="4k7" x="10.16" y="15.367" smashed="yes" rot="MR180"/>
 <element name="R31" library="rcl" package="R0603" value="4k7" x="43.053" y="30.48" smashed="yes"/>

@@ -11752,7 +11752,7 @@ Based on Cypress-EZ-usb-8051.pdf</description>
 <part name="CS#" library="wirepad@1" deviceset="SMD2" device=""/>
 <part name="HS#" library="wirepad@1" deviceset="SMD2" device=""/>
 <part name="VS#" library="wirepad@1" deviceset="SMD2" device=""/>
-<part name="R21" library="rcl" deviceset="R-EU_" device="R0603" value="530/560"/>
+<part name="R21" library="rcl" deviceset="R-EU_" device="R0603" value="518/515"/>
 <part name="AGND9" library="supply1" deviceset="GND" device=""/>
 <part name="R22" library="rcl" deviceset="R-EU_" device="R0603" value="4k7"/>
 <part name="P+5" library="supply1" deviceset="+5V" device=""/>
