@@ -139,7 +139,8 @@ There are some jumpers spreaded over the PCB, namely _J1_, _J2_, _J3_, _J4_, _J5
 - closed: use filter addon
 
 ##### J1.2
-- currently unused
+- opened: use filter of the addon board
+- closed: bypass filter (actually filter is set to 95MHz cut-off which is way above the video signal content)
 
 #### J2 (RGB, RGsB, YPbPr)
 ##### J2.1
@@ -172,6 +173,12 @@ _J5_ is the JTAG connector.
 
 #### J6 (Power supply of analog outputs)
 The analog part can be power with **either** 3.3V **or** 5V. If you want to power this part of the PCB with 3.3V, close J5 and leave pad . If you want to power this part with 5V, leave _J6_ opened and connect pad _5V_ to +5V power rail of the N64. **NEVER connect 5V and close J5.**
+
+#### Fallback Mode
+
+A fallback mode can be activated by holding reset button down while powering on the N64. In the fallback mode **linedoubling and component conversion is turned off**. Sync on G/Y output is still on if one J2.1 or J2.2 is set as it does not affect RGBS.
+
+
 
 ### Source the PCB
 
