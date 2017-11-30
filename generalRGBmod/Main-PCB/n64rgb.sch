@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="7.7.0">
+<eagle version="8.4.3">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
+<setting keepoldvectorfont="yes"/>
 <setting verticaltext="up"/>
 </settings>
 <grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
@@ -8686,7 +8687,7 @@ Source: http://www.ctscorp.com/components/Datasheets/CTSChipArrayDs.pdf</descrip
 <part name="RN102" library="resistor-net" deviceset="CTS742C083" device="" value="CAT16-2001F4LF "/>
 <part name="RN101" library="resistor-net" deviceset="CTS742C083" device="" value="CAT16-1001F4LF "/>
 <part name="RN103" library="resistor-net" deviceset="CTS742C083" device="" value="CAT16-1001F4LF "/>
-<part name="R100" library="rcl" deviceset="R-EU_" device="R0603" value="270"/>
+<part name="R100" library="rcl" deviceset="R-EU_" device="R0603" value="280"/>
 <part name="GND22" library="supply1" deviceset="GND" device=""/>
 <part name="RN20" library="resistor-net" deviceset="CTS742C083" device="" value="CAT16-75R0F4LF "/>
 <part name="GND8" library="supply1" deviceset="GND" device=""/>
@@ -8697,13 +8698,13 @@ Source: http://www.ctscorp.com/components/Datasheets/CTSChipArrayDs.pdf</descrip
 <part name="RN112" library="resistor-net" deviceset="CTS742C083" device="" value="CAT16-2001F4LF "/>
 <part name="RN111" library="resistor-net" deviceset="CTS742C083" device="" value="CAT16-1001F4LF "/>
 <part name="RN113" library="resistor-net" deviceset="CTS742C083" device="" value="CAT16-1001F4LF "/>
-<part name="R110" library="rcl" deviceset="R-EU_" device="R0603" value="270"/>
+<part name="R110" library="rcl" deviceset="R-EU_" device="R0603" value="280"/>
 <part name="GND9" library="supply1" deviceset="GND" device=""/>
 <part name="RN120" library="resistor-net" deviceset="CTS742C083" device="" value="CAT16-2001F4LF "/>
 <part name="RN122" library="resistor-net" deviceset="CTS742C083" device="" value="CAT16-2001F4LF "/>
 <part name="RN121" library="resistor-net" deviceset="CTS742C083" device="" value="CAT16-1001F4LF "/>
 <part name="RN123" library="resistor-net" deviceset="CTS742C083" device="" value="CAT16-1001F4LF "/>
-<part name="R120" library="rcl" deviceset="R-EU_" device="R0603" value="270"/>
+<part name="R120" library="rcl" deviceset="R-EU_" device="R0603" value="280"/>
 <part name="GND10" library="supply1" deviceset="GND" device=""/>
 <part name="DSYNC#" library="wirepad" deviceset="SMD1" device="" value=""/>
 <part name="CLOCK#" library="wirepad" deviceset="SMD1" device="" value=""/>

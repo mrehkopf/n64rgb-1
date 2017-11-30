@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="7.7.0">
+<eagle version="8.4.3">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
+<setting keepoldvectorfont="yes"/>
 <setting verticaltext="up"/>
 </settings>
 <grid distance="0.05" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.003125" altunitdist="inch" altunit="inch"/>
@@ -2139,10 +2140,10 @@ design rules under a new name.</description>
 <param name="slThermalsForVias" value="0"/>
 <param name="dpMaxLengthDifference" value="10mm"/>
 <param name="dpGapFactor" value="2.5"/>
-<param name="checkGrid" value="0"/>
 <param name="checkAngle" value="0"/>
 <param name="checkFont" value="1"/>
 <param name="checkRestrict" value="0"/>
+<param name="checkStop" value="0"/>
 <param name="useDiameter" value="13"/>
 <param name="maxErrors" value="50"/>
 </designrules>
@@ -2306,7 +2307,7 @@ design rules under a new name.</description>
 <attribute name="VALUE" x="2.54" y="24.765" size="0.0254" layer="27" rot="R90"/>
 </element>
 <element name="R15" library="rcl" package="R0603" value="330" x="39.37" y="19.05" smashed="yes"/>
-<element name="R100" library="rcl" package="R0603" value="270" x="39.37" y="21.59" smashed="yes" rot="R180"/>
+<element name="R100" library="rcl" package="R0603" value="280" x="39.37" y="21.59" smashed="yes" rot="R180"/>
 <element name="R13" library="rcl" package="R0603" value="4k7" x="34.925" y="21.59" smashed="yes"/>
 <element name="R14" library="rcl" package="R0603" value="475" x="34.925" y="19.05" smashed="yes"/>
 <element name="RED" library="wirepad" package="SMD1,27-2,54" value="" x="48.26" y="27.94" smashed="yes" rot="R90">
@@ -2395,7 +2396,7 @@ design rules under a new name.</description>
 <attribute name="OC_FARNELL" value="unknown" x="21.59" y="3.01625" size="1.778" layer="27" rot="R180" display="off"/>
 <attribute name="OC_NEWARK" value="unknown" x="21.59" y="3.01625" size="1.778" layer="27" rot="R180" display="off"/>
 </element>
-<element name="R110" library="rcl" package="R0603" value="270" x="25.4" y="3.01625" smashed="yes" rot="R90"/>
+<element name="R110" library="rcl" package="R0603" value="280" x="25.4" y="3.01625" smashed="yes" rot="R90"/>
 <element name="RN120" library="resistor-net" package="CTS742C083" value="CAT16-2001F4LF " x="29.21" y="6.82625" smashed="yes" rot="R180">
 <attribute name="MF" value="" x="29.21" y="6.82625" size="1.778" layer="27" rot="R180" display="off"/>
 <attribute name="MPN" value="" x="29.21" y="6.82625" size="1.778" layer="27" rot="R180" display="off"/>
@@ -2420,7 +2421,7 @@ design rules under a new name.</description>
 <attribute name="OC_FARNELL" value="unknown" x="33.655" y="3.01625" size="1.778" layer="27" rot="R180" display="off"/>
 <attribute name="OC_NEWARK" value="unknown" x="33.655" y="3.01625" size="1.778" layer="27" rot="R180" display="off"/>
 </element>
-<element name="R120" library="rcl" package="R0603" value="270" x="37.465" y="3.01625" smashed="yes" rot="R90"/>
+<element name="R120" library="rcl" package="R0603" value="280" x="37.465" y="3.01625" smashed="yes" rot="R90"/>
 <element name="DSYNC#" library="wirepad" package="SMD0,8-1,6" value="" x="2.06375" y="18.415" smashed="yes" rot="R90"/>
 <element name="CLOCK#" library="wirepad" package="SMD0,8-1,6" value="" x="2.06375" y="19.685" smashed="yes" rot="R90"/>
 <element name="FBN13" library="resistor-net" package="CTS742C083" value="BLA31BD221SN4D " x="20.955" y="30.48" smashed="yes" rot="R90">
