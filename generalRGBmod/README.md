@@ -93,14 +93,16 @@ _(Button combinations can be modified according to your needs - see note below @
 
 ### 'Hidden' Jumpers - Altering Defaults
 
-There are three 'hidden' jumpers on the modding board. The jumpers are nothing else then neighbouring pins. These pins are marked with an arrow. If you short a pair of pins you can change the default of the above noted features.
+There are three jumpers jumpers on the modding board - one double solder jumper and one 'hidden' jumper - to set up deblur (IGR installation) and 15bit mode.  
+The hidden jumper are nothing else then neighbouring pins. This pin is marked with an arrow. If you short a pair of pins you can change the default of the above noted features.  
 
-- pin 1 and 2 -> deactivate the de-blur heuristic.
-- pin 90 and 91 -> deactivates de-blur by default (only applied if de-blur heuristic is off by default)
-- pin 36 and 37 -> activates the 15bit color mode by default
+- pin 1 and 2 (J11.2)-> deactivate the de-blur heuristic.
+- pin 90 and 91 (J11.1) -> deactivates de-blur by default (only applied if de-blur heuristic is off by default)
+- pin 36 and 37 (hidden jumper) -> activates the 15bit color mode by default
 
 **Note**:  
-Board Version September 2017 and later have a dedicated double solder jumper for de-blur heuristic and de-blur default. The jumper is labeled with _J11_ (left pad is _marked with a dot_). The middle pad is GND, the right pad is de-blur heuristic on (open) or off (short to middle) and the left pad is de-blur on (open) or off (short to middle), respectively.
+Board Version September 2017 and later have a dedicated double solder jumper for de-blur heuristic and de-blur default. The jumper is labeled with _J11_ (left pad is _marked with a dot_). The middle pad is GND, the right pad is de-blur heuristic on (open) or off (short to middle) and the left pad is de-blur on (open) or off (short to middle), respectively.  
+On older revisions _J11.1_ and _J11.2_ are hidden jumpers as well.
 
 
 ### Slow Slew Rate
