@@ -3634,7 +3634,7 @@ Based on Cypress-EZ-usb-8051.pdf</description>
 <class number="0" name="default" width="0" drill="0">
 </class>
 </classes>
-<designrules name="PCBCart">
+<designrules name="PCBCart *">
 <description language="de">&lt;b&gt;EAGLE Design Rules&lt;/b&gt;
 &lt;p&gt;
 Die Standard-Design-Rules sind so gewählt, dass sie für 
@@ -3699,11 +3699,11 @@ design rules under a new name.</description>
 <param name="psElongationLong" value="100"/>
 <param name="psElongationOffset" value="100"/>
 <param name="mvStopFrame" value="1"/>
-<param name="mvCreamFrame" value="0"/>
+<param name="mvCreamFrame" value="0.1"/>
 <param name="mlMinStopFrame" value="2mil"/>
 <param name="mlMaxStopFrame" value="2mil"/>
 <param name="mlMinCreamFrame" value="0mil"/>
-<param name="mlMaxCreamFrame" value="0mil"/>
+<param name="mlMaxCreamFrame" value="5mil"/>
 <param name="mlViaStopLimit" value="30mil"/>
 <param name="srRoundness" value="0"/>
 <param name="srMinRoundness" value="0mil"/>
@@ -5743,37 +5743,37 @@ design rules under a new name.</description>
 </signal>
 </signals>
 <errors>
-<approved hash="7,40,a8c42587e6910717"/>
-<approved hash="7,40,404a47d227c86f1d"/>
-<approved hash="7,40,ccb5519aa71c8d3c"/>
-<approved hash="7,40,37a38f3d604d8f86"/>
-<approved hash="7,40,759caa4deeeb7dfc"/>
-<approved hash="7,40,2025ce4dde782765"/>
-<approved hash="7,40,919fadc201d3a7e9"/>
 <approved hash="3,2,fc8186f1852dff5d"/>
+<approved hash="3,15,fc8186f1852dff5d"/>
+<approved hash="3,1,316f688ea987238d"/>
 <approved hash="7,40,0ba9b920cc759768"/>
 <approved hash="7,40,89a4050b3dff8187"/>
 <approved hash="7,40,aafb8c929896b673"/>
-<approved hash="7,40,7c6e41d620046cf3"/>
+<approved hash="7,40,919fadc201d3a7e9"/>
+<approved hash="7,40,2025ce4dde782765"/>
+<approved hash="7,40,a8c42587e6910717"/>
+<approved hash="7,40,404a47d227c86f1d"/>
+<approved hash="7,40,37a38f3d604d8f86"/>
+<approved hash="7,40,759caa4deeeb7dfc"/>
+<approved hash="7,40,ccb5519aa71c8d3c"/>
 <approved hash="7,40,cad24a162053a238"/>
-<approved hash="7,40,ceaf3b3c8debb58d"/>
 <approved hash="7,40,41ddc255d2606365"/>
-<approved hash="7,40,aab03e70fad4dd31"/>
+<approved hash="7,40,7c6e41d620046cf3"/>
+<approved hash="7,40,ceaf3b3c8debb58d"/>
 <approved hash="7,40,5460649d7f8d8384"/>
 <approved hash="7,40,1985b817a6ffd173"/>
-<approved hash="7,40,201243ca5c11ccfd"/>
+<approved hash="7,40,aab03e70fad4dd31"/>
 <approved hash="7,40,1a62ce422fac9753"/>
+<approved hash="7,40,201243ca5c11ccfd"/>
 <approved hash="7,40,45e08eedb24a272f"/>
 <approved hash="7,40,4427be4fae5c6523"/>
-<approved hash="7,40,f321e045c090e039"/>
 <approved hash="7,40,1ce8c9c6b24cd827"/>
-<approved hash="7,40,0316495deb55e172"/>
+<approved hash="7,40,f321e045c090e039"/>
 <approved hash="7,40,8080e0399b00088d"/>
+<approved hash="7,40,0316495deb55e172"/>
 <approved hash="7,40,5dc7e74bde87bac6"/>
 <approved hash="7,40,b0bc9b9d0d43ac88"/>
 <approved hash="7,40,6322502e400100f8"/>
-<approved hash="3,15,fc8186f1852dff5d"/>
-<approved hash="3,1,316f688ea987238d"/>
 </errors>
 </board>
 </drawing>
