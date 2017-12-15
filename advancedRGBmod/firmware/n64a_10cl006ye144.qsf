@@ -179,6 +179,7 @@ set_global_assignment -name QIP_FILE ip/Cyclone10LP/altmult_add3_0.qip
 set_global_assignment -name QIP_FILE ip/Cyclone10LP/altmult_add2_0.qip
 set_global_assignment -name SDC_FILE sdc/n64a_sdc.sdc
 
+set_global_assignment -name QIP_FILE debug/sources.spf
 set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files/10cl006ye144
 
 ## Current Strength
