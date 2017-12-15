@@ -82,12 +82,12 @@ RESERVED_INPUT_WITH_WEAK_PULLUP : 11        :        :                   :      
 ~ALTERA_DCLK~                : 12        : output : 3.3-V LVTTL       :         : 1         : N              
 ~ALTERA_DATA0~ / RESERVED_INPUT_WITH_WEAK_PULLUP : 13        : input  : 3.3-V LVTTL       :         : 1         : N              
 nCONFIG                      : 14        :        :                   :         : 1         :                
-TDI                          : 15        : input  :                   :         : 1         :                
-TCK                          : 16        : input  :                   :         : 1         :                
+altera_reserved_tdi          : 15        : input  : 3.3-V LVTTL       :         : 1         : N              
+altera_reserved_tck          : 16        : input  : 3.3-V LVTTL       :         : 1         : N              
 VCCIO1                       : 17        : power  :                   : 3.3V    : 1         :                
-TMS                          : 18        : input  :                   :         : 1         :                
+altera_reserved_tms          : 18        : input  : 3.3-V LVTTL       :         : 1         : N              
 GND                          : 19        : gnd    :                   :         :           :                
-TDO                          : 20        : output :                   :         : 1         :                
+altera_reserved_tdo          : 20        : output : 3.3-V LVTTL       :         : 1         : N              
 nCE                          : 21        :        :                   :         : 1         :                
 GND+                         : 22        :        :                   :         : 1         :                
 nCLK                         : 23        : input  : 3.3-V LVTTL       :         : 1         : Y              
