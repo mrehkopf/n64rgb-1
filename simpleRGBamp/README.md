@@ -27,8 +27,8 @@ can be found in this document.
 | | | | | | |
 | **U1** | THS7374 | TSSOP-14 | 1 | 595-THS7374IPWR | |
 | | THS7373 | TSSOP-14 | 1 | 595-THS7373IPWR | **Alternative** for the THS7374 [1] |
-| **C1** | 0.1uF / 50V (10%) | SMD 0603 | 1 | 80-C0603C104K9R | |  
-| **C2** | 22uF / 6.3V (tantal) | SMD case B (typical: 3.50mm x 2.80mm) | 1 | 74-593D226X96R3B2TE3 |
+| **C1** | 22uF / 6.3V (tantal) | SMD case B (typical: 3.50mm x 2.80mm) | 1 | 74-593D226X96R3B2TE3 | |
+| **C2** | 0.1uF / 50V (10%) | SMD 0603 | 1 | 80-C0603C104K9R | |  
 | | | | | | |
 | **R1, R41** | 4.7kohm (1%) | SMD 0603 | 2 | 71-CRCW06034K70FKEAH | |
 | **R42** | 475ohm (1%) | SMD 0603 | 1 | 71-CRCW0603-475-E3 | csync compatible with 75ohm termination [2,3] |

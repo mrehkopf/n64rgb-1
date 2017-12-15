@@ -53,6 +53,8 @@ module n64a_top (
 
   // Jumper VGA Sync / Filter AddOn
   UseVGA_HVSync, // (J1) use Filter out if '0'; use /HS and /VS if '1'
+  nFilterBypass, // (J1) bypass filter if '0'; set filter as output if '1'
+                 //      (only applicable if UseVGA_HVSync is '0')
 
   // Jumper Video Output Type and Scanlines
   nEN_RGsB,   // (J2) generate RGsB if '0'
@@ -87,6 +89,7 @@ output nVSYNC_or_F2;
 output nHSYNC_or_F1;
 
 input UseVGA_HVSync;
+input nFilterBypass;
 
 input       nEN_RGsB;
 input       nEN_YPbPr;
@@ -120,7 +123,6 @@ source_3bit_0 scanline_debug_src(
 // 2   - 0 = use J3 setting | 1 = use debug setting
 // 1:0 - Scanline strength (00, 01, 10, 11 = 100%, 50%, 25%, 0%)
 
-wire [1:0] SL_active = SL_debug[2] ? SL_debug[1:0] : SL_str;
 
 
 wire [2:0] gamma_debug;
@@ -147,6 +149,24 @@ source_3bit_0 DeBlur_15bitmode_debug_src(
 // 1 - 0 = force de-blur   | 1 = don't use de-blur (replaces nDeBlurMan)
 // 0 - 0 = 15bit mode      | 1 = 21bit mode        (replaces n15bit_mode)
 
+// Part 0: determine jumper set
+// ============================
+
+reg nfirstboot = 1'b0;
+reg UseJumperSet;
+
+always @(negedge nCLK) begin
+  if (~nfirstboot) begin
+    UseJumperSet <= nRST;  // fallback if reset pressed on power cycle
+    nfirstboot <= 1'b1;
+  end
+end
+
+// fallback only to 240p and RGB
+// (sync output on G/Y in any case to see at least something even with a component cable)
+
+wire nEN_YPbPr_active = UseJumperSet ? nEN_YPbPr : 1'b1;
+wire n240p_active     = UseJumperSet ? n240p     : 1'b0;
 
 // Part 1: connect IGR module
 // ==========================
@@ -308,13 +328,15 @@ rom_1port_0 gamma_correction(
 
 wire CLK_out;
 
-wire     n240p_debug = Linedoubler_debug[2] ? Linedoubler_debug[1] : n240p;
+wire     n240p_debug = Linedoubler_debug[2] ? Linedoubler_debug[1] : n240p_active;
 wire n480i_bob_debug = Linedoubler_debug[2] ? Linedoubler_debug[0] : n480i_bob;
 
 wire       nENABLE_linedbl = (n64_480i & n480i_bob_debug) | ~n240p_debug | ~nRST;
+// wire       nENABLE_linedbl = (n64_480i & n480i_bob) | ~n240p_active | ~nRST;
 
-// wire       nENABLE_linedbl = (n64_480i & n480i_bob) | ~n240p | ~nRST;
+wire [1:0] SL_active = SL_debug[2] ? SL_debug[1:0] : SL_str;
 wire [1:0] SL_str_dbl      = n64_480i ? 2'b11 : SL_active;
+// wire [1:0] SL_str_dbl      = n64_480i ? 2'b11 : SL_str;
 
 wire [4:0] vinfo_dbl = {nENABLE_linedbl,SL_str_dbl,vmode,n64_480i};
 
@@ -337,7 +359,7 @@ wire [3:0] Sync_o;
 
 n64a_vconv video_converter(
   .CLK(CLK_out),
-  .nEN_YPbPr(nEN_YPbPr),    // enables color transformation on '0'
+  .nEN_YPbPr(nEN_YPbPr_active),    // enables color transformation on '0'
   .vdata_i(vdata_tmp),
   .vdata_o({Sync_o,V1_o,V2_o,V3_o})
 );
@@ -345,7 +367,7 @@ n64a_vconv video_converter(
 // Part 5.3: assign final outputs
 // ===========================
 assign    CLK_ADV712x = CLK_out;
-assign nCSYNC_ADV712x = nEN_RGsB & nEN_YPbPr ? 1'b0  : Sync_o[0];
+assign nCSYNC_ADV712x = nEN_RGsB & nEN_YPbPr ? 1'b0  : Sync_o[0]; // output sync on G/Y even in fallback mode
 // assign nBLANK_ADV712x = Sync_o[2];
 
 // Filter Add On:
@@ -362,9 +384,9 @@ assign nCSYNC_ADV712x = nEN_RGsB & nEN_YPbPr ? 1'b0  : Sync_o[0];
 
 assign nCSYNC       = Sync_o[0];
 
-assign nVSYNC_or_F2 = UseVGA_HVSync   ? Sync_o[3] :
-                      nENABLE_linedbl ? 1'b0 : 1'b1;
-assign nHSYNC_or_F1 = UseVGA_HVSync   ? Sync_o[1] :
-                                        1'b0;
+assign nVSYNC_or_F2 = UseVGA_HVSync                     ? Sync_o[3] :
+                      (nFilterBypass & nENABLE_linedbl) ? 1'b0 : 1'b1;
+assign nHSYNC_or_F1 = UseVGA_HVSync                     ? Sync_o[1] :
+                      nFilterBypass                     ? 1'b0 : 1'b1;
 
 endmodule

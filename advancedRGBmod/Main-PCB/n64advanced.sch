@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="8.3.2">
+<eagle version="8.4.3">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -11752,7 +11752,7 @@ Based on Cypress-EZ-usb-8051.pdf</description>
 <part name="CS#" library="wirepad@1" deviceset="SMD2" device=""/>
 <part name="HS#" library="wirepad@1" deviceset="SMD2" device=""/>
 <part name="VS#" library="wirepad@1" deviceset="SMD2" device=""/>
-<part name="R21" library="rcl" deviceset="R-EU_" device="R0603" value="530/560"/>
+<part name="R21" library="rcl" deviceset="R-EU_" device="R0603" value="518/515"/>
 <part name="AGND9" library="supply1" deviceset="GND" device=""/>
 <part name="R22" library="rcl" deviceset="R-EU_" device="R0603" value="4k7"/>
 <part name="P+5" library="supply1" deviceset="+5V" device=""/>
@@ -12517,7 +12517,7 @@ Based on Cypress-EZ-usb-8051.pdf</description>
 <pinref part="U1" gate="G$1" pin="IO111"/>
 </segment>
 </net>
-<net name="NC" class="0">
+<net name="FIL_BYPASS" class="0">
 <segment>
 <pinref part="J1" gate="G$1" pin="1"/>
 <label x="175.26" y="195.58" size="1.778" layer="95" rot="R90"/>

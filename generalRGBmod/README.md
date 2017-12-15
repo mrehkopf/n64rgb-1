@@ -93,14 +93,16 @@ _(Button combinations can be modified according to your needs - see note below @
 
 ### 'Hidden' Jumpers - Altering Defaults
 
-There are three 'hidden' jumpers on the modding board. The jumpers are nothing else then neighbouring pins. These pins are marked with an arrow. If you short a pair of pins you can change the default of the above noted features.
+There are three jumpers jumpers on the modding board - one double solder jumper and one 'hidden' jumper - to set up deblur (IGR installation) and 15bit mode.  
+The hidden jumper are nothing else then neighbouring pins. This pin is marked with an arrow. If you short a pair of pins you can change the default of the above noted features.  
 
-- pin 1 and 2 -> deactivate the de-blur heuristic.
-- pin 36 and 37 -> deactivates de-blur by default (only applied if de-blur heuristic is off by default)
-- pin 90 and 91 -> activates the 15bit color mode by default
+- pin 1 and 2 (J11.2)-> deactivate the de-blur heuristic.
+- pin 90 and 91 (J11.1) -> deactivates de-blur by default (only applied if de-blur heuristic is off by default)
+- pin 36 and 37 (hidden jumper) -> activates the 15bit color mode by default
 
 **Note**:  
-Board Version September 2017 and later have a dedicated double solder jumper for de-blur heuristic and de-blur default. The jumper is labeled with _J11_ (left pad is _marked with a dot_). The middle pad is GND, the right pad is de-blur heuristic on (open) or off (short to middle) and the left pad is de-blur on (open) or off (short to middle), respectively.
+Board Version September 2017 and later have a dedicated double solder jumper for de-blur heuristic and de-blur default. The jumper is labeled with _J11_ (left pad is _marked with a dot_). The middle pad is GND, the right pad is de-blur heuristic on (open) or off (short to middle) and the left pad is de-blur on (open) or off (short to middle), respectively.  
+On older revisions _J11.1_ and _J11.2_ are hidden jumpers as well.
 
 
 ### Slow Slew Rate
@@ -127,11 +129,11 @@ The bypass mode of the internal filters is controlled by the CPLD. At the moment
 - To leave the internal filters enabled you can left the pad open
 - To bypass the filter set this pad to GND.
 
-## Firmware / Technical Information
+## Technical Information
 
-Firmware programming file depends on the CPLD you use. Please keep that in mind and look for the POF-file with appropriate extension.
+A complete installation and setup guide to this modding kit is provided in the main folder of the repository. Here are some additional short notes.
 
-### How to build the project
+### Checklist: How to build the project
 
 - Use PCB files to order your own PCB or simply use the shared project on OSHPark
 - Source the components you need, e.g. from Mouser
@@ -145,7 +147,8 @@ Firmware programming file depends on the CPLD you use. Please keep that in mind 
   * The board needs to be powered; so you may consider to install the PCB into your N64 first and then use the N64 for powering the board
   * If you want to build an adapter, you may take a look onto [my DIY adapter](https://oshpark.com/shared_projects/mEwjoesz) at [my profile on OSHPark](https://oshpark.com/profiles/borti4938)
 - Install the modding board:
-  * Installation is similar to the [installation of viletims board](http://etim.net.au/n64rgb/). The minor differences / extra pads are as follows:
+  * Installation description is part of the guide located in the top folder.
+  * However an installation guide of a simalar product made by viletim is provided [here](http://etim.net.au/n64rgb/). The minor differences / extra pads are as follows:
     * Pad *Fil*: controls the low pass filter mode (see above)
     * Pad *Rst#*: connect this pad to the PIF-NUS pin 27
     * Pad *Ctrl*: connect this pin to the middle pin of the controller port you want to use for the IGR functions (controller port 1 is probably connected to PIF-NUS pin 16; check that before soldering a wire)
@@ -158,71 +161,10 @@ Choose the PCB service which suits you. Here are some:
 - OSHPark: [Link to the Main PCB](https://oshpark.com/shared_projects/ZkJGARiN) (If the PCB was updated and I forgot to update this link, look onto [my profile](https://oshpark.com/profiles/borti4938))
 - PCBWay.com: [Link](http://www.pcbway.com/), [Affiliate Link](http://www.pcbway.com/setinvite.aspx?inviteid=10658)
 
-### Part List for the PCB
-
+### BOM / Part List for the PCB
 This part list a recommendation how the PCB is designed. If you are able to find pin-compatible devices / parts, you can use them.
 
-The mouser ordering keys are just to help you to source appropriate components.
-
-#### Components
-
-**be aware of the additional comments below this table**
-
-| Label | Device / Part | Package | Quantity | Mouser Ordering Key | Comment |
-|:---:|---|---|:---:|:---|---|
-| | | | | | | |
-| **C1** | 100uF / 6.3V (20%)| SMD 1206 | 1 | 81-GRM31CR60J107ME9L | For strong supply voltage filtering |
-| **L1** | 10uH (10%) / 300mA | SMD 1210 | 1 | 81-LQH32CN100K23L | For strong supply voltage filtering |
-| **FB1** | Ferrite Bead 470 Ohms (25%) DCR 0.2ohm | SMD 0603 | 1 | 81-BLM18PG471SN1D | **Alternative** for **C1** and **L1** for weak supply voltage filtering |
-| | | | | | | |
-| **U1** | EPM240T100C5N [1] | TQFP100 | 1 | 989-EPM240T100C5N | Close J1; don't use U3|
-| | EPM570T100C5N [1] | TQFP100 | 1 | 989-EPM570T100C5N | Close J1; don't use U3 |
-| | 5M240ZT100C4N [1] | TQFP100 | 1 | 989-5M240ZT100C4N | Leave J1 open; use U3 |
-| | 5M570ZT100C4N [1] | TQFP100 | 1 | 989-5M570ZT100C4N | Leave J1 open; use U3 |
-| **C10--C19,C22** | 0.1uF / 50V (10%) | SMD 0603 | 10 | 80-C0603C104K9R | |  
-| **FBN10--FBN13** | Ferrite Chip Bead Array 1206; 4x 220ohm (25%) DCR 0.35ohm | SMD 1206 | 4 | 81-BLA31BD221SN4D | |
-| | Chip Resistor Array 1206; 47ohm (1%) Concave 4resistors | SMD 1206 | 4 | 652-CAT16-47R0F4LF | **Alternative** for the Ferrit Beads |
-| **R10** | 1kohm (1%) | SMD 0603 | 1 | 71-CRCW0603-1.0K | |
-| **R11, R12** | 10kohm (1%) | SMD 0603 | 1 | 71-CRCW0603-10K | |
-| **R13** | 4.7kohm (1%) | SMD 0603 | 1 | 71-CRCW06034K70FKEAH | |
-| **R14** | 475ohm (1%) | SMD 0603 | 1 | 71-CRCW0603-475-E3 | |
-| **R15** | 330ohm (1%) | SMD 0603 | 1 | 71-CRCW0603330RFKEAH | [4] |
-| **RN1x0, RN1x2** | Chip Resistor Array 1206; 2kohm (1%) Concave 4resistors | SMD 1206 | 6 | 652-CAT16-2001F4LF | |
-| **RN1x1, RN1x3** | Chip Resistor Array 1206; 1kohm (1%) Concave 4resistors | SMD 1206 | 6 | 652-CAT16-1001F4LF | |
-| **R100, R110, R120** | 270ohm (1%) | SMD 0603 | 3 | 71-CRCW0603270RFKEAH | |
-| | _bridge_ | SMD 0603 | 1 | | **Alternative** for R15 [4]|
-| | | | | | | |
-| **U2** | THS7374 | TSSOP-14 | 1 | 595-THS7374IPWR | |
-| | THS7373 | TSSOP-14 | 1 | 595-THS7373IPWR | **Alternative** for the THS7374 [2] |
-| **C21** |  22uF/6.3volts (10%) | SMD 1206 | 1 | 81-GRM31CR60J226KE19 | |
-| **RN20** | Chip Resistor Array 1206; 75ohm (1%) Concave 4resistors | SMD 1206 | 1 | 652-CAT16-75R0F4LF | see [3] |
-| | Chip Resistor Array 1206; 39ohm (1%) Concave 4resistors | SMD 1206 | 1 | 652-CAT16-39R0F4LF | **Alternative**, see [3] |
-| **C23--C27** | 47pF / 25V (5%) | SMD 0603 | 5 | 77-VJ0603A470JXXPBC | |  
-| | | | | | | |
-| **U3** | TLV70018DDCR | SOT-23-5 | 1 | 595-TLV70018DDCR | only use this if you use a MaxV CPLD; leave J1 open in that case! |
-| **C31** | 10uF / 6.3V (10%) | SMD 1206 | 1 | 81-GRM426X106K6.3L | Use with **U3** |
-| **C32,C33** | 1uF / 6.3V (10%) | SMD 0603 | 2 | 80-C0603C105K9R | Use with **U3** |
-
-#### Additional Comments
-
-##### [1]
-Only use one of them!
-From the price factor:
-
-- If you head for 240LE, which is enough for the current implementation, I would take a EPM240T100C5N. Here you don't need **U3** and **C31-C33**.
-- If you go for 570LE, which ensures that furture features (what ever that means; but no linedoubling) have enough place to fit in. Here you need **U3** and **C31-C33** for generating the internal voltage of 1.8V.
-
-#### [2]
-THS7373 has one SD-video and three HD-video filters implemented in. The red, green and blue channel are passed through the HD-video filters. These filters can be bypassed on demand which has nearly no effect. The C-Sync is passed through the SD-video filter, which cannot be bypassed.
-In contrast, the THS7374 has four SD-video filters, which can be all bypassed. Therefor **I recommend to use the THS7374**!
-
-#### [3]
-If you use a RGB-cable for a NTSC-SNES, you need the 75ohm resistors.
-If you use a RGB-cable for a PAL-SNES, you need the 39ohm resistors.
-
-#### [4]
-If you have a cable with this resistor inside your cable on the sync line, you don't need to have it here on board.
-
+The manufacturer's part numbers (MPNs) are just to help you to source appropriate components.
 
 ### Firmware
 The firmware is located in the folder firmware/. To build the firmware on your own you need Quartus Prime Lite (any version which supports MaxII and MaxV devices).
