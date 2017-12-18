@@ -319,7 +319,7 @@
 <vertex x="49.609375" y="17.065625"/>
 <vertex x="48.73625" y="17.065625"/>
 </polygon>
-<text x="38.5257625" y="3.1245125" size="0.8128" layer="29" font="vector" ratio="20">__/)__/)_</text>
+<text x="6.7757625" y="9.4745125" size="1.016" layer="25" font="vector" ratio="20">__/)__/)_</text>
 <text x="46.51375" y="6.588125" size="1.016" layer="25" font="vector" ratio="15" rot="R90" align="bottom-right">GND</text>
 <text x="48.73625" y="1.27" size="0.8128" layer="26" font="vector" ratio="15" rot="MR0">Vers: N64RGBv1
 5M_20171211</text>
