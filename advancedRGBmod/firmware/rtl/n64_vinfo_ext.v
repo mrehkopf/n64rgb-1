@@ -3,7 +3,7 @@
 // Engineer: borti4938
 //
 // Module Name:    n64_vinfo_ext
-// Project Name:   N64 Advanced RGB Mod
+// Project Name:   N64 Advanced RGB/YPbPr DAC Mod
 // Target Devices: universial
 // Tool versions:  Altera Quartus Prime
 // Description:    extracts video info from input

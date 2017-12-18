@@ -3,7 +3,7 @@
 // Engineer: borti4938
 //
 // Module Name:    n64a_top
-// Project Name:   N64 Advanced RGB Mod
+// Project Name:   N64 Advanced RGB/YPbPr DAC Mod
 // Target Devices: Cyclone IV:    EP4CE6E22   , EP4CE10E22
 //                 Cyclone 10 LP: 10CL006YE144, 10CL010YE144
 // Tool versions:  Altera Quartus Prime
@@ -100,13 +100,6 @@ input       n480i_bob;
 
 // start of rtl
 
-reg [`VDATA_I_FU_SLICE] vdata_ir[0:1]; // buffer for sync, red, green and blue
-
-initial begin
-  vdata_ir[0] = {vdata_width_i{1'b0}};
-  vdata_ir[1] = {vdata_width_i{1'b0}};
-end
-
 // Part 0: determine jumper set
 // ============================
 
@@ -133,7 +126,7 @@ assign SYS_CLKen = 1'b1;
 
 wire nForceDeBlur, nDeBlurMan, n15bit_mode;
 
-n64_igr igr(
+n64a_igr igr(
   .SYS_CLK(SYS_CLK),
   .nRST(nRST),
   .CTRL(CTRL_i),
@@ -183,7 +176,7 @@ n64_vinfo_ext get_vinfo(
 // Part 3: DeBlur Management (incl. heuristic)
 // ===========================================
 
-wire ndo_deblur, nblank_rgb;
+wire [1:0] deblurparams_pass;
 
 n64_deblur deblur_management(
   .nCLK(nCLK),
@@ -193,40 +186,24 @@ n64_deblur deblur_management(
   .vdata_pre(vdata_ir[0]),
   .vdata_cur(D_i),
   .deblurparams_i({data_cnt,n64_480i,vmode,blurry_pixel_pos,nForceDeBlur,nDeBlurMan}),
-  .deblurparams_o({ndo_deblur,nblank_rgb})
+  .deblurparams_o(deblurparams_pass)
 );
 
 
 // Part 4: data demux
 // ==================
 
-always @(negedge nCLK) begin // data register management
-  if (~nDSYNC) begin
-    // shift data to output registers
-    if(ndo_deblur)        // deblur inactive
-      vdata_ir[1][`VDATA_I_FU_SLICE] <= vdata_ir[0][`VDATA_I_FU_SLICE];
-    else if (nblank_rgb)  // deblur active: pass RGB only if not blanked
-      vdata_ir[1][`VDATA_I_CO_SLICE] <= vdata_ir[0][`VDATA_I_CO_SLICE];
+wire [`VDATA_I_FU_SLICE] vdata_ir[0:1];
 
-    // get new sync data
-    vdata_ir[0][`VDATA_I_SY_SLICE] <= D_i[3:0];
-  end else begin
-    // demux of RGB
-    case(data_cnt)
-      2'b01: vdata_ir[0][`VDATA_I_RE_SLICE] <= n15bit_mode ? D_i : {D_i[6:2], 2'b00};
-      2'b10: begin
-        vdata_ir[0][`VDATA_I_GR_SLICE] <= n15bit_mode ? D_i : {D_i[6:2], 2'b00};
-        if(~ndo_deblur)
-          vdata_ir[1][`VDATA_I_SY_SLICE] <= vdata_ir[0][`VDATA_I_SY_SLICE];
-      end
-      2'b11: vdata_ir[0][`VDATA_I_BL_SLICE] <= n15bit_mode ? D_i : {D_i[6:2], 2'b00};
-    endcase
-  end
-  if (~nRST) begin
-    vdata_ir[0] <= {vdata_width_i{1'b0}};
-    vdata_ir[1] <= {vdata_width_i{1'b0}};
-  end
-end
+n64_vdemux video_demux(
+  .nCLK(nCLK),
+  .nDSYNC(nDSYNC),
+  .D_i(D_i),
+  .demuxparams_i({data_cnt,deblurparams_pass,n15bit_mode}),
+  .vdata_r_0(vdata_ir[0]),
+  .vdata_r_1(vdata_ir[1])
+);
+
 
 // Part 5: Post-Processing
 // =======================

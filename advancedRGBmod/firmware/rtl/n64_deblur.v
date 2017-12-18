@@ -2,8 +2,8 @@
 // Company:  Circuit-Board.de
 // Engineer: borti4938
 //
-// Module Name:    n64_deblurest
-// Project Name:   N64 Advanced RGB Mod
+// Module Name:    n64_deblur
+// Project Name:   N64 Advanced RGB/YPbPr DAC Mod
 // Target Devices: universial
 // Tool versions:  Altera Quartus Prime
 // Description:    estimates whether N64 uses blur or not
