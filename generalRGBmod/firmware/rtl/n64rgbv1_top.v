@@ -3,15 +3,17 @@
 // Engineer: borti4938
 // (initial design file by Ikari_01)
 //
-// Module Name:    n64rgb
-// Project Name:   n64rgb
+// Module Name:    n64rgbv1_top
+// Project Name:   N64 RGB DAC Mod
 // Target Devices: several MaxII & MaxV devices
 // Tool versions:  Altera Quartus Prime
 // Description:
 //
-// Dependencies: rtl/n64igr.v (Rev. 2.5)
+// Dependencies: rtl/n64_igr.v        (Rev. 2.5)
 //               rtl/n64_vinfo_ext.v  (Rev. 1.0)
 //               rtl/n64_deblur.v     (Rev. 1.0)
+//               rtl/n64_vdemux.v     (Rev. 1.0)
+//               vh/n64rgb_params.vh
 //
 // Revision: 2.6
 // Features: BUFFERED version (no color shifting around edges)
@@ -117,7 +119,7 @@ wire nRST_IGR, DRV_RST;
 wire   CTRL_IGR = install_type ? CTRL_nAutoDB   : 1'b1;
 assign nRST_IGR = install_type ? nRST_nManualDB : 1'b1;
 
-n64igr igr(
+n64_igr igr(
   .nCLK(nCLK),
   .nRST_IGR(nRST_IGR),
   .DRV_RST(DRV_RST),

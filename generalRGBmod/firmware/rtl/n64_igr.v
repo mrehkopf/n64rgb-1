@@ -2,8 +2,8 @@
 // Company: Circuit-Board.de
 // Engineer: borti4938
 //
-// Module Name:    n64igr
-// Project Name:   n64rgb
+// Module Name:    n64_igr
+// Project Name:   N64 RGB DAC Mod
 // Target Devices: several MaxII & MaxV devices
 // Tool versions:  Altera Quartus Prime
 // Description:
@@ -21,7 +21,7 @@
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 
-module n64igr (
+module n64_igr (
   input      nCLK,
   input      nRST_IGR,
   output reg DRV_RST,

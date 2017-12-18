@@ -134,7 +134,7 @@ set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to install_type
 ## Files
 ## =====
 set_global_assignment -name VERILOG_FILE rtl/n64rgbv1_top.v
-set_global_assignment -name VERILOG_FILE rtl/n64igr.v
+set_global_assignment -name VERILOG_FILE rtl/n64_igr.v
 set_global_assignment -name VERILOG_FILE rtl/n64_vinfo_ext.v
 set_global_assignment -name VERILOG_FILE rtl/n64_deblur.v
 set_global_assignment -name VERILOG_FILE rtl/n64_vdemux.v
