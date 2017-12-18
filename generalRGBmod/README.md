@@ -15,14 +15,16 @@ If you are looking for a ready to install kit, just look on your own for a selle
   * MaxII EPM570T100C5
   * MaxV 5M240ZT100C4 (a 5M240ZT100C5 does not met timing requirements [1])
   * MaxV 5M570ZT100C4 (a 5M570ZT100C5 does not met timing requirements [1])
-- Video amplifier THS7374 or THS7373
+- Video DAC:
+  * V1: R2R ladder with video amplifier THS7374 or THS7373
+  * V2: Video DAC ADV7125
 - Detection of 240p/288p vs. 480i/576i together with detection of NTSC vs. PAL mode
 - Heuristic for de-blur function [2], De-Blur in 240p/288p (horizontal resolution decreased from 640 to 320 pixels)
 - 15bit color mode
 - IGR features:
   * reset the console with the controller
   * full control on de-blur and 15bit mode with the controller
-- **NEW** Installation type: user decides whether he want to use IGR features or dedicated mechanical switches
+- Installation type: user decides whether he want to use IGR features or dedicated mechanical switches
 - Slow Slew Rate
 - for possibly future implementation: switch LPF of the video amplifier on and off (may only fit into CPLDs with 570LE)
 
@@ -91,18 +93,30 @@ The 15bit color mode reduces the color depth from 21bit (7bit for each color) do
 
 _(Button combinations can be modified according to your needs - see note below @ **In-Game Routines (IGR)**)_
 
-### 'Hidden' Jumpers - Altering Defaults
+### Jumpers - Altering Defaults and Installation Type
 
 There are three jumpers jumpers on the modding board - one double solder jumper and one 'hidden' jumper - to set up deblur (IGR installation) and 15bit mode.  
 The hidden jumper are nothing else then neighbouring pins. This pin is marked with an arrow. If you short a pair of pins you can change the default of the above noted features.  
 
-- pin 1 and 2 (J11.2)-> deactivate the de-blur heuristic.
-- pin 90 and 91 (J11.1) -> deactivates de-blur by default (only applied if de-blur heuristic is off by default)
-- pin 36 and 37 (hidden jumper) -> activates the 15bit color mode by default
+- J11.1 -> deactivates de-blur by default (only applied if de-blur heuristic is off by default) **[1]**
+- J11.2 -> deactivate the de-blur heuristic. **[1]**
+- pin 36 and 37 (hidden jumper on v1) / J12.1 -> activates the 15bit color mode by default
+- J12 (v1) / J12.2 (v2) -> Altering installation type **[2]** 
 
-**Note**:  
+**Notes**:  
+
+**[1]**  
 Board Version September 2017 and later have a dedicated double solder jumper for de-blur heuristic and de-blur default. The jumper is labeled with _J11_ (left pad is _marked with a dot_). The middle pad is GND, the right pad is de-blur heuristic on (open) or off (short to middle) and the left pad is de-blur on (open) or off (short to middle), respectively.  
-On older revisions _J11.1_ and _J11.2_ are hidden jumpers as well.
+On older revisions _J11.1_ (pin 90 and 91) and _J11.2_ (pin 1 and 2) are hidden jumpers.  
+
+**[2]**  
+To use switches for de-blur (similar to viletims board) on can set the jumper _J12_ on the board. This deactivates the IGR functionalities and the user can use the in-/ouputs for controller and reset for switches.  
+These switches are used as on viletims commercial board: **A**uto and **M**anual. The corresponding inputs are _Ctrl_ and _Rst#_, respectively. On newer boards (September 2017 and later) these pads are relabeled with _Ctrl/ A_ and _Rst#/ M_.
+
+- If pad _Ctrl/ A_ is shorted to GND via a switch, the de-blur heuristic is used to switch de-blur on and off.
+- If pad _Rst#/ M_ is shorted to GND via a switch, the de-blur is forced to be on (beats heuristic).
+
+_J12_ is connected to pin 66 of the CPLD. Next to it is pin 65 which is connected to GND. If you have an older version of the board (August 2017 and earlier) running with the current firmware (September 2017 and later) you can short pin 65 and 66 to activate the alternative installation type.
 
 
 ### Slow Slew Rate
@@ -110,19 +124,7 @@ On older revisions _J11.1_ and _J11.2_ are hidden jumpers as well.
 This feature reduces the rising and falling time of the outputs. This reduces artefacts due to fast rising/falling edges at the outputs and the resulting over-/undershoots. The drawback is that the edges are not as sharp as with fast slew rates (at least in theory), which is not noticeable.
 
 
-### **NEW**: Switches for De-Blur (alternative installation type)
-
-To use switches for de-blur (similar to viletims board) on can set the jumper _J12_ on the board. This deactivates the IGR functionalities and the user can use the in-/ouputs for controller and reset for switches.
-
-These switches are used as on viletims commercial board: **A**uto and **M**anual. The corresponding inputs are _Ctrl_ and _Rst#_, respectively. On newer boards (September 2017 and later) these pads are relabeled with _Ctrl/ A_ and _Rst#/ M_.
-
-If pad _Ctrl/ A_ is shorted to GND via a switch, the de-blur heuristic is used to switch de-blur on and off.
-If pad _Rst#/ M_ is shorted to GND via a switch, the de-blur is forced to be on (beats heuristic).
-
-**Note**:  
-_J12_ is connected to pin 66 of the CPLD. Next to it is pin 65 which is connected to GND. If you have an older version of the board (August 2017 and earlier) running with the current firmware (September 2017 and later) you can short pin 65 and 66 to activate the alternative installation type.
-
-### Low Pass Filter Bypass Mode of the THS7374
+### Low Pass Filter Bypass Mode of the THS7374 (v1 only)
 
 The bypass mode of the internal filters is controlled by the CPLD. At the moment the CPLD forwards just the setting one can input to the CPLD over pad *Fil*.
 
@@ -149,7 +151,7 @@ A complete installation and setup guide to this modding kit is provided in the m
 - Install the modding board:
   * Installation description is part of the guide located in the top folder.
   * However an installation guide of a simalar product made by viletim is provided [here](http://etim.net.au/n64rgb/). The minor differences / extra pads are as follows:
-    * Pad *Fil*: controls the low pass filter mode (see above)
+    * Pad *Fil*: controls the low pass filter mode (v1 only, see above)
     * Pad *Rst#*: connect this pad to the PIF-NUS pin 27
     * Pad *Ctrl*: connect this pin to the middle pin of the controller port you want to use for the IGR functions (controller port 1 is probably connected to PIF-NUS pin 16; check that before soldering a wire)
   * You have to be aware of the pinout of your video-encoder build into your N64. Pads on the DIY modding board are labeled.
@@ -158,7 +160,8 @@ A complete installation and setup guide to this modding kit is provided in the m
 ### Source the PCB
 Choose the PCB service which suits you. Here are some:
 
-- OSHPark: [Link to the Main PCB](https://oshpark.com/shared_projects/ZkJGARiN) (If the PCB was updated and I forgot to update this link, look onto [my profile](https://oshpark.com/profiles/borti4938))
+- OSHPark: [Link to the Main PCB v1](https://oshpark.com/shared_projects/0wcOS9Yw) (If the PCB was updated and I forgot to update this link, look onto [my profile](https://oshpark.com/profiles/borti4938))
+- OSHPark: [Link to the Main PCB v2](https://oshpark.com/shared_projects/E8HV1b2T) (If the PCB was updated and I forgot to update this link, look onto [my profile](https://oshpark.com/profiles/borti4938))
 - PCBWay.com: [Link](http://www.pcbway.com/), [Affiliate Link](http://www.pcbway.com/setinvite.aspx?inviteid=10658)
 
 ### BOM / Part List for the PCB
