@@ -38,14 +38,14 @@ set_time_format -unit ns -decimal_places 3
 # Create Clock
 #**************************************************************
 
-create_clock -name {data_cnt[0]} -period 40.000 -waveform { 0.000 20.000 } [get_registers {n64_vinfo_ext:get_vinfo|data_cnt[0]}]
+# create_clock -name {data_cnt[0]} -period 40.000 -waveform { 0.000 20.000 } [get_registers {n64_vinfo_ext:get_vinfo|data_cnt[0]}]
 
 
 #**************************************************************
 # Create Generated Clock
 #**************************************************************
 
-# create_generated_clock -name data_cnt[0] -source [get_ports {nCLK}] -divide_by 2 -multiply_by 1 -duty_cycle 50 [get_registers {n64_vinfo_ext:get_vinfo|data_cnt[0]}]
+create_generated_clock -name data_cnt[0] -source [get_ports {nCLK}] -divide_by 2 [get_registers {n64_vinfo_ext:get_vinfo|data_cnt[0]}]
 
 
 #**************************************************************
