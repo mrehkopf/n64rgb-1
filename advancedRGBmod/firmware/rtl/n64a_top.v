@@ -23,7 +23,7 @@
 //           linebuffer for - NTSC 240p (480i optional) -> 480p rate conversion
 //                          - PAL  288p (576i optional) -> 576p rate conversion
 //
-///////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////
 
 
 module n64a_top (
@@ -66,7 +66,6 @@ module n64a_top (
 );
 
 `include "vh/n64a_params.vh"
-
 
 input                     nCLK;
 input                     nDSYNC;

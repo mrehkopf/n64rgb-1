@@ -32,10 +32,8 @@
 //             - Controller (IGR) and Manual (Switch) have a shared input
 //             - default for 15bit mode is forwarded to actual setting for the installation with a switch
 //
-///////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////
 
-//`define DEBUG
-//`define OPTION_INVLPF
 
 module n64rgbv2_top (
   // N64 Video Input
@@ -102,8 +100,6 @@ output [color_width-1:0] B_o;     // blue data vector
 
 output ADV712x_CLK;
 output ADV712x_SYNC;
-
-
 
 
 // start of rtl

@@ -12,7 +12,7 @@
 //
 // Revision: 1.0
 //
-///////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////
 
 
 module n64_vinfo_ext(
@@ -32,7 +32,6 @@ input nDSYNC;
 input              [3:0] Sync_pre;
 input  [color_width-1:0] D_i;
 output             [4:0] vinfo_o; // order: data_cnt,n64_480i,vmode,blurry_pixel_pos
-
 
 
 // data counter for heuristic and de-mux

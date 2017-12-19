@@ -18,7 +18,7 @@
 //           selectable defaults
 //           defaults set on each power cycle and on each reset
 //
-///////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////
 
 
 module n64_igr (
@@ -47,6 +47,7 @@ module n64_igr (
 `ifdef OPTION_INVLPF
   initial InvLPF = 1'b0;
 `endif
+
 
   // nCLK frequency (NTSC and PAL related to console type; not to video type)
   //   - NTSC: ~48.68MHz
