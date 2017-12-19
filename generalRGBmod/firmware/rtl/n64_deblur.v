@@ -205,13 +205,18 @@ end
 
 // finally the blanking management
 
-wire ndo_deblur = ~nForceDeBlur ?  (n64_480i | nDeBlurMan) :
-                                   (n64_480i | nblur_n64);    // force de-blur option for 240p? -> yes: enable it if user wants to | no: enable de-blur depending on estimation
+reg ndo_deblur = 1'b1; // force de-blur option for 240p? -> yes: enable it if user wants to | no: enable de-blur depending on estimation
 
 reg nblank_rgb = 1'b1; // blanking of RGB pixels for de-blur
 
 always @(negedge nCLK) begin
-  if (~nDSYNC)
+  if (~nDSYNC) begin
+    if (nVSYNC_pre & ~vdata_cur[3]) begin // negedge at nVSYNC detected - new frame, new setting
+      if (nForceDeBlur)
+        ndo_deblur <= n64_480i | nblur_n64;
+      else
+        ndo_deblur <= n64_480i | nDeBlurMan;
+    end
     if(ndo_deblur)
       nblank_rgb <= 1'b1;
     else begin 
@@ -220,6 +225,7 @@ always @(negedge nCLK) begin
       else
         nblank_rgb <= ~nblank_rgb;
     end
+  end
 end
 
 
