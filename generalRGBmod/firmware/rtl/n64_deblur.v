@@ -225,6 +225,6 @@ end
 
 // post-assignment
 
-assign deblurparams_o = {nblank_rgb,ndo_deblur};
+assign deblurparams_o = {ndo_deblur,nblank_rgb};
 
 endmodule
