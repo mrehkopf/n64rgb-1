@@ -185,7 +185,6 @@ A fallback mode can be activated by holding reset button down while powering on 
 Choose the PCB service which suits you. Here are some:
 
 - OSHPark: [Link to the Main PCB](https://oshpark.com/shared_projects/kKAiNrtK) (If the PCB was updated and I forgot to update this link, look onto [my profile](https://oshpark.com/profiles/borti4938))
-- OSHPark: [Link to the Filter AddOn PCB](https://oshpark.com/shared_projects/BTvi9bfX) (If the PCB was updated and I forgot to update this link, look onto [my profile](https://oshpark.com/profiles/borti4938)) -- get this PCB with 0.8mm (or less) substrate thickness
 - PCBWay.com: [Link](http://www.pcbway.com/), [Affiliate Link](http://www.pcbway.com/setinvite.aspx?inviteid=10658)
 
 ### Part List for the PCB

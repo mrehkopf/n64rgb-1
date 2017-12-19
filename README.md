@@ -17,7 +17,11 @@ A collection of RGB mods for the N64. This repository includes:
 - additional MAV-NUS Adapter:
   * pin breakout from 0.8mm pitch to 1.27mm pitch
   * PCB files provided
-  * folder: MAV-NUS-BreakOut
+  * folder: misc/MAV-NUS-BreakOut
+- Filter AddOn for N64RGBv2 and N64 Advanced:
+  * used to filter the video signal comming out of the ADV7125 or to adjust signal levels such that one can use SNES PAL RGB cables
+  * PCB files provided
+  * folder: misc/FilterAddOn
 - an alternative firmware for viletims commercial N64 RGB modding kit
   * include in firmware folder of generalRGBmod
   * project: n64rgb_viletim.qpf
