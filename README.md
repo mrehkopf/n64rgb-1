@@ -19,7 +19,8 @@ A collection of RGB mods for the N64. This repository includes:
   * PCB files provided
   * folder: MAV-NUS-BreakOut
 - an alternative firmware for viletims commercial N64 RGB modding kit
-  * folder: viletim
+  * include in firmware folder of generalRGBmod
+  * project: n64rgb_viletim.qpf
 
 
 ## Acknowledgement
