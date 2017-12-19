@@ -34,7 +34,6 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 
-//`define DEBUG
 //`define OPTION_INVLPF
 
 module n64rgbv1_top (
@@ -104,20 +103,19 @@ input  nTHS7374_LPF_Bypass_p98_i;   // the GitHub final version at pin 98
 output THS7374_LPF_Bypass_o;         // so simply combine both for same firmware file
 
 
-
 // start of rtl
 
 // Part 1: connect IGR module
 // ==========================
 
 wire nForceDeBlur_IGR, nDeBlur_IGR, n15bit_mode_IGR;
-wire nRST_IGR, DRV_RST;
+wire nRST_IGR = install_type ? nRST_nManualDB : 1'b0;
+wire DRV_RST;
+wire CTRL_IGR = install_type ? CTRL_nAutoDB   : 1'b1;
+
 `ifdef OPTION_INVLPF
   wire InvLPF;
 `endif
-
-wire   CTRL_IGR = install_type ? CTRL_nAutoDB   : 1'b1;
-assign nRST_IGR = install_type ? nRST_nManualDB : 1'b1;
 
 n64_igr igr(
   .nCLK(nCLK),

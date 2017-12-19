@@ -77,18 +77,8 @@ parameter init_trend = 9'h100;  // initial value (shall have MSB set, zero else)
 
 // start of rtl
 
-`ifdef DEBUG
-  parameter init_cnt = 4'hd;            // initial counter value for nblur_est_cnt
-  parameter hold_off = 4'h3;            // hold off estimation for x pairs of (non-blur,'blur') pixels
-  reg [3:0] nblur_est_cnt  = init_cnt;  // register to estimate whether blur is used or not by the N64
-                                        // (if counter saturates, a non-blurred picture is detected)
-  reg [3:0] nblur_est_holdoff = 4'h0;   // Holf Off the nblur_est_cnt (removes ripples e.g. due to light effects)
-`endif
-
-`ifndef DEBUG
-  reg [1:0] nblur_est_cnt     = 2'b00;  // register to estimate whether blur is used or not by the N64
-  reg [1:0] nblur_est_holdoff = 2'b00;  // Holf Off the nblur_est_cnt (removes ripples e.g. due to light effects)
-`endif
+reg [1:0] nblur_est_cnt     = 2'b00;  // register to estimate whether blur is used or not by the N64
+reg [1:0] nblur_est_holdoff = 2'b00;  // Holf Off the nblur_est_cnt (removes ripples e.g. due to light effects)
 
 reg [2:0] run_estimation = 3'b000;    // run counter or not (run_estimation[2] decides); do not use pixels at border
 
@@ -111,25 +101,14 @@ always @(negedge nCLK) begin // estimation of blur effect
       run_estimation[2:1] <= run_estimation[1:0]; // deblur estimation counter is
       run_estimation[0]   <= 1'b1;                // starts a bit delayed in each line
 
-`ifdef DEBUG
-      if (|nblur_est_holdoff) // hold_off? if yes, decrement it
-        nblur_est_holdoff <= nblur_est_holdoff - 1'b1;
-`else
       if (|nblur_est_holdoff) // hold_off? if yes, increment it until overflow back to zero
         nblur_est_holdoff <= nblur_est_holdoff + 1'b1;
-`endif
 
 
       if (&gradient_changes) begin  // evaluate gradients: &gradient_changes == all color components changed the gradient
-`ifdef DEBUG
-        if (~|{&nblur_est_cnt,|nblur_est_holdoff})
-          nblur_est_cnt <= nblur_est_cnt +1'b1;
-        nblur_est_holdoff <= hold_off;
-`else
         if (~nblur_est_cnt[1] & ~|nblur_est_holdoff)
           nblur_est_cnt <= nblur_est_cnt +1'b1;
         nblur_est_holdoff <= 2'b01;
-`endif
       end
 
       gradient_changes    <= 2'b00; // reset
@@ -137,19 +116,11 @@ always @(negedge nCLK) begin // estimation of blur effect
 
     if(~nCSYNC_pre & vdata_cur[0]) begin // negedge at CSYNC detected - new line
       run_estimation    <= 3'b000;
-`ifdef DEBUG
-      nblur_est_holdoff <= 4'h0;
-`else
       nblur_est_holdoff <= 2'b00;
-`endif
     end
 
     if(nVSYNC_pre & ~vdata_cur[3]) begin // negedge at nVSYNC detected - new frame
-`ifdef DEBUG
-      if(&nblur_est_cnt) begin // add to weight
-`else
       if(nblur_est_cnt[1]) begin // add to weight
-`endif
         if(~&nblur_n64_trend)
           nblur_n64_trend <= nblur_n64_trend + 1'b1;
       end else begin// subtract
@@ -158,13 +129,8 @@ always @(negedge nCLK) begin // estimation of blur effect
       end
 
       nblur_n64 <= nblur_n64_trend[`NBLUR_TH_BIT];
-//      nblur_n64 <= &nblur_est_cnt;
 
-`ifdef DEBUG
-      nblur_est_cnt <= init_cnt;
-`else
       nblur_est_cnt <= 2'b00;
-`endif
     end
 
   end else if (act_window) begin

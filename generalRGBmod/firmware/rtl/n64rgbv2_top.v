@@ -84,7 +84,6 @@ input install_type; // installation type
                     // - 1 -> with IGR functionalities
                     // - 0 -> toogle switch for deblur (no IGR fubnctions)
 
-
 input Default_nForceDeBlur;
 input Default_DeBlur;
 input Default_n15bit_mode;
@@ -108,13 +107,9 @@ output ADV712x_SYNC;
 // ==========================
 
 wire nForceDeBlur_IGR, nDeBlur_IGR, n15bit_mode_IGR;
-wire nRST_IGR, DRV_RST;
-`ifdef OPTION_INVLPF
-  wire InvLPF;
-`endif
-
-wire   CTRL_IGR = install_type ? CTRL_nAutoDB   : 1'b1;
-assign nRST_IGR = install_type ? nRST_nManualDB : 1'b1;
+wire nRST_IGR = install_type ? nRST_nManualDB : 1'b1;
+wire DRV_RST;
+wire CTRL_IGR = install_type ? CTRL_nAutoDB : 1'b1;
 
 n64_igr igr(
   .nCLK(nCLK),
@@ -127,10 +122,6 @@ n64_igr igr(
   .nForceDeBlur(nForceDeBlur_IGR),
   .nDeBlur(nDeBlur_IGR),
   .n15bit_mode(n15bit_mode_IGR)
-`ifdef OPTION_INVLPF
-  ,
-  .InvLPF(InvLPF)
-`endif
 );
 
 assign nRST_nManualDB = ~install_type ? 1'bz : 
