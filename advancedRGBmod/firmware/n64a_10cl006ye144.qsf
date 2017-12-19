@@ -166,12 +166,13 @@ set_global_assignment -name VERILOG_FILE rtl/n64a_top.v
 set_global_assignment -name VERILOG_INCLUDE_FILE vh/n64a_params.vh
 set_global_assignment -name VERILOG_INCLUDE_FILE vh/igr_params.vh
 set_global_assignment -name QIP_FILE debug/ip/Cyclone10LP/source_3bit_0/synthesis/source_3bit_0.qip
-set_global_assignment -name VERILOG_FILE rtl/n64_igr.v
+set_global_assignment -name VERILOG_FILE rtl/n64a_igr.v
 set_global_assignment -name QIP_FILE ip/Cyclone10LP/altpll_1.qip
 set_global_assignment -name QIP_FILE ip/Cyclone10LP/rom_1port_0.qip
 set_global_assignment -name QIP_FILE ip/Cyclone10LP/altpll_0.qip
 set_global_assignment -name VERILOG_FILE rtl/n64_vinfo_ext.v
 set_global_assignment -name VERILOG_FILE rtl/n64_deblur.v
+set_global_assignment -name VERILOG_FILE rtl/n64_vdemux.v
 set_global_assignment -name VERILOG_FILE rtl/n64a_linedbl.v
 set_global_assignment -name QIP_FILE ip/Cyclone10LP/ram2port_0.qip
 set_global_assignment -name VERILOG_FILE rtl/n64a_vconv.v
@@ -179,7 +180,7 @@ set_global_assignment -name QIP_FILE ip/Cyclone10LP/altmult_add3_0.qip
 set_global_assignment -name QIP_FILE ip/Cyclone10LP/altmult_add2_0.qip
 set_global_assignment -name SDC_FILE sdc/n64a_sdc.sdc
 
-set_global_assignment -name QIP_FILE debug/sources.spf
+#set_global_assignment -name QIP_FILE debug/sources.spf
 set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files/10cl006ye144
 
 ## Current Strength

@@ -2,8 +2,8 @@
 // Company:  Circuit-Board.de
 // Engineer: borti4938
 //
-// Module Name:    n64_deblurest
-// Project Name:   N64 Advanced RGB Mod
+// Module Name:    n64_deblur
+// Project Name:   N64 Advanced RGB/YPbPr DAC Mod
 // Target Devices: universial
 // Tool versions:  Altera Quartus Prime
 // Description:    estimates whether N64 uses blur or not
@@ -12,7 +12,7 @@
 //
 // Revision: 1.0
 //
-///////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////
 
 
 module n64_deblur (
@@ -172,13 +172,18 @@ end
 
 // finally the blanking management
 
-wire ndo_deblur = ~nForceDeBlur ?  (n64_480i | nDeBlurMan) :
-                                   (n64_480i | nblur_n64);    // force de-blur option for 240p? -> yes: enable it if user wants to | no: enable de-blur depending on estimation
+reg ndo_deblur = 1'b1; // force de-blur option for 240p? -> yes: enable it if user wants to | no: enable de-blur depending on estimation
 
 reg nblank_rgb = 1'b1; // blanking of RGB pixels for de-blur
 
 always @(negedge nCLK) begin
-  if (~nDSYNC)
+  if (~nDSYNC) begin
+    if (nVSYNC_pre & ~vdata_cur[3]) begin // negedge at nVSYNC detected - new frame, new setting
+      if (nForceDeBlur)
+        ndo_deblur <= n64_480i | nblur_n64;
+      else
+        ndo_deblur <= n64_480i | nDeBlurMan;
+    end
     if(ndo_deblur)
       nblank_rgb <= 1'b1;
     else begin 
@@ -187,11 +192,12 @@ always @(negedge nCLK) begin
       else
         nblank_rgb <= ~nblank_rgb;
     end
+  end
 end
 
 
 // post-assignment
 
-assign deblurparams_o = {nblank_rgb,ndo_deblur};
+assign deblurparams_o = {ndo_deblur,nblank_rgb};
 
 endmodule

@@ -3,7 +3,7 @@
 // Engineer: borti4938
 //
 // Module Name:    n64_vinfo_ext
-// Project Name:   N64 Advanced RGB Mod
+// Project Name:   N64 Advanced RGB/YPbPr DAC Mod
 // Target Devices: universial
 // Tool versions:  Altera Quartus Prime
 // Description:    extracts video info from input
@@ -12,7 +12,7 @@
 //
 // Revision: 1.0
 //
-///////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////
 
 
 module n64_vinfo_ext(
@@ -83,9 +83,7 @@ always @(negedge nCLK) begin
     if(~Sync_pre[3] & D_i[3]) begin // posedge at nVSYNC detected - reset line_cnt and set vmode
       line_cnt <= 2'b00;
       vmode    <= ~line_cnt[1];
-    end
-
-    if(~Sync_pre[1] & D_i[1]) // posedge nHSYNC -> increase line_cnt
+    end else if(~Sync_pre[1] & D_i[1]) // posedge nHSYNC -> increase line_cnt
       line_cnt <= line_cnt + 1'b1;
 
     if(~n64_480i) begin // 240p

@@ -3,7 +3,7 @@
 // Engineer: borti4938
 //
 // Module Name:    n64a_vconv
-// Project Name:   N64 Advanced RGB Mod
+// Project Name:   N64 Advanced RGB/YPbPr DAC Mod
 // Target Devices: Max10, Cyclone IV and Cyclone 10 LP devices
 // Tool versions:  Altera Quartus Prime
 // Description:
@@ -16,7 +16,7 @@
 // Features: conversion RGB to YPbPr on demand
 //           outputs 8bit vectors for ADV7125 / ADV7123
 //
-///////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////
 
 module n64a_vconv(
   CLK,
@@ -30,7 +30,6 @@ module n64a_vconv(
 `include "vh/n64a_params.vh"
 
 localparam coeff_width = 20;
-
 
 input CLK;
 

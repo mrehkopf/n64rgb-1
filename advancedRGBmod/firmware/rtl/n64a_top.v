@@ -3,7 +3,7 @@
 // Engineer: borti4938
 //
 // Module Name:    n64a_top
-// Project Name:   N64 Advanced RGB Mod
+// Project Name:   N64 Advanced RGB/YPbPr DAC Mod
 // Target Devices: Cyclone IV:    EP4CE6E22   , EP4CE10E22
 //                 Cyclone 10 LP: 10CL006YE144, 10CL010YE144
 // Tool versions:  Altera Quartus Prime
@@ -23,7 +23,7 @@
 //           linebuffer for - NTSC 240p (480i optional) -> 480p rate conversion
 //                          - PAL  288p (576i optional) -> 576p rate conversion
 //
-///////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////
 
 
 module n64a_top (
@@ -67,7 +67,6 @@ module n64a_top (
 
 `include "vh/n64a_params.vh"
 
-
 input                     nCLK;
 input                     nDSYNC;
 input [color_width_i-1:0] D_i;
@@ -100,6 +99,7 @@ input       n480i_bob;
 
 // start of rtl
 
+
 // Part 0: Debug probes and sources
 // ================================
 
@@ -122,6 +122,17 @@ source_3bit_0 scanline_debug_src(
 // bit assignment for SL_debug[2:0]:
 // 2   - 0 = use J3 setting | 1 = use debug setting
 // 1:0 - Scanline strength (00, 01, 10, 11 = 100%, 50%, 25%, 0%)
+
+
+wire [2:0] Vidout_debug;
+source_3bit_0 Vidout_debug_src(
+  .source(Vidout_debug)
+);
+
+// bit assignment for Vidout_debug[2:0]:
+// 2 - 0 = use J2 setting | 1 = use debug setting
+// 1 - 0 = enable RGsB    | 1 = disable RGsB
+// 0 - 0 = enable YPbPr   | 1 = disable YPbPr (beats RGsB)
 
 
 
@@ -149,6 +160,7 @@ source_3bit_0 DeBlur_15bitmode_debug_src(
 // 1 - 0 = force de-blur   | 1 = don't use de-blur (replaces nDeBlurMan)
 // 0 - 0 = 15bit mode      | 1 = 21bit mode        (replaces n15bit_mode)
 
+
 // Part 0: determine jumper set
 // ============================
 
@@ -175,7 +187,7 @@ assign SYS_CLKen = 1'b1;
 
 wire nForceDeBlur_tmp, nDeBlurMan_tmp, n15bit_mode_tmp;
 
-n64_igr igr(
+n64a_igr igr(
   .SYS_CLK(SYS_CLK),
   .nRST(nRST),
   .CTRL(CTRL_i),
@@ -209,18 +221,6 @@ wire n15bit_mode  = DeBlur_15bitmode_debug[2] ? DeBlur_15bitmode_debug[0] : n15b
 //
 
 
-reg [`VDATA_I_FU_SLICE] vdata_ir[0:6]; // buffer for sync, red, green and blue
-reg [`VDATA_I_CO_SLICE] vdata_gr;      // red, green and blue (gamma boosted)
-
-integer i;
-initial begin
-  for (i = 0; i < 7; i = i+1) begin
-         vdata_ir[i] = {vdata_width_i{1'b0}};
-  end
-  vdata_gr = {3*color_width_i{1'b0}};
-end
-
-
 // Part 2: get all of the vinfo needed for further processing
 // ==========================================================
 
@@ -232,7 +232,7 @@ wire       blurry_pixel_pos;  // indicates position of a potential blurry pixel
 n64_vinfo_ext get_vinfo(
   .nCLK(nCLK),
   .nDSYNC(nDSYNC),
-  .Sync_pre(vdata_ir[0][`VDATA_I_SY_SLICE]),
+  .Sync_pre(vdata_r[0][`VDATA_I_SY_SLICE]),
   .D_i(D_i),
   .vinfo_o({data_cnt,n64_480i,vmode,blurry_pixel_pos})
 );
@@ -241,83 +241,35 @@ n64_vinfo_ext get_vinfo(
 // Part 3: DeBlur Management (incl. heuristic)
 // ===========================================
 
-wire ndo_deblur, nblank_rgb;
+wire [1:0] deblurparams_pass;
 
 n64_deblur deblur_management(
   .nCLK(nCLK),
   .nDSYNC(nDSYNC),
   .nRST(nRST),
-  .vdata_sync_2pre(vdata_ir[1][`VDATA_I_SY_SLICE]),
-  .vdata_pre(vdata_ir[0]),
+  .vdata_sync_2pre(vdata_r[1][`VDATA_I_SY_SLICE]),
+  .vdata_pre(vdata_r[0]),
   .vdata_cur(D_i),
   .deblurparams_i({data_cnt,n64_480i,vmode,blurry_pixel_pos,nForceDeBlur,nDeBlurMan}),
-  .deblurparams_o({ndo_deblur,nblank_rgb})
+  .deblurparams_o(deblurparams_pass)
 );
 
 
 // Part 4: data demux
 // ==================
 
-wire       en_gamma_boost = gamma_debug[2];
-wire [1:0] gamma_rom_page = gamma_debug[1:0];
+wire [`VDATA_I_FU_SLICE] vdata_r[0:2];
 
-reg  [color_width_i-1:0] addr_gamma_rom = {color_width_i{1'b0}};
-wire [color_width_i-1:0] data_gamma_rom;
-
-always @(negedge nCLK) begin // data register management
-  if (~nDSYNC) begin
-    // shift data to output registers
-    if(ndo_deblur)        // deblur inactive
-      vdata_ir[1][`VDATA_I_FU_SLICE] <= vdata_ir[0][`VDATA_I_FU_SLICE];
-    else if (nblank_rgb)  // deblur active: pass RGB only if not blanked
-      vdata_ir[1][`VDATA_I_CO_SLICE] <= vdata_ir[0][`VDATA_I_CO_SLICE];
-
-       vdata_gr[`VDATA_I_RE_SLICE] <= data_gamma_rom;
-    vdata_ir[0][`VDATA_I_SY_SLICE] <= D_i[3:0];
-  end else begin
-    // demux of RGB
-    case(data_cnt)
-      2'b01: begin
-           vdata_gr[`VDATA_I_GR_SLICE] <= data_gamma_rom;
-                        addr_gamma_rom <= vdata_ir[1][`VDATA_I_RE_SLICE];
-        vdata_ir[0][`VDATA_I_RE_SLICE] <= n15bit_mode ? D_i : {D_i[6:2], 2'b00};
-      end
-      2'b10: begin
-           vdata_gr[`VDATA_I_BL_SLICE] <= data_gamma_rom;
-                        addr_gamma_rom <= vdata_ir[1][`VDATA_I_GR_SLICE];
-        vdata_ir[0][`VDATA_I_GR_SLICE] <= n15bit_mode ? D_i : {D_i[6:2], 2'b00};
-        if(~ndo_deblur)
-          vdata_ir[1][`VDATA_I_SY_SLICE] <= vdata_ir[0][`VDATA_I_SY_SLICE];
-      end
-      2'b11: begin
-                        addr_gamma_rom <= vdata_ir[1][`VDATA_I_BL_SLICE];
-        vdata_ir[0][`VDATA_I_BL_SLICE] <= n15bit_mode ? D_i : {D_i[6:2], 2'b00};
-      end
-    endcase
-  end
-
-  for (i = 2; i < 6; i = i+1)
-    vdata_ir[i] <= vdata_ir[i-1];
-
-  if (en_gamma_boost)
-    vdata_ir[6] <= {vdata_ir[5][`VDATA_I_SY_SLICE],vdata_gr};
-  else
-    vdata_ir[6] <= vdata_ir[5];
-
-  if (~nRST) begin
-    for (i = 0; i < 7; i = i+1) begin
-      vdata_ir[i] <= {vdata_width_i{1'b0}};
-    end
-    addr_gamma_rom <=   {color_width_i{1'b0}};
-         vdata_gr  <= {3*color_width_i{1'b0}};
-  end
-end
-
-rom_1port_0 gamma_correction(
-  .address({gamma_rom_page,addr_gamma_rom}),
-  .clock(~nCLK),
-  .rden(en_gamma_boost),
-  .q(data_gamma_rom)
+n64_vdemux video_demux(
+  .nCLK(nCLK),
+  .nDSYNC(nDSYNC),
+  .nRST(nRST),
+  .D_i(D_i),
+  .demuxparams_i({data_cnt,deblurparams_pass,n15bit_mode}),
+  .gammaparams_i(gamma_debug),
+  .vdata_r_0(vdata_r[0]),
+  .vdata_r_1(vdata_r[1]),
+  .vdata_r_6(vdata_r[2])
 );
 
 // Part 5: Post-Processing
@@ -347,7 +299,7 @@ n64a_linedbl linedoubler(
   .CLK_out(CLK_out),
   .nRST(nRST),
   .vinfo_dbl(vinfo_dbl),
-  .vdata_i(vdata_ir[6]),
+  .vdata_i(vdata_r[2]),
   .vdata_o(vdata_tmp)
 );
 
@@ -357,9 +309,12 @@ n64a_linedbl linedoubler(
 
 wire [3:0] Sync_o;
 
+wire nEN_RGsB_debug  = Vidout_debug[2] ? Vidout_debug[1] : nEN_RGsB;
+wire nEN_YPbPr_debug = Vidout_debug[2] ? Vidout_debug[0] : nEN_YPbPr_active;
+
 n64a_vconv video_converter(
   .CLK(CLK_out),
-  .nEN_YPbPr(nEN_YPbPr_active),    // enables color transformation on '0'
+  .nEN_YPbPr(nEN_YPbPr_debug),    // enables color transformation on '0'
   .vdata_i(vdata_tmp),
   .vdata_o({Sync_o,V1_o,V2_o,V3_o})
 );
@@ -367,7 +322,7 @@ n64a_vconv video_converter(
 // Part 5.3: assign final outputs
 // ===========================
 assign    CLK_ADV712x = CLK_out;
-assign nCSYNC_ADV712x = nEN_RGsB & nEN_YPbPr ? 1'b0  : Sync_o[0]; // output sync on G/Y even in fallback mode
+assign nCSYNC_ADV712x = nEN_RGsB_debug & nEN_YPbPr_debug ? 1'b0  : Sync_o[0];
 // assign nBLANK_ADV712x = Sync_o[2];
 
 // Filter Add On:

@@ -1,0 +1,164 @@
+# -------------------------------------------------------------------------- #
+#
+# Copyright (C) 1991-2016 Altera Corporation. All rights reserved.
+# Your use of Altera Corporation's design tools, logic functions
+# and other software and tools, and its AMPP partner logic
+# functions, and any output files from any of the foregoing
+# (including device programming or simulation files), and any
+# associated documentation or information are expressly subject
+# to the terms and conditions of the Altera Program License
+# Subscription Agreement, the Altera Quartus Prime License Agreement,
+# the Altera MegaCore Function License Agreement, or other
+# applicable license agreement, including, without limitation,
+# that your use is for the sole purpose of programming logic
+# devices manufactured by Altera and sold by Altera or its
+# authorized distributors.  Please refer to the applicable
+# agreement for further details.
+#
+# -------------------------------------------------------------------------- #
+#
+# Quartus Prime
+# Version 15.1.2 Build 193 02/01/2016 SJ Lite Edition
+# Date created = 08:12:51  July 18, 2016
+#
+# -------------------------------------------------------------------------- #
+#
+# Notes:
+#
+# 1) The default values for assignments are stored in the file:
+#		n64rgb_with_igr_assignment_defaults.qdf
+#    If this file doesn't exist, see file:
+#		assignment_defaults.qdf
+#
+# 2) Altera recommends that you do not modify this file. This
+#    file is updated automatically by the Quartus Prime software
+#    and any changes you make may be lost or overwritten.
+#
+# -------------------------------------------------------------------------- #
+
+
+set_global_assignment -name FAMILY "MAX II"
+set_global_assignment -name DEVICE EPM570T100C5
+set_global_assignment -name ORIGINAL_QUARTUS_VERSION 15.1.2
+set_global_assignment -name PROJECT_CREATION_TIME_DATE "11:45:38  APRIL 19, 2017"
+set_global_assignment -name LAST_QUARTUS_VERSION "17.1.0 Lite Edition"
+set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
+set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
+set_global_assignment -name DEVICE_FILTER_PACKAGE TQFP
+set_global_assignment -name DEVICE_FILTER_PIN_COUNT 100
+set_global_assignment -name DEVICE_FILTER_SPEED_GRADE 5
+set_global_assignment -name ERROR_CHECK_FREQUENCY_DIVISOR "-1"
+set_global_assignment -name POWER_EXT_SUPPLY_VOLTAGE_TO_REGULATOR 3.3V
+set_global_assignment -name STRATIX_DEVICE_IO_STANDARD "3.3-V LVTTL"
+
+
+## N64 Video Input
+## ===============
+set_location_assignment PIN_12 -to nCLK
+set_location_assignment PIN_14 -to nDSYNC
+set_location_assignment PIN_21 -to D_i[0]
+set_location_assignment PIN_20 -to D_i[1]
+set_location_assignment PIN_19 -to D_i[2]
+set_location_assignment PIN_18 -to D_i[3]
+set_location_assignment PIN_17 -to D_i[4]
+set_location_assignment PIN_16 -to D_i[5]
+set_location_assignment PIN_15 -to D_i[6]
+
+set_instance_assignment -name GLOBAL_SIGNAL GLOBAL_CLOCK -to nCLK
+set_instance_assignment -name GLOBAL_SIGNAL GLOBAL_CLOCK -to nDSYNC
+
+
+## System, Controller and Reset
+## ============================
+set_location_assignment PIN_99 -to nRST_nManualDB
+set_location_assignment PIN_100 -to CTRL_nAutoDB
+set_location_assignment PIN_85 -to nTHS7374_LPF_Bypass_p85_i
+set_location_assignment PIN_98 -to nTHS7374_LPF_Bypass_p98_i
+set_location_assignment PIN_53 -to THS7374_LPF_Bypass_o
+
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to nRST_nManualDB
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to CTRL_nAutoDB
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to nTHS7374_LPF_Bypass_p85_i
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to nTHS7374_LPF_Bypass_p98_i
+
+
+## Video Output to R2R ladder
+## ==========================
+set_location_assignment PIN_78 -to R_o[0]
+set_location_assignment PIN_77 -to R_o[1]
+set_location_assignment PIN_76 -to R_o[2]
+set_location_assignment PIN_75 -to R_o[3]
+set_location_assignment PIN_74 -to R_o[4]
+set_location_assignment PIN_73 -to R_o[5]
+set_location_assignment PIN_72 -to R_o[6]
+set_location_assignment PIN_26 -to G_o[0]
+set_location_assignment PIN_27 -to G_o[1]
+set_location_assignment PIN_28 -to G_o[2]
+set_location_assignment PIN_29 -to G_o[3]
+set_location_assignment PIN_30 -to G_o[4]
+set_location_assignment PIN_33 -to G_o[5]
+set_location_assignment PIN_34 -to G_o[6]
+set_location_assignment PIN_43 -to B_o[0]
+set_location_assignment PIN_44 -to B_o[1]
+set_location_assignment PIN_47 -to B_o[2]
+set_location_assignment PIN_48 -to B_o[3]
+set_location_assignment PIN_49 -to B_o[4]
+set_location_assignment PIN_50 -to B_o[5]
+set_location_assignment PIN_51 -to B_o[6]
+
+set_location_assignment PIN_68 -to nCLAMP
+set_location_assignment PIN_69 -to nCSYNC
+set_location_assignment PIN_70 -to nVSYNC
+set_location_assignment PIN_71 -to nHSYNC
+
+set_instance_assignment -name SLOW_SLEW_RATE ON -to R_o
+set_instance_assignment -name SLOW_SLEW_RATE ON -to G_o
+set_instance_assignment -name SLOW_SLEW_RATE ON -to B_o
+set_instance_assignment -name SLOW_SLEW_RATE ON -to nCSYNC
+set_instance_assignment -name SLOW_SLEW_RATE ON -to nHSYNC
+set_instance_assignment -name SLOW_SLEW_RATE ON -to nCLAMP
+set_instance_assignment -name SLOW_SLEW_RATE ON -to nVSYNC
+
+
+## Jumper
+## ======
+set_location_assignment PIN_36 -to Default_n15bit_mode
+set_location_assignment PIN_2 -to Default_nForceDeBlur
+set_location_assignment PIN_91 -to Default_DeBlur
+set_location_assignment PIN_66 -to install_type
+
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to Default_n15bit_mode
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to Default_nForceDeBlur
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to Default_DeBlur
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to install_type
+
+
+## Files
+## =====
+set_global_assignment -name VERILOG_FILE rtl/n64rgbv1_top.v
+set_global_assignment -name VERILOG_FILE rtl/n64_igr.v
+set_global_assignment -name VERILOG_FILE rtl/n64_vinfo_ext.v
+set_global_assignment -name VERILOG_FILE rtl/n64_deblur.v
+set_global_assignment -name VERILOG_FILE rtl/n64_vdemux.v
+set_global_assignment -name VERILOG_INCLUDE_FILE vh/igr_params.vh
+set_global_assignment -name SDC_FILE sdc/n64rgb.sdc
+set_global_assignment -name SDC_FILE sdc/n64igr.sdc
+set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files/v1/EPM570T100C5
+
+
+## Synthesis and Fitter Settings
+## =============================
+set_global_assignment -name TOP_LEVEL_ENTITY n64rgbv1_top
+set_global_assignment -name RESERVE_ALL_UNUSED_PINS "AS INPUT TRI-STATED WITH BUS-HOLD"
+set_global_assignment -name OPTIMIZATION_MODE "HIGH PERFORMANCE EFFORT"
+set_global_assignment -name ALLOW_SHIFT_REGISTER_MERGING_ACROSS_HIERARCHIES ALWAYS
+set_global_assignment -name DISABLE_REGISTER_MERGING_ACROSS_HIERARCHIES OFF
+
+
+## Additions by Quartus Prime
+## ==========================
+set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "NO HEAT SINK WITH STILL AIR"
+set_global_assignment -name NUM_PARALLEL_PROCESSORS 2
+set_global_assignment -name ENABLE_OCT_DONE OFF
+set_global_assignment -name STRATIXV_CONFIGURATION_SCHEME "PASSIVE SERIAL"
+set_global_assignment -name USE_CONFIGURATION_DEVICE ON

@@ -3,7 +3,7 @@
 // Engineer: borti4938
 //
 // Module Name:    n64a_linedbl
-// Project Name:   N64 Advanced RGB Mod
+// Project Name:   N64 Advanced RGB/YPbPr DAC Mod
 // Target Devices: Max10, Cyclone IV and Cyclone 10 LP devices
 // Tool versions:  Altera Quartus Prime
 // Description:    simple line-multiplying
@@ -17,7 +17,7 @@
 //                          - PAL  288p -> 576p rate conversion
 //           injection of scanlines on demand in three selectable intensities
 //
-///////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////
 
 
 module n64a_linedbl(

@@ -3,13 +3,13 @@
   <instance enable_logging="true" entity_name="" is_auto_node="true" name="">
     <node_ip_info instance_id="0" mfg_id="110" node_id="9" version="0"/>
     <sources>
-      <source name="480i" value="false"/>
-      <source name="lineX2" value="false"/>
-      <source name="use debug setting" value="false"/>
+      <source name="480i deinterlace in lineX2 on/off" value="true"/>
+      <source name="lineX2 on/off" value="false"/>
+      <source name="use debug" value="true"/>
     </sources>
     <probes/>
     <view>
-      <view_node expanded="true" group_name="Linedoubler_debug[2:0]" index="0" lsb_to_msb="false" node_type="source" radix="bin" view_type="group_header"/>
+      <view_node expanded="true" group_name="linedbl" index="0" lsb_to_msb="false" node_type="source" radix="bin" view_type="group_header"/>
       <view_node expanded="true" index="2" node_type="source" view_type="group_member"/>
       <view_node expanded="true" index="1" node_type="source" view_type="group_member"/>
       <view_node expanded="true" index="0" node_type="source" view_type="group_member"/>
@@ -19,13 +19,13 @@
   <instance enable_logging="true" entity_name="" is_auto_node="true" name="">
     <node_ip_info instance_id="1" mfg_id="110" node_id="9" version="0"/>
     <sources>
-      <source name="sl lsb" value="false"/>
-      <source name="sl msb" value="false"/>
-      <source name="use debug setting" value="false"/>
+      <source name="sl lsb" value="true"/>
+      <source name="sl msb" value="true"/>
+      <source name="use debug" value="true"/>
     </sources>
     <probes/>
     <view>
-      <view_node expanded="true" group_name="SL_debug[2:0]" index="0" lsb_to_msb="false" node_type="source" radix="bin" view_type="group_header"/>
+      <view_node expanded="true" group_name="scanline str" index="0" lsb_to_msb="false" node_type="source" radix="bin" view_type="group_header"/>
       <view_node expanded="true" index="2" node_type="source" view_type="group_member"/>
       <view_node expanded="true" index="1" node_type="source" view_type="group_member"/>
       <view_node expanded="true" index="0" node_type="source" view_type="group_member"/>
@@ -35,13 +35,13 @@
   <instance enable_logging="true" entity_name="" is_auto_node="true" name="">
     <node_ip_info instance_id="2" mfg_id="110" node_id="9" version="0"/>
     <sources>
-      <source name="gt lsb" value="false"/>
-      <source name="gt msb" value="false"/>
-      <source name="use gamma table" value="false"/>
+      <source name="YPbPr on/off" value="true"/>
+      <source name="RGsB on/off" value="false"/>
+      <source name="use debug" value="true"/>
     </sources>
     <probes/>
     <view>
-      <view_node expanded="true" group_name="gamma_debug[2:0]" index="0" lsb_to_msb="false" node_type="source" radix="bin" view_type="group_header"/>
+      <view_node expanded="true" group_name="video output format " index="0" lsb_to_msb="false" node_type="source" radix="bin" view_type="group_header"/>
       <view_node expanded="true" index="2" node_type="source" view_type="group_member"/>
       <view_node expanded="true" index="1" node_type="source" view_type="group_member"/>
       <view_node expanded="true" index="0" node_type="source" view_type="group_member"/>
@@ -51,13 +51,29 @@
   <instance enable_logging="true" entity_name="" is_auto_node="true" name="">
     <node_ip_info instance_id="3" mfg_id="110" node_id="9" version="0"/>
     <sources>
-      <source name="n15bit_mode" value="false"/>
-      <source name="nDeBlurMan" value="false"/>
-      <source name="use debug setting" value="false"/>
+      <source name="table lsb" value="false"/>
+      <source name="table msb" value="false"/>
+      <source name="use debug" value="false"/>
     </sources>
     <probes/>
     <view>
-      <view_node expanded="true" group_name="DeBlur_15bitmode_debug[2:0]" index="0" lsb_to_msb="false" node_type="source" radix="bin" view_type="group_header"/>
+      <view_node expanded="true" group_name="gamma table debug" index="0" lsb_to_msb="false" node_type="source" view_type="group_header"/>
+      <view_node expanded="true" index="2" node_type="source" view_type="group_member"/>
+      <view_node expanded="true" index="1" node_type="source" view_type="group_member"/>
+      <view_node expanded="true" index="0" node_type="source" view_type="group_member"/>
+    </view>
+    <log data="" max_size="8" size="0" time="" width="3"/>
+  </instance>
+  <instance enable_logging="true" entity_name="" is_auto_node="true" name="">
+    <node_ip_info instance_id="4" mfg_id="110" node_id="9" version="0"/>
+    <sources>
+      <source name="15bit/21bit mode" value="false"/>
+      <source name="deblur on/off" value="false"/>
+      <source name="use debug" value="false"/>
+    </sources>
+    <probes/>
+    <view>
+      <view_node expanded="true" group_name="deblur / 15bit mode debug" index="0" lsb_to_msb="false" node_type="source" view_type="group_header"/>
       <view_node expanded="true" index="2" node_type="source" view_type="group_member"/>
       <view_node expanded="true" index="1" node_type="source" view_type="group_member"/>
       <view_node expanded="true" index="0" node_type="source" view_type="group_member"/>
