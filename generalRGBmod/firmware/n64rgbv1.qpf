@@ -18,16 +18,16 @@
 #
 # Quartus Prime
 # Version 17.1.0 Build 590 10/25/2017 SJ Lite Edition
-# Date created = 15:23:18  December 18, 2017
+# Date created = 06:34:47  December 19, 2017
 #
 # -------------------------------------------------------------------------- #
 
 QUARTUS_VERSION = "17.1"
-DATE = "15:23:18  December 18, 2017"
+DATE = "06:34:47  December 19, 2017"
 
 # Revisions
 
 PROJECT_REVISION = "n64rgbv1_5M570ZT100C4"
-PROJECT_REVISION = "n64rgbv1_5M240ZT100C4"
 PROJECT_REVISION = "n64rgbv1_EPM240T100C5"
 PROJECT_REVISION = "n64rgbv1_EPM570T100C5"
+PROJECT_REVISION = "n64rgbv1_5M240ZT100C4"
