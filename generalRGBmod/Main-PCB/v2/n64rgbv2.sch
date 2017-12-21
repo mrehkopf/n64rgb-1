@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="8.5.0">
+<eagle version="8.4.3">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -10907,7 +10907,6 @@ Source: 3M</description>
 <part name="GND3" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="J11" library="jumper" deviceset="SJ2W" device=""/>
 <part name="GND18" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
-<part name="J1" library="jumper" deviceset="SJ" device=""/>
 <part name="U2" library="analog-devices" deviceset="ADV7123" device="" value="ADV7125/ADV7123"/>
 <part name="AGND10" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="P+19" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+5V" device=""/>
@@ -10953,6 +10952,7 @@ Source: 3M</description>
 <part name="C32" library="rcl" deviceset="C-EU" device="C0603" value="0.01u"/>
 <part name="P_GND3" library="wirepad" deviceset="SMD2" device=""/>
 <part name="J12" library="jumper" deviceset="SJ2W" device=""/>
+<part name="FB3" library="rcl" deviceset="R-EU_" device="R0603"/>
 </parts>
 <sheets>
 <sheet>
@@ -10961,6 +10961,9 @@ Source: 3M</description>
 <wire x1="91.44" y1="82.55" x2="91.44" y2="64.77" width="0.1524" layer="94"/>
 <wire x1="91.44" y1="64.77" x2="71.12" y2="64.77" width="0.1524" layer="94"/>
 <wire x1="71.12" y1="64.77" x2="71.12" y2="82.55" width="0.1524" layer="94"/>
+<text x="269.24" y="129.54" size="1.27" layer="97" font="fixed">ugly pinout choices
+for R2,G2 and B2 at CPLD
+to support prototypes</text>
 </plain>
 <instances>
 <instance part="R13" gate="G$1" x="264.16" y="15.24"/>
@@ -11036,7 +11039,6 @@ Source: 3M</description>
 <instance part="GND3" gate="1" x="60.96" y="68.58"/>
 <instance part="J11" gate="G$1" x="154.94" y="187.96" rot="R90"/>
 <instance part="GND18" gate="1" x="154.94" y="180.34"/>
-<instance part="J1" gate="1" x="124.46" y="236.22"/>
 <instance part="U2" gate="G$1" x="276.86" y="116.84"/>
 <instance part="AGND10" gate="1" x="312.42" y="91.44"/>
 <instance part="P+19" gate="1" x="322.58" y="119.38"/>
@@ -11091,6 +11093,7 @@ Source: 3M</description>
 <instance part="C32" gate="G$1" x="271.78" y="215.9"/>
 <instance part="P_GND3" gate="1" x="55.88" y="200.66"/>
 <instance part="J12" gate="G$1" x="139.7" y="58.42" rot="R90"/>
+<instance part="FB3" gate="G$1" x="124.46" y="236.22"/>
 </instances>
 <busses>
 </busses>
@@ -11295,9 +11298,6 @@ Source: 3M</description>
 <wire x1="266.7" y1="86.36" x2="266.7" y2="83.82" width="0.1524" layer="91"/>
 <wire x1="266.7" y1="83.82" x2="269.24" y2="83.82" width="0.1524" layer="91"/>
 <junction x="269.24" y="83.82"/>
-<wire x1="269.24" y1="83.82" x2="271.78" y2="83.82" width="0.1524" layer="91"/>
-<pinref part="U2" gate="G$1" pin="B2"/>
-<wire x1="271.78" y1="83.82" x2="271.78" y2="86.36" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="U2" gate="G$1" pin="R1"/>
@@ -11308,9 +11308,6 @@ Source: 3M</description>
 <wire x1="287.02" y1="149.86" x2="287.02" y2="152.4" width="0.1524" layer="91"/>
 <wire x1="287.02" y1="152.4" x2="284.48" y2="152.4" width="0.1524" layer="91"/>
 <junction x="284.48" y="152.4"/>
-<wire x1="284.48" y1="152.4" x2="281.94" y2="152.4" width="0.1524" layer="91"/>
-<pinref part="U2" gate="G$1" pin="R2"/>
-<wire x1="281.94" y1="152.4" x2="281.94" y2="149.86" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="RN23" gate="G$1" pin="8"/>
@@ -11333,9 +11330,6 @@ Source: 3M</description>
 <pinref part="U2" gate="G$1" pin="G1"/>
 <wire x1="246.38" y1="129.54" x2="243.84" y2="129.54" width="0.1524" layer="91"/>
 <junction x="243.84" y="129.54"/>
-<pinref part="U2" gate="G$1" pin="G2"/>
-<wire x1="246.38" y1="127" x2="243.84" y2="127" width="0.1524" layer="91"/>
-<wire x1="243.84" y1="127" x2="243.84" y2="129.54" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="J21" gate="1" pin="2"/>
@@ -11413,7 +11407,7 @@ Source: 3M</description>
 <wire x1="104.14" y1="226.06" x2="104.14" y2="236.22" width="0.1524" layer="91"/>
 <junction x="104.14" y="226.06"/>
 <wire x1="104.14" y1="236.22" x2="119.38" y2="236.22" width="0.1524" layer="91"/>
-<pinref part="J1" gate="1" pin="1"/>
+<pinref part="FB3" gate="G$1" pin="1"/>
 </segment>
 <segment>
 <pinref part="C14" gate="G$1" pin="1"/>
@@ -11670,10 +11664,10 @@ Source: 3M</description>
 <wire x1="129.54" y1="236.22" x2="139.7" y2="236.22" width="0.1524" layer="91"/>
 <wire x1="139.7" y1="236.22" x2="139.7" y2="226.06" width="0.1524" layer="91"/>
 <junction x="139.7" y="226.06"/>
-<pinref part="J1" gate="1" pin="2"/>
 <pinref part="C3" gate="G$1" pin="1"/>
 <wire x1="147.32" y1="218.44" x2="147.32" y2="220.98" width="0.1524" layer="91"/>
 <junction x="147.32" y="220.98"/>
+<pinref part="FB3" gate="G$1" pin="2"/>
 </segment>
 <segment>
 <pinref part="P+12" gate="VCC" pin="VCC"/>
@@ -12300,12 +12294,51 @@ Source: 3M</description>
 <wire x1="27.94" y1="129.54" x2="45.72" y2="129.54" width="0.1524" layer="91"/>
 </segment>
 </net>
+<net name="N$25" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="B2/63-GCLK3"/>
+<wire x1="198.12" y1="124.46" x2="220.98" y2="124.46" width="0.1524" layer="91"/>
+<wire x1="220.98" y1="124.46" x2="238.76" y2="142.24" width="0.1524" layer="91"/>
+<wire x1="238.76" y1="142.24" x2="259.08" y2="142.24" width="0.1524" layer="91"/>
+<wire x1="259.08" y1="142.24" x2="259.08" y2="139.7" width="0.1524" layer="91"/>
+<wire x1="259.08" y1="139.7" x2="281.94" y2="139.7" width="0.1524" layer="91"/>
+<pinref part="U2" gate="G$1" pin="R2"/>
+<wire x1="281.94" y1="139.7" x2="281.94" y2="149.86" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$41" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="B2/61-GCLK2"/>
+<wire x1="198.12" y1="119.38" x2="218.44" y2="119.38" width="0.1524" layer="91"/>
+<wire x1="218.44" y1="119.38" x2="238.76" y2="139.7" width="0.1524" layer="91"/>
+<wire x1="238.76" y1="139.7" x2="256.54" y2="139.7" width="0.1524" layer="91"/>
+<wire x1="256.54" y1="139.7" x2="256.54" y2="127" width="0.1524" layer="91"/>
+<pinref part="U2" gate="G$1" pin="G2"/>
+<wire x1="256.54" y1="127" x2="246.38" y2="127" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$43" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="B2/60"/>
+<wire x1="198.12" y1="116.84" x2="218.44" y2="116.84" width="0.1524" layer="91"/>
+<wire x1="218.44" y1="116.84" x2="238.76" y2="137.16" width="0.1524" layer="91"/>
+<wire x1="238.76" y1="137.16" x2="266.7" y2="137.16" width="0.1524" layer="91"/>
+<pinref part="U2" gate="G$1" pin="B2"/>
+<wire x1="271.78" y1="96.52" x2="271.78" y2="86.36" width="0.1524" layer="91"/>
+<wire x1="271.78" y1="96.52" x2="266.7" y2="96.52" width="0.1524" layer="91"/>
+<wire x1="266.7" y1="96.52" x2="266.7" y2="137.16" width="0.1524" layer="91"/>
+</segment>
+</net>
 </nets>
 </sheet>
 </sheets>
 </schematic>
 </drawing>
 <compatibility>
+<note version="6.3" minversion="6.2.2" severity="warning">
+Since Version 6.2.2 text objects can contain more than one line,
+which will not be processed correctly with this version.
+</note>
 <note version="8.2" severity="warning">
 Since Version 8.2, EAGLE supports online libraries. The ids
 of those online libraries will not be understood (or retained)
