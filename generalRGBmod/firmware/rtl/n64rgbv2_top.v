@@ -31,7 +31,7 @@
 //
 // Dependencies: rtl/n64igr.v (Rev. 2.5)
 //               rtl/n64_vinfo_ext.v  (Rev. 1.0)
-//               rtl/n64_deblur.v     (Rev. 1.0)
+//               rtl/n64_deblur.v     (Rev. 1.1)
 //               rtl/n64_vdemux.v     (Rev. 1.0)
 //               vh/n64rgb_params.vh
 //
@@ -188,14 +188,14 @@ n64_vinfo_ext get_vinfo(
 // Part 3: DeBlur Management (incl. heuristic)
 // ===========================================
 
+wire nrst_deblur = install_type ? nRST_nManualDB : 1'b1;
 wire ndo_deblur, nblank_rgb;
 wire [1:0] deblurparams_pass;
 
 n64_deblur deblur_management(
   .nCLK(nCLK),
   .nDSYNC(nDSYNC),
-  .DRV_RST(DRV_RST),
-  .vdata_sync_2pre(vdata_r[1][`VDATA_SY_SLICE]),
+  .nRST(nrst_deblur),
   .vdata_pre(vdata_r[0]),
   .vdata_cur(D_i),
   .deblurparams_i({data_cnt,n64_480i,vmode,blurry_pixel_pos,nForceDeBlur,nDeBlurMan}),

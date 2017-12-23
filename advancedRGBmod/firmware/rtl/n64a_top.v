@@ -32,7 +32,7 @@
 // Dependencies: vh/n64a_params.vh
 //               rtl/n64_igr.v        (Rev. 3.0)
 //               rtl/n64_vinfo_ext.v  (Rev. 1.0)
-//               rtl/n64_deblur.v     (Rev. 1.0)
+//               rtl/n64_deblur.v     (Rev. 1.1)
 //               rtl/n64a_linedbl.v   (Rev. 1.1)
 //               rtl/n64a_video.v     (Rev. 1.0)
 // (more dependencies may appear in other files)
@@ -61,7 +61,7 @@ module n64a_top (
   // Video Output to ADV712x
      CLK_ADV712x,
   nCSYNC_ADV712x,
-//  nBLANK_ADV712x,
+//   nBLANK_ADV712x,
   V3_o,     // video component data vector 3 (B or Pr)
   V2_o,     // video component data vector 2 (G or Y)
   V1_o,     // video component data vector 1 (R or Pb)
@@ -98,7 +98,7 @@ inout  nRST;
 
 output                        CLK_ADV712x;
 output                     nCSYNC_ADV712x;
-//output                     nBLANK_ADV712x;
+// output                     nBLANK_ADV712x;
 output [color_width_o-1:0] V3_o;
 output [color_width_o-1:0] V2_o;
 output [color_width_o-1:0] V1_o;
@@ -128,7 +128,7 @@ reg UseJumperSet;
 always @(negedge nCLK) begin
   if (~nfirstboot) begin
     UseJumperSet <= nRST;  // fallback if reset pressed on power cycle
-    nfirstboot <= 1'b1;
+    nfirstboot   <= 1'b1;
   end
 end
 
@@ -201,7 +201,6 @@ n64_deblur deblur_management(
   .nCLK(nCLK),
   .nDSYNC(nDSYNC),
   .nRST(nRST),
-  .vdata_sync_2pre(vdata_ir[1][`VDATA_I_SY_SLICE]),
   .vdata_pre(vdata_ir[0]),
   .vdata_cur(D_i),
   .deblurparams_i({data_cnt,n64_480i,vmode,blurry_pixel_pos,nForceDeBlur,nDeBlurMan}),
@@ -263,9 +262,10 @@ n64a_vconv video_converter(
 );
 
 // Part 5.3: assign final outputs
-// ===========================
+// ==============================
+
 assign    CLK_ADV712x = CLK_out;
-assign nCSYNC_ADV712x = nEN_RGsB & nEN_YPbPr ? 1'b0  : Sync_o[0]; // output sync on G/Y even in fallbac mode
+assign nCSYNC_ADV712x = nEN_RGsB & nEN_YPbPr ? 1'b0  : Sync_o[0]; // output sync on G even in fallback mode
 //assign nBLANK_ADV712x = 1'b1;
 
 // Filter Add On:

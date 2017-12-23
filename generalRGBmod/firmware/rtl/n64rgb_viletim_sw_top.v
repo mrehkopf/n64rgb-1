@@ -30,7 +30,7 @@
 // Description:
 //
 // Dependencies: rtl/n64_vinfo_ext.v  (Rev. 1.0)
-//               rtl/n64_deblur.v     (Rev. 1.0)
+//               rtl/n64_deblur.v     (Rev. 1.1)
 //               rtl/n64_vdemux.v     (Rev. 1.0)
 //               vh/n64rgb_params.vh
 //
@@ -140,8 +140,7 @@ wire [1:0] deblurparams_pass;
 n64_deblur deblur_management(
   .nCLK(nCLK),
   .nDSYNC(nDSYNC),
-  .DRV_RST(1'b0),
-  .vdata_sync_2pre(vdata_r[1][`VDATA_SY_SLICE]),
+  .nRST(1'b1),
   .vdata_pre(vdata_r[0]),
   .vdata_cur(D_i),
   .deblurparams_i({data_cnt,n64_480i,vmode,blurry_pixel_pos,nForceDeBlur,nDeBlurMan}),
