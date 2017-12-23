@@ -11,7 +11,7 @@
 //
 // Dependencies: rtl/n64igr.v (Rev. 2.5)
 //               rtl/n64_vinfo_ext.v  (Rev. 1.0)
-//               rtl/n64_deblur.v     (Rev. 1.0)
+//               rtl/n64_deblur.v     (Rev. 1.1)
 //               rtl/n64_vdemux.v     (Rev. 1.0)
 //               vh/n64rgb_params.vh
 //
@@ -168,14 +168,14 @@ n64_vinfo_ext get_vinfo(
 // Part 3: DeBlur Management (incl. heuristic)
 // ===========================================
 
+wire nrst_deblur = install_type ? nRST_nManualDB : 1'b1;
 wire ndo_deblur, nblank_rgb;
 wire [1:0] deblurparams_pass;
 
 n64_deblur deblur_management(
   .nCLK(nCLK),
   .nDSYNC(nDSYNC),
-  .DRV_RST(DRV_RST),
-  .vdata_sync_2pre(vdata_r[1][`VDATA_SY_SLICE]),
+  .nRST(nrst_deblur),
   .vdata_pre(vdata_r[0]),
   .vdata_cur(D_i),
   .deblurparams_i({data_cnt,n64_480i,vmode,blurry_pixel_pos,nForceDeBlur,nDeBlurMan}),
@@ -201,9 +201,6 @@ n64_vdemux video_demux(
 assign {nVSYNC,nCLAMP,nHSYNC,nCSYNC} = vdata_r[1][`VDATA_SY_SLICE];
 assign {R_o,G_o,B_o}                 = vdata_r[1][`VDATA_CO_SLICE];
 
-
-// assign ADV712x_CLK  = ~nCLK;
-// assign ADV712x_CLK  = ~nDSYNC;
 assign ADV712x_CLK  = data_cnt[0];
 assign ADV712x_SYNC = nSYNC_ON_GREEN ? 1'b0 : vdata_r[1][vdata_width-4];
 

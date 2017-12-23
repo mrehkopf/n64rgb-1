@@ -12,7 +12,7 @@
 // Dependencies: vh/n64a_params.vh
 //               rtl/n64_igr.v        (Rev. 3.0)
 //               rtl/n64_vinfo_ext.v  (Rev. 1.0)
-//               rtl/n64_deblur.v     (Rev. 1.0)
+//               rtl/n64_deblur.v     (Rev. 1.1)
 //               rtl/n64a_linedbl.v   (Rev. 1.1)
 //               rtl/n64a_video.v     (Rev. 1.0)
 // (more dependencies may appear in other files)
@@ -247,7 +247,6 @@ n64_deblur deblur_management(
   .nCLK(nCLK),
   .nDSYNC(nDSYNC),
   .nRST(nRST),
-  .vdata_sync_2pre(vdata_r[1][`VDATA_I_SY_SLICE]),
   .vdata_pre(vdata_r[0]),
   .vdata_cur(D_i),
   .deblurparams_i({data_cnt,n64_480i,vmode,blurry_pixel_pos,nForceDeBlur,nDeBlurMan}),
