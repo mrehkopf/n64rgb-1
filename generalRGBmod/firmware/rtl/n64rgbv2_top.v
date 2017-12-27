@@ -1,4 +1,24 @@
 //////////////////////////////////////////////////////////////////////////////////
+//
+// This file is part of the N64 RGB/YPbPr DAC project.
+//
+// Copyright (C) 2016-2017 by Peter Bartmann <borti4938@gmx.de>
+//
+// N64 RGB/YPbPr DAC is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//
+//////////////////////////////////////////////////////////////////////////////////
+//
 // Company: Circuit-Board.de
 // Engineer: borti4938
 // (initial design file by Ikari_01)
@@ -93,9 +113,9 @@ output nVSYNC;
 output nCSYNC;
 output nCLAMP;
 
-output [color_width-1:0] R_o;     // red data vector
-output [color_width-1:0] G_o;     // green data vector
-output [color_width-1:0] B_o;     // blue data vector
+output [color_width:0] R_o;     // red data vector
+output [color_width:0] G_o;     // green data vector
+output [color_width:0] B_o;     // blue data vector
 
 output ADV712x_CLK;
 output ADV712x_SYNC;
@@ -198,8 +218,13 @@ n64_vdemux video_demux(
 );
 
 
-assign {nVSYNC,nCLAMP,nHSYNC,nCSYNC} = vdata_r[1][`VDATA_SY_SLICE];
-assign {R_o,G_o,B_o}                 = vdata_r[1][`VDATA_CO_SLICE];
+// assign final outputs
+// --------------------
+
+assign {nVSYNC,nCLAMP,nHSYNC,nCSYNC} =  vdata_r[1][`VDATA_SY_SLICE];
+assign  R_o                          = {vdata_r[1][`VDATA_RE_SLICE],vdata_r[1][3*color_width-1]};
+assign  G_o                          = {vdata_r[1][`VDATA_GR_SLICE],vdata_r[1][2*color_width-1]};
+assign  B_o                          = {vdata_r[1][`VDATA_BL_SLICE],vdata_r[1][  color_width-1]};
 
 assign ADV712x_CLK  = data_cnt[0];
 assign ADV712x_SYNC = nSYNC_ON_GREEN ? 1'b0 : vdata_r[1][vdata_width-4];
