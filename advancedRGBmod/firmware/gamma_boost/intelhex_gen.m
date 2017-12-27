@@ -13,6 +13,8 @@
 % https://de.mathworks.com/matlabcentral/fileexchange/59004-intelhex-gen-data
 % and modified by Peter 'borti4938' Bartmann at 2017/10/04
 % 
+%%%%%%%%%%%%%%%%%%%%%%%
+
 function [ ] = intelhex_gen(data,fileName)
 
 if length(data) > 655535
