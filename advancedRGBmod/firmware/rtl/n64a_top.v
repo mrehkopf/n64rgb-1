@@ -30,11 +30,11 @@
 // Description:
 //
 // Dependencies: vh/n64a_params.vh
-//               rtl/n64_igr.v        (Rev. 3.0)
-//               rtl/n64_vinfo_ext.v  (Rev. 1.0)
-//               rtl/n64_deblur.v     (Rev. 1.1)
-//               rtl/n64a_linedbl.v   (Rev. 1.1)
-//               rtl/n64a_video.v     (Rev. 1.0)
+//               rtl/n64a_controller.v (Rev. 1.0)
+//               rtl/n64_vinfo_ext.v   (Rev. 1.0)
+//               rtl/n64_deblur.v      (Rev. 1.1)
+//               rtl/n64a_linedbl.v    (Rev. 1.1)
+//               rtl/n64a_video.v      (Rev. 1.0)
 // (more dependencies may appear in other files)
 //
 // Revision: 1.1
@@ -119,108 +119,36 @@ input       n480i_bob;
 
 // start of rtl
 
-
-// Part 0: Debug probes and sources
-// ================================
-
-wire [2:0] Linedoubler_debug;
-source_3bit_0 Linedoubler_debug_src(
-  .source(Linedoubler_debug)
-);
-
-// bit assignment for Linedoubler_debug[2:0]:
-// 2 - 0 = use J4 setting         | 1 = use debug setting
-// 1 - 0 = disable lineX2         | 1 = enable lineX2
-// 0 - 0 = enable 480i bob-deint. | 1 = output 480i
-
-
-wire [2:0] SL_debug;
-source_3bit_0 scanline_debug_src(
-  .source(SL_debug)
-);
-
-// bit assignment for SL_debug[2:0]:
-// 2   - 0 = use J3 setting | 1 = use debug setting
-// 1:0 - Scanline strength (00, 01, 10, 11 = 100%, 50%, 25%, 0%)
-
-
-wire [2:0] Vidout_debug;
-source_3bit_0 Vidout_debug_src(
-  .source(Vidout_debug)
-);
-
-// bit assignment for Vidout_debug[2:0]:
-// 2 - 0 = use J2 setting | 1 = use debug setting
-// 1 - 0 = enable RGsB    | 1 = disable RGsB
-// 0 - 0 = enable YPbPr   | 1 = disable YPbPr (beats RGsB)
-
-
-
-wire [2:0] gamma_debug;
-source_3bit_0 gamma_debug_src(
-  .source(gamma_debug)
-);
-
-// bit assignment for gamma_debug[2:0]:
-// 2   - use gamma table (don't use gamma table means gamma = 1.0)
-// 1:0 - 00 = 0.8
-//       01 = 0.9
-//       10 = 1.1
-//       11 = 1.2
-
-
-
-wire [2:0] DeBlur_15bitmode_debug;
-source_3bit_0 DeBlur_15bitmode_debug_src(
-  .source(DeBlur_15bitmode_debug)
-);
-
-// bit assignment for DeBlur_15bitmode_debug[2:0]:
-// 2 - 0 = use IGR setting | 1 = use debug setting
-// 1 - 0 = force de-blur   | 1 = don't use de-blur (replaces nDeBlurMan)
-// 0 - 0 = 15bit mode      | 1 = 21bit mode        (replaces n15bit_mode)
-
-
-// Part 0: determine jumper set
-// ============================
-
-reg nfirstboot = 1'b0;
-reg UseJumperSet;
-
-always @(negedge nCLK) begin
-  if (~nfirstboot) begin
-    UseJumperSet <= nRST;  // fallback if reset pressed on power cycle
-    nfirstboot <= 1'b1;
-  end
-end
-
-// fallback only to 240p and RGB
-// (sync output on G/Y in any case to see at least something even with a component cable)
-
-wire nEN_YPbPr_active = UseJumperSet ? nEN_YPbPr : 1'b1;
-wire n240p_active     = UseJumperSet ? n240p     : 1'b0;
-
-// Part 1: connect IGR module
-// ==========================
+// Part 1: connect controller module
+// =================================
 
 assign SYS_CLKen = 1'b1;
 
-wire nForceDeBlur_tmp, nDeBlurMan_tmp, n15bit_mode_tmp;
+//wire [ 7:0] DefaultSet = {UseVGA_HVSync,nFilterBypass,nEN_RGsB,nEN_YPbPr,SL_str,n240p,n480i_bob};
+wire [ 5:0] DefaultSet = {nEN_RGsB,nEN_YPbPr,SL_str,n240p,n480i_bob};
+wire [11:0] ConfigSet;
 
-n64a_igr igr(
+n64a_controller controller_u(
   .SYS_CLK(SYS_CLK),
   .nRST(nRST),
   .CTRL(CTRL_i),
-  .Default_DeBlur(1'b1),
-  .Default_nForceDeBlur(1'b1),
-  .nForceDeBlur(nForceDeBlur_tmp),
-  .nDeBlur(nDeBlurMan_tmp),
-  .n15bit_mode(n15bit_mode_tmp)
+  .DefaultSet(DefaultSet),
+  .ConfigSet(ConfigSet),
+  .nCLK(nCLK),
+  .nDSYNC(nDSYNC),
+  .video_data_i(vdata_r[2]),
+  .video_data_o(vdata_r[3])
 );
 
-wire nForceDeBlur = DeBlur_15bitmode_debug[2] ? 1'b0 : nForceDeBlur_tmp;
-wire nDeBlurMan   = DeBlur_15bitmode_debug[2] ? DeBlur_15bitmode_debug[1] : nDeBlurMan_tmp;
-wire n15bit_mode  = DeBlur_15bitmode_debug[2] ? DeBlur_15bitmode_debug[0] : n15bit_mode_tmp;
+wire       nDeBlurMan    = ConfigSet[11];
+wire       nForceDeBlur  = ConfigSet[10];
+wire       n15bit_mode   = ConfigSet[ 9];
+wire [2:0] cfg_gamma     = ConfigSet[ 8:6];
+wire       cfg_nEN_RGsB  = ConfigSet[ 5];
+wire       cfg_nEN_YPbPr = ConfigSet[ 4];
+wire [1:0] cfg_SL_str    = ConfigSet[ 3:2];
+wire       cfg_n240p     = ConfigSet[ 1];
+wire       cfg_n480i_bob = ConfigSet[ 0];
 
 
 // Part 2 - 4: RGB Demux with De-Blur Add-On
@@ -277,7 +205,7 @@ n64_deblur deblur_management(
 // Part 4: data demux
 // ==================
 
-wire [`VDATA_I_FU_SLICE] vdata_r[0:2];
+wire [`VDATA_I_FU_SLICE] vdata_r[0:3];
 
 n64_vdemux video_demux(
   .nCLK(nCLK),
@@ -285,7 +213,7 @@ n64_vdemux video_demux(
   .nRST(nRST),
   .D_i(D_i),
   .demuxparams_i({data_cnt,deblurparams_pass,n15bit_mode}),
-  .gammaparams_i(gamma_debug),
+  .gammaparams_i(cfg_gamma),
   .vdata_r_0(vdata_r[0]),
   .vdata_r_1(vdata_r[1]),
   .vdata_r_6(vdata_r[2])
@@ -299,15 +227,9 @@ n64_vdemux video_demux(
 
 wire CLK_out;
 
-wire     n240p_debug = Linedoubler_debug[2] ? Linedoubler_debug[1] : n240p_active;
-wire n480i_bob_debug = Linedoubler_debug[2] ? Linedoubler_debug[0] : n480i_bob;
+wire       nENABLE_linedbl = (n64_480i & cfg_n480i_bob) | ~cfg_n240p | ~nRST;
 
-wire       nENABLE_linedbl = (n64_480i & n480i_bob_debug) | ~n240p_debug | ~nRST;
-// wire       nENABLE_linedbl = (n64_480i & n480i_bob) | ~n240p_active | ~nRST;
-
-wire [1:0] SL_active = SL_debug[2] ? SL_debug[1:0] : SL_str;
-wire [1:0] SL_str_dbl      = n64_480i ? 2'b11 : SL_active;
-// wire [1:0] SL_str_dbl      = n64_480i ? 2'b11 : SL_str;
+ wire [1:0] SL_str_dbl      = n64_480i ? 2'b11 : cfg_SL_str;
 
 wire [4:0] vinfo_dbl = {nENABLE_linedbl,SL_str_dbl,vmode,n64_480i};
 
@@ -318,7 +240,7 @@ n64a_linedbl linedoubler(
   .CLK_out(CLK_out),
   .nRST(nRST),
   .vinfo_dbl(vinfo_dbl),
-  .vdata_i(vdata_r[2]),
+  .vdata_i(vdata_r[3]),
   .vdata_o(vdata_tmp)
 );
 
@@ -328,12 +250,9 @@ n64a_linedbl linedoubler(
 
 wire [3:0] Sync_o;
 
-wire nEN_RGsB_debug  = Vidout_debug[2] ? Vidout_debug[1] : nEN_RGsB;
-wire nEN_YPbPr_debug = Vidout_debug[2] ? Vidout_debug[0] : nEN_YPbPr_active;
-
 n64a_vconv video_converter(
   .CLK(CLK_out),
-  .nEN_YPbPr(nEN_YPbPr_debug),    // enables color transformation on '0'
+  .nEN_YPbPr(cfg_nEN_YPbPr),    // enables color transformation on '0'
   .vdata_i(vdata_tmp),
   .vdata_o({Sync_o,V1_o,V2_o,V3_o})
 );
@@ -341,7 +260,7 @@ n64a_vconv video_converter(
 // Part 5.3: assign final outputs
 // ===========================
 assign    CLK_ADV712x = CLK_out;
-assign nCSYNC_ADV712x = nEN_RGsB_debug & nEN_YPbPr_debug ? 1'b0  : Sync_o[0];
+assign nCSYNC_ADV712x = cfg_nEN_RGsB & cfg_nEN_YPbPr ? 1'b0  : Sync_o[0];
 // assign nBLANK_ADV712x = Sync_o[2];
 
 // Filter Add On:
