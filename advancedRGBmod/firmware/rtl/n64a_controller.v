@@ -322,48 +322,86 @@ assign nRST = drv_rst ? 1'b0 : 1'bz;wire nHSYNC_cur = video_data_i[3*color_width
 // ========================
 
 // concept:
-// - OSD is virtual screen
+// - OSD is virtual screen of size 128x384 pixel each 3bit to define off and seven colors.
 // - content is mapped into memory; for simplicity each pixel element has 2 bits: '00' for not set and a color else
 // - each pixel of virtual screen is written by NIOSII processor
+
+wire [15:0] txt_wraddr;
+wire [ 1:0] txt_wrctrl;
+wire [ 2:0] txt_wrdata;
+
+
+system system_u(
+  .clk_clk(SYS_CLK),
+  .reset_reset_n(nRST),
+  .txt_wraddr_export(txt_wraddr),
+  .txt_wrctrl_export(txt_wrctrl),
+  .txt_wrdata_export(txt_wrdata)
+);
 
 wire nVSYNC_cur = video_data_i[3*color_width_i+3];
 
 reg nHSYNC_pre = 1'b0;
 reg nVSYNC_pre = 1'b0;
 
-reg [8:0] v_cnt =  9'd0;
-reg [9:0] h_cnt = 10'd0;
+reg [9:0] h_cnt = 10'h0;
+reg [7:0] v_cnt =  8'h0;
 
-reg draw_osd_window = 1'b0;
+reg [2:0] draw_osd_window = 3'b000;
+reg [2:0]        en_txtrd = 3'b000;
+
+reg [15:0] txt_rdaddr = 16'h0;
 
 always @(negedge nCLK) begin
   if (~nDSYNC) begin
-    h_cnt <= h_cnt + 1'b1;
+    h_cnt <= ~&h_cnt ? h_cnt + 1'b1 : h_cnt;
 
     if (nHSYNC_pre & ~nHSYNC_cur) begin
-      h_cnt <= 10'd0;
-      v_cnt <= v_cnt + 1'b1;
+      h_cnt <= 10'h0;
+      v_cnt <= ~&v_cnt ? v_cnt + 1'b1 : v_cnt;
     end
-    if (nVSYNC_pre & ~nVSYNC_cur)
-      v_cnt <= 9'd0;
+    if (nVSYNC_pre & ~nVSYNC_cur) begin
+      v_cnt <= 8'h0;
+      txt_rdaddr <= 15'h0;
+    end
+
+    if (en_txtrd[0])
+      txt_rdaddr <= ~&txt_rdaddr ? txt_rdaddr + 1'b1 : txt_rdaddr; 
 
     nHSYNC_pre <= nHSYNC_cur;
     nVSYNC_pre <= nVSYNC_cur;
   end
-  
-  if ((h_cnt > `OSD_WINDOW_H_START) && (h_cnt < `OSD_WINDOW_H_STOP) &&
-      (v_cnt > `OSD_WINDOW_V_START) && (v_cnt < `OSD_WINDOW_V_STOP) )
-    draw_osd_window <= 1'b1;
-  else
-    draw_osd_window <= 1'b0;
 
+  draw_osd_window[2:1] <= draw_osd_window[1:0];
+  draw_osd_window[  0] <= (h_cnt > `OSD_WINDOW_H_START) && (h_cnt < `OSD_WINDOW_H_STOP) &&
+                          (v_cnt > `OSD_WINDOW_V_START) && (v_cnt < `OSD_WINDOW_V_STOP);
+
+  en_txtrd[2:1] <= en_txtrd[1:0];
+  en_txtrd[  0] <=(h_cnt > `OSD_TXT_H_START)   && (h_cnt < `OSD_TXT_H_STOP)     &&
+                  (v_cnt > `OSD_HEADER_V_STOP) && (v_cnt < `OSD_FOOTER_V_START);
   if (~nRST) begin
-    v_cnt <=  9'd0;
-    h_cnt <= 10'd0;
+    h_cnt <= 10'h0;
+    v_cnt <=  8'h0;
 
     draw_osd_window <= 1'b0;
+
+    en_txtrd <= 3'b000;
+    txt_rdaddr <= 16'h0;
   end
 end
+
+wire [1:0] txt_data;
+
+ram2port_1 virt_display_u(
+  .data(txt_wrdata),
+  .rd_aclr(txt_wrctrl[1]),
+  .rdaddress(txt_rdaddr),
+  .rdclock(~nCLK),
+  .rden(en_txtrd[0]),
+  .wraddress(txt_wraddr),
+  .wrclock(SYS_CLK),
+  .wren(txt_wrctrl[0]),
+  .q(txt_data));
 
 wire [5:0] window_bg_color = `OSD_WINDOW_BG_COLOR;
 
@@ -372,7 +410,11 @@ always @(negedge nCLK) begin
   video_data_o[`VDATA_I_SY_SLICE] <= video_data_i[`VDATA_I_SY_SLICE];
 
   // draw menu window if needed
-  if (show_osd & draw_osd_window) begin
+  if (show_osd & draw_osd_window[2]) begin
+    if (en_txtrd[2] & ~|txt_data) begin
+//    if (en_txtrd[2]) begin
+      video_data_o[`VDATA_I_CO_SLICE] <= `OSD_TXT_COLOR_YELLOW;
+    end else begin
     // modify red
       video_data_o[3*color_width_i-1:3*color_width_i-2] <= window_bg_color[5:4];
       video_data_o[3*color_width_i-3:2*color_width_i]   <= video_data_i[3*color_width_i-1:2*color_width_i+2];
@@ -382,6 +424,7 @@ always @(negedge nCLK) begin
     // modify blue
       video_data_o[color_width_i-1:color_width_i-2] <= window_bg_color[1:0];
       video_data_o[color_width_i-3:              0] <= video_data_i[color_width_i-1:2];
+    end
   end else begin
     video_data_o[`VDATA_I_CO_SLICE] <= video_data_i[`VDATA_I_CO_SLICE];
   end
