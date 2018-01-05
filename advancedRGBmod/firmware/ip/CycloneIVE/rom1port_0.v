@@ -4,7 +4,7 @@
 // MODULE: altsyncram 
 
 // ============================================================
-// File Name: rom_1port_0.v
+// File Name: rom1port_0.v
 // Megafunction Name(s):
 // 			altsyncram
 //
@@ -36,7 +36,7 @@
 // synopsys translate_off
 `timescale 1 ps / 1 ps
 // synopsys translate_on
-module rom_1port_0 (
+module rom1port_0 (
 	address,
 	clock,
 	rden,
@@ -160,10 +160,10 @@ endmodule
 // Retrieval info: CONNECT: @clock0 0 0 0 0 clock 0 0 0 0
 // Retrieval info: CONNECT: @rden_a 0 0 0 0 rden 0 0 0 0
 // Retrieval info: CONNECT: q 0 0 7 0 @q_a 0 0 7 0
-// Retrieval info: GEN_FILE: TYPE_NORMAL rom_1port_0.v TRUE
-// Retrieval info: GEN_FILE: TYPE_NORMAL rom_1port_0.inc FALSE
-// Retrieval info: GEN_FILE: TYPE_NORMAL rom_1port_0.cmp FALSE
-// Retrieval info: GEN_FILE: TYPE_NORMAL rom_1port_0.bsf FALSE
-// Retrieval info: GEN_FILE: TYPE_NORMAL rom_1port_0_inst.v FALSE
-// Retrieval info: GEN_FILE: TYPE_NORMAL rom_1port_0_bb.v FALSE
+// Retrieval info: GEN_FILE: TYPE_NORMAL rom1port_0.v TRUE
+// Retrieval info: GEN_FILE: TYPE_NORMAL rom1port_0.inc FALSE
+// Retrieval info: GEN_FILE: TYPE_NORMAL rom1port_0.cmp FALSE
+// Retrieval info: GEN_FILE: TYPE_NORMAL rom1port_0.bsf FALSE
+// Retrieval info: GEN_FILE: TYPE_NORMAL rom1port_0_inst.v FALSE
+// Retrieval info: GEN_FILE: TYPE_NORMAL rom1port_0_bb.v FALSE
 // Retrieval info: LIB_FILE: altera_mf

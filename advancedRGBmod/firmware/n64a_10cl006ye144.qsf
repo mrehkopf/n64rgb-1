@@ -168,14 +168,14 @@ set_global_assignment -name VERILOG_INCLUDE_FILE vh/n64a_controller_params.vh
 set_global_assignment -name VERILOG_FILE rtl/n64a_controller.v
 set_global_assignment -name QIP_FILE debug/ip/Cyclone10LP/source_3bit_0/synthesis/source_3bit_0.qip
 set_global_assignment -name QIP_FILE ip/Cyclone10LP/altpll_1.qip
-set_global_assignment -name QIP_FILE ip/Cyclone10LP/rom_1port_0.qip
-set_global_assignment -name QIP_FILE ip/Cyclone10LP/altpll_0.qip
 set_global_assignment -name QIP_FILE ip/Cyclone10LP/ram2port_1.qip
 set_global_assignment -name QIP_FILE ip/Cyclone10LP/system/synthesis/system.qip
 set_global_assignment -name VERILOG_FILE rtl/n64_vinfo_ext.v
 set_global_assignment -name VERILOG_FILE rtl/n64_deblur.v
 set_global_assignment -name VERILOG_FILE rtl/n64_vdemux.v
+set_global_assignment -name QIP_FILE ip/Cyclone10LP/rom1port_0.qip
 set_global_assignment -name VERILOG_FILE rtl/n64a_linedbl.v
+set_global_assignment -name QIP_FILE ip/Cyclone10LP/altpll_0.qip
 set_global_assignment -name QIP_FILE ip/Cyclone10LP/ram2port_0.qip
 set_global_assignment -name VERILOG_FILE rtl/n64a_vconv.v
 set_global_assignment -name QIP_FILE ip/Cyclone10LP/altmult_add3_0.qip

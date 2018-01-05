@@ -146,7 +146,7 @@ always @(negedge nCLK) begin // data register management
   end
 end
 
-rom_1port_0 gamma_correction(
+rom1port_0 gamma_table_u(
   .address({gamma_rom_page,addr_gamma_rom}),
   .clock(~nCLK),
   .rden(en_gamma_boost),

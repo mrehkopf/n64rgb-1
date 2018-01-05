@@ -41,7 +41,7 @@ set_global_assignment -name FAMILY "Cyclone IV E"
 set_global_assignment -name DEVICE EP4CE10E22C8
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 17.0.2
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "08:43:25  SEPTEMBER 28, 2017"
-set_global_assignment -name LAST_QUARTUS_VERSION "17.1.0 Lite Edition"
+set_global_assignment -name LAST_QUARTUS_VERSION "17.1.1 Lite Edition"
 set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
 set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
 set_global_assignment -name ERROR_CHECK_FREQUENCY_DIVISOR 1
@@ -168,7 +168,7 @@ set_global_assignment -name VERILOG_INCLUDE_FILE vh/n64a_controller_params.vh
 set_global_assignment -name VERILOG_FILE rtl/n64a_controller.v
 set_global_assignment -name QIP_FILE debug/ip/CycloneIVE/source_3bit_0/synthesis/source_3bit_0.qip
 set_global_assignment -name QIP_FILE ip/CycloneIVE/altpll_1.qip
-set_global_assignment -name QIP_FILE ip/CycloneIVE/rom_1port_0.qip
+set_global_assignment -name QIP_FILE ip/CycloneIVE/rom1port_0.qip
 set_global_assignment -name QIP_FILE ip/CycloneIVE/altpll_0.qip
 set_global_assignment -name VERILOG_FILE rtl/n64_vinfo_ext.v
 set_global_assignment -name VERILOG_FILE rtl/n64_deblur.v

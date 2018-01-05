@@ -4,7 +4,7 @@
 // MODULE: altsyncram 
 
 // ============================================================
-// File Name: rom_1port_0.v
+// File Name: rom1port_0.v
 // Megafunction Name(s):
 // 			altsyncram
 //
@@ -36,7 +36,7 @@
 // synopsys translate_off
 `timescale 1 ps / 1 ps
 // synopsys translate_on
-module rom_1port_0 (
+module rom1port_0 (
 	address,
 	clock,
 	rden,
@@ -92,7 +92,7 @@ module rom_1port_0 (
 		altsyncram_component.init_file = "./gamma_boost/gamma_vals.hex"
 `endif
 ,
-		altsyncram_component.intended_device_family = "Cyclone IV E",
+		altsyncram_component.intended_device_family = "Cyclone 10 LP",
 		altsyncram_component.lpm_hint = "ENABLE_RUNTIME_MOD=NO",
 		altsyncram_component.lpm_type = "altsyncram",
 		altsyncram_component.numwords_a = 512,
@@ -122,7 +122,7 @@ endmodule
 // Retrieval info: PRIVATE: IMPLEMENT_IN_LES NUMERIC "0"
 // Retrieval info: PRIVATE: INIT_FILE_LAYOUT STRING "PORT_A"
 // Retrieval info: PRIVATE: INIT_TO_SIM_X NUMERIC "0"
-// Retrieval info: PRIVATE: INTENDED_DEVICE_FAMILY STRING "Cyclone IV E"
+// Retrieval info: PRIVATE: INTENDED_DEVICE_FAMILY STRING "Cyclone 10 LP"
 // Retrieval info: PRIVATE: JTAG_ENABLED NUMERIC "0"
 // Retrieval info: PRIVATE: JTAG_ID STRING "NONE"
 // Retrieval info: PRIVATE: MAXIMUM_DEPTH NUMERIC "0"
@@ -142,7 +142,7 @@ endmodule
 // Retrieval info: CONSTANT: CLOCK_ENABLE_INPUT_A STRING "BYPASS"
 // Retrieval info: CONSTANT: CLOCK_ENABLE_OUTPUT_A STRING "BYPASS"
 // Retrieval info: CONSTANT: INIT_FILE STRING "./gamma_boost/gamma_vals.hex"
-// Retrieval info: CONSTANT: INTENDED_DEVICE_FAMILY STRING "Cyclone IV E"
+// Retrieval info: CONSTANT: INTENDED_DEVICE_FAMILY STRING "Cyclone 10 LP"
 // Retrieval info: CONSTANT: LPM_HINT STRING "ENABLE_RUNTIME_MOD=NO"
 // Retrieval info: CONSTANT: LPM_TYPE STRING "altsyncram"
 // Retrieval info: CONSTANT: NUMWORDS_A NUMERIC "512"
@@ -160,10 +160,10 @@ endmodule
 // Retrieval info: CONNECT: @clock0 0 0 0 0 clock 0 0 0 0
 // Retrieval info: CONNECT: @rden_a 0 0 0 0 rden 0 0 0 0
 // Retrieval info: CONNECT: q 0 0 7 0 @q_a 0 0 7 0
-// Retrieval info: GEN_FILE: TYPE_NORMAL rom_1port_0.v TRUE
-// Retrieval info: GEN_FILE: TYPE_NORMAL rom_1port_0.inc FALSE
-// Retrieval info: GEN_FILE: TYPE_NORMAL rom_1port_0.cmp FALSE
-// Retrieval info: GEN_FILE: TYPE_NORMAL rom_1port_0.bsf FALSE
-// Retrieval info: GEN_FILE: TYPE_NORMAL rom_1port_0_inst.v FALSE
-// Retrieval info: GEN_FILE: TYPE_NORMAL rom_1port_0_bb.v FALSE
+// Retrieval info: GEN_FILE: TYPE_NORMAL rom1port_0.v TRUE
+// Retrieval info: GEN_FILE: TYPE_NORMAL rom1port_0.inc FALSE
+// Retrieval info: GEN_FILE: TYPE_NORMAL rom1port_0.cmp FALSE
+// Retrieval info: GEN_FILE: TYPE_NORMAL rom1port_0.bsf FALSE
+// Retrieval info: GEN_FILE: TYPE_NORMAL rom1port_0_inst.v FALSE
+// Retrieval info: GEN_FILE: TYPE_NORMAL rom1port_0_bb.v FALSE
 // Retrieval info: LIB_FILE: altera_mf
