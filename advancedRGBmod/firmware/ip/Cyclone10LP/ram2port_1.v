@@ -49,10 +49,10 @@ module ram2port_1 (
 
 	input	[2:0]  data;
 	input	  rd_aclr;
-	input	[14:0]  rdaddress;
+	input	[15:0]  rdaddress;
 	input	  rdclock;
 	input	  rden;
-	input	[14:0]  wraddress;
+	input	[15:0]  wraddress;
 	input	  wrclock;
 	input	  wren;
 	output	[2:0]  q;
@@ -102,16 +102,16 @@ module ram2port_1 (
 		altsyncram_component.clock_enable_output_b = "BYPASS",
 		altsyncram_component.intended_device_family = "Cyclone 10 LP",
 		altsyncram_component.lpm_type = "altsyncram",
-		altsyncram_component.numwords_a = 32768,
-		altsyncram_component.numwords_b = 32768,
+		altsyncram_component.numwords_a = 36864,
+		altsyncram_component.numwords_b = 36864,
 		altsyncram_component.operation_mode = "DUAL_PORT",
 		altsyncram_component.outdata_aclr_b = "CLEAR1",
 		altsyncram_component.outdata_reg_b = "CLOCK1",
 		altsyncram_component.power_up_uninitialized = "FALSE",
 		altsyncram_component.ram_block_type = "M9K",
 		altsyncram_component.rdcontrol_reg_b = "CLOCK1",
-		altsyncram_component.widthad_a = 15,
-		altsyncram_component.widthad_b = 15,
+		altsyncram_component.widthad_a = 16,
+		altsyncram_component.widthad_b = 16,
 		altsyncram_component.width_a = 3,
 		altsyncram_component.width_b = 3,
 		altsyncram_component.width_byteena_a = 1;
@@ -152,7 +152,7 @@ endmodule
 // Retrieval info: PRIVATE: JTAG_ENABLED NUMERIC "0"
 // Retrieval info: PRIVATE: JTAG_ID STRING "NONE"
 // Retrieval info: PRIVATE: MAXIMUM_DEPTH NUMERIC "0"
-// Retrieval info: PRIVATE: MEMSIZE NUMERIC "98304"
+// Retrieval info: PRIVATE: MEMSIZE NUMERIC "110592"
 // Retrieval info: PRIVATE: MEM_IN_BITS NUMERIC "0"
 // Retrieval info: PRIVATE: MIFfilename STRING ""
 // Retrieval info: PRIVATE: OPERATION_MODE NUMERIC "2"
@@ -189,31 +189,31 @@ endmodule
 // Retrieval info: CONSTANT: CLOCK_ENABLE_OUTPUT_B STRING "BYPASS"
 // Retrieval info: CONSTANT: INTENDED_DEVICE_FAMILY STRING "Cyclone 10 LP"
 // Retrieval info: CONSTANT: LPM_TYPE STRING "altsyncram"
-// Retrieval info: CONSTANT: NUMWORDS_A NUMERIC "32768"
-// Retrieval info: CONSTANT: NUMWORDS_B NUMERIC "32768"
+// Retrieval info: CONSTANT: NUMWORDS_A NUMERIC "36864"
+// Retrieval info: CONSTANT: NUMWORDS_B NUMERIC "36864"
 // Retrieval info: CONSTANT: OPERATION_MODE STRING "DUAL_PORT"
 // Retrieval info: CONSTANT: OUTDATA_ACLR_B STRING "CLEAR1"
 // Retrieval info: CONSTANT: OUTDATA_REG_B STRING "CLOCK1"
 // Retrieval info: CONSTANT: POWER_UP_UNINITIALIZED STRING "FALSE"
 // Retrieval info: CONSTANT: RAM_BLOCK_TYPE STRING "M9K"
 // Retrieval info: CONSTANT: RDCONTROL_REG_B STRING "CLOCK1"
-// Retrieval info: CONSTANT: WIDTHAD_A NUMERIC "15"
-// Retrieval info: CONSTANT: WIDTHAD_B NUMERIC "15"
+// Retrieval info: CONSTANT: WIDTHAD_A NUMERIC "16"
+// Retrieval info: CONSTANT: WIDTHAD_B NUMERIC "16"
 // Retrieval info: CONSTANT: WIDTH_A NUMERIC "3"
 // Retrieval info: CONSTANT: WIDTH_B NUMERIC "3"
 // Retrieval info: CONSTANT: WIDTH_BYTEENA_A NUMERIC "1"
 // Retrieval info: USED_PORT: data 0 0 3 0 INPUT NODEFVAL "data[2..0]"
 // Retrieval info: USED_PORT: q 0 0 3 0 OUTPUT NODEFVAL "q[2..0]"
 // Retrieval info: USED_PORT: rd_aclr 0 0 0 0 INPUT GND "rd_aclr"
-// Retrieval info: USED_PORT: rdaddress 0 0 15 0 INPUT NODEFVAL "rdaddress[14..0]"
+// Retrieval info: USED_PORT: rdaddress 0 0 16 0 INPUT NODEFVAL "rdaddress[15..0]"
 // Retrieval info: USED_PORT: rdclock 0 0 0 0 INPUT NODEFVAL "rdclock"
 // Retrieval info: USED_PORT: rden 0 0 0 0 INPUT VCC "rden"
-// Retrieval info: USED_PORT: wraddress 0 0 15 0 INPUT NODEFVAL "wraddress[14..0]"
+// Retrieval info: USED_PORT: wraddress 0 0 16 0 INPUT NODEFVAL "wraddress[15..0]"
 // Retrieval info: USED_PORT: wrclock 0 0 0 0 INPUT VCC "wrclock"
 // Retrieval info: USED_PORT: wren 0 0 0 0 INPUT GND "wren"
 // Retrieval info: CONNECT: @aclr1 0 0 0 0 rd_aclr 0 0 0 0
-// Retrieval info: CONNECT: @address_a 0 0 15 0 wraddress 0 0 15 0
-// Retrieval info: CONNECT: @address_b 0 0 15 0 rdaddress 0 0 15 0
+// Retrieval info: CONNECT: @address_a 0 0 16 0 wraddress 0 0 16 0
+// Retrieval info: CONNECT: @address_b 0 0 16 0 rdaddress 0 0 16 0
 // Retrieval info: CONNECT: @clock0 0 0 0 0 wrclock 0 0 0 0
 // Retrieval info: CONNECT: @clock1 0 0 0 0 rdclock 0 0 0 0
 // Retrieval info: CONNECT: @data_a 0 0 3 0 data 0 0 3 0

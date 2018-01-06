@@ -10,6 +10,8 @@
 *.qdf
 *.qws
 *_description.txt
+*.map
+*.objdump
 db/
 incremental_db/
 .DS_Store
@@ -18,3 +20,12 @@ ModelSim/
 simulation/
 greybox_tmp/
 system/
+.metadata/
+RemoteSystemsTempFiles/
+*BAK*
+.cproject
+.project
+obj/
+controller_bsp/
+.settings/
+hdl_sim/

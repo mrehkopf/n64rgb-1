@@ -70,18 +70,18 @@
 
   // positioning of OSD window (not linedoubled)
   `define OSD_WINDOW_H_START 10'd128
-  `define OSD_WINDOW_H_STOP  10'd527  // 7 pixels left margin + 384 pixels free text + 7 pixel right margin + 2 unequality comparision
+  `define OSD_WINDOW_H_STOP  10'd431  // 7 pixels left margin + 288 pixels free text + 7 pixel right margin + 2 unequality comparision
   `define OSD_WINDOW_V_START  8'd32
   `define OSD_WINDOW_V_STOP   8'd211  // 25 lines header + 128 lines free text + 25 line footer + 2 unequality comparision
 
-  // define some areas in the OSD windows (128 x 384 pixel = 49152 pixel = number of words in ram2port_1)
+  // define some areas in the OSD windows (128 x 288 pixel = 36864 pixel = number of words in ram2port_1)
   `define OSD_TXT_H_START    10'd135
-  `define OSD_TXT_H_STOP     10'd520
+  `define OSD_TXT_H_STOP     10'd424
   `define OSD_HEADER_V_STOP   8'd57
   `define OSD_FOOTER_V_START  8'd186
 
   // define OSD background window color
-  `define OSD_WINDOW_BG_COLOR 6'b000011
+  `define OSD_WINDOW_BG_COLOR 6'b000001
 
   // define text color
   `define OSD_TXT_COLOR_WHITE   21'h1FFFFF
