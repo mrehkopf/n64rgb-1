@@ -114,23 +114,20 @@
 
 
 
-#define font_x_offset(txp) ((txp)*(FONT_10PT_COLUMN))
-#define font_y_offset(typ) ((typ)*(FONT_10PT_ROW+2))
-
 
 // variables
-char szText[VD_MAXCHARS_FONT_10PT];
+char szText[VD_WIDTH];
 
 int main()
 {
 
   sprintf(szText, "Top Left");
-  VD_print_string(font_x_offset(0), font_y_offset(0), VD_RED, cour10_font, szText);
+  VD_print_string(0, 0, VD_RED, szText);
   sprintf(szText, "Hello World! Your N64A here.");
-  VD_print_string(font_x_offset(4), font_y_offset(4), VD_GREEN, cour10_font, szText);
+  VD_print_string(10, 5, VD_GREEN, szText);
   sprintf(szText, "Bottom Right");
-  int text_tpx = VD_MAXCHARS_FONT_10PT - strlen(szText) -1;
-  VD_print_string(font_x_offset(text_tpx), font_y_offset(VD_MAXROWS_FONT_10PT-1), VD_RED, cour10_font, szText);
+  alt_u8 text_tpx = VD_WIDTH - strlen(szText);
+  VD_print_string(text_tpx, VD_HEIGHT-1, VD_RED, szText);
 
   /* Event loop never exits. */
   while (1);

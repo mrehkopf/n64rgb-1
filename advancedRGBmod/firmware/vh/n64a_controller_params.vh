@@ -68,17 +68,28 @@
   `define Cr 16'h0001 // C-button right
 
 
+  // define font size (every value - 1)
+  `define OSD_FONT_WIDTH 3'd7
+  `define OSD_FONT_HIGHT 4'd11
+
+  // define text window size (every value - 1)
+  `define MAX_CHARS_PER_ROW 6'd47
+  `define MAX_TEXT_ROWS     4'd11
+
   // positioning of OSD window (not linedoubled)
   `define OSD_WINDOW_H_START 10'd128
-  `define OSD_WINDOW_H_STOP  10'd431  // 7 pixels left margin + 288 pixels free text + 7 pixel right margin + 2 unequality comparision
-  `define OSD_WINDOW_V_START  8'd32
-  `define OSD_WINDOW_V_STOP   8'd211  // 25 lines header + 128 lines free text + 25 line footer + 2 unequality comparision
+  `define OSD_WINDOW_H_STOP  10'd527  // 7 pixels left margin + 384 (8x48) pixels free text + 7 pixel right margin + 2 unequality comparision
+//  `define OSD_WINDOW_V_START  8'd32
+//  `define OSD_WINDOW_V_STOP   8'd227  // 25 lines header + 144 (12x12) lines free text + 25 line footer + 2 unequality comparision
+  `define OSD_WINDOW_V_START  8'd50
+  `define OSD_WINDOW_V_STOP   8'd209  // 7 lines header + 144 (12x12) lines free text + 7 line footer + 2 unequality comparision
 
-  // define some areas in the OSD windows (128 x 288 pixel = 36864 pixel = number of words in ram2port_1)
+
+  // define some areas in the OSD windows
   `define OSD_TXT_H_START    10'd135
-  `define OSD_TXT_H_STOP     10'd424
+  `define OSD_TXT_H_STOP     10'd520
   `define OSD_HEADER_V_STOP   8'd57
-  `define OSD_FOOTER_V_START  8'd186
+  `define OSD_FOOTER_V_START  8'd202
 
   // define OSD background window color
   `define OSD_WINDOW_BG_COLOR 6'b000001

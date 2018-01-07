@@ -376,7 +376,7 @@
   <parameter name="enPRInitMode" value="false" />
   <parameter name="enableDiffWidth" value="false" />
   <parameter name="initMemContent" value="true" />
-  <parameter name="initializationFileName">software/controller_app/mem_init/system_onchip_me</parameter>
+  <parameter name="initializationFileName">software/controller_app/mem_init/system_onchip_memory2_0.hex</parameter>
   <parameter name="instanceID" value="NONE" />
   <parameter name="memorySize" value="20480" />
   <parameter name="readDuringWriteMode" value="DONT_CARE" />
@@ -402,7 +402,7 @@
   <parameter name="resetValue" value="0" />
   <parameter name="simDoTestBenchWiring" value="false" />
   <parameter name="simDrivenValue" value="0" />
-  <parameter name="width" value="16" />
+  <parameter name="width" value="10" />
  </module>
  <module name="txt_wrctrl" kind="altera_avalon_pio" version="17.1" enabled="1">
   <parameter name="bitClearingEdgeCapReg" value="false" />
@@ -430,7 +430,7 @@
   <parameter name="resetValue" value="0" />
   <parameter name="simDoTestBenchWiring" value="false" />
   <parameter name="simDrivenValue" value="0" />
-  <parameter name="width" value="3" />
+  <parameter name="width" value="11" />
  </module>
  <connection
    kind="avalon"

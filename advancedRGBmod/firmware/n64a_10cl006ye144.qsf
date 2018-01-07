@@ -170,6 +170,7 @@ set_global_assignment -name QIP_FILE debug/ip/Cyclone10LP/source_3bit_0/synthesi
 set_global_assignment -name QIP_FILE ip/Cyclone10LP/altpll_1.qip
 set_global_assignment -name QIP_FILE system/synthesis/system.qip
 set_global_assignment -name QIP_FILE ip/Cyclone10LP/ram2port_1.qip
+set_global_assignment -name QIP_FILE ip/Cyclone10LP/ram1port_1.qip
 set_global_assignment -name VERILOG_FILE rtl/n64_vinfo_ext.v
 set_global_assignment -name VERILOG_FILE rtl/n64_deblur.v
 set_global_assignment -name VERILOG_FILE rtl/n64_vdemux.v

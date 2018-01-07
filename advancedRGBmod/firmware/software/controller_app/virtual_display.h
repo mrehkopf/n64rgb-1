@@ -32,25 +32,23 @@
 #include "alt_types.h"
 #include "altera_avalon_pio_regs.h"
 
-// define for font
-#define FONT_10PT_ROW 11
-#define FONT_10PT_COLUMN 8
-
-extern char* cour10_font;
-
 // define virtual display (memory mapped)
-#define VD_WIDTH  288
-#define VD_HEIGHT 128
+#define VD_WIDTH  48
+#define VD_HEIGHT 12
 
-#define VD_MAXCHARS_FONT_10PT 37
-#define VD_MAXROWS_FONT_10PT  10
+// define some masks and shifts
+#define VD_WRDATA_COLOR_ANDMASK 0x700
+#define VD_WRDATA_FONT_ANDMASK  0x0FF
 
-// define some masks
-#define VD_WRDATA_ANDMASK       0x7
-#define VD_WRCTRL_WREN_ORMASK   0x1
-#define VD_WRCTRL_WREN_ANDMASK  0x2
-#define VD_WRCTRL_ACLR_ORMASK   0x2
-#define VD_WRCTRL_ACLR_ANDMASK  0x1
+#define VD_WRADDR_Y_ANDMASK 0x00F
+#define VD_WRADDR_X_ANDMASK 0x3F0
+
+#define VD_WRCTRL_WREN_ANDMASK  0x1
+#define VD_WRCTRL_WREN_IORMASK  0x1
+#define VD_WRCTRL_ACLR_ANDMASK  0x2
+
+#define VD_WRDATA_COLOR_SHIFT   8
+#define VD_WRADDR_X_SHIFT       4
 
 // Color definitions
 #define VD_NON      0x0
@@ -63,13 +61,12 @@ extern char* cour10_font;
 #define VD_MAGENTA  0x7
 
 // some macros
-#define VD_SET_ADDR(x,y) IOWR_ALTERA_AVALON_PIO_DATA(TXT_WRADDR_BASE,x<<7 | (y & 0x7F))
-#define VD_SET_DATA(x) IOWR_ALTERA_AVALON_PIO_DATA(TXT_WRDATA_BASE,x & VD_WRDATA_ANDMASK)
+#define VD_SET_ADDR(x,y) IOWR_ALTERA_AVALON_PIO_DATA(TXT_WRADDR_BASE,((x<<VD_WRADDR_X_SHIFT) & VD_WRADDR_X_ANDMASK) | (y & VD_WRADDR_Y_ANDMASK))
+#define VD_SET_DATA(c,f) IOWR_ALTERA_AVALON_PIO_DATA(TXT_WRDATA_BASE,((c<<VD_WRDATA_COLOR_SHIFT) & VD_WRDATA_COLOR_ANDMASK) | (f & VD_WRDATA_FONT_ANDMASK))
 
 // prototypes
-int VD_print_string(int horiz_offset, int vert_offset, alt_u8 color, char *font, char string[]);
-int VD_print_char (int horiz_offset, int vert_offset, alt_u8 color, char character, char *font);
-void VD_draw_Pixel(alt_u16 x, alt_u8 y, alt_u8 color);
+int VD_print_string(alt_u8 horiz_offset, alt_u8 vert_offset, alt_u8 color, char string[]);
+int VD_print_char(alt_u8 horiz_offset, alt_u8 vert_offset, alt_u8 color, char character);
 void VD_write_data(void);
 
 #endif /* VIRTUAL_DISPLAY_H_ */

@@ -322,13 +322,14 @@ assign nRST = drv_rst ? 1'b0 : 1'bz;wire nHSYNC_cur = video_data_i[3*color_width
 // ========================
 
 // concept:
-// - OSD is virtual screen of size 128x384 pixel each 3bit to define off and seven colors.
-// - content is mapped into memory; for simplicity each pixel element has 2 bits: '00' for not set and a color else
-// - each pixel of virtual screen is written by NIOSII processor
+// - OSD is virtual screen of size 12x48 chars; each char stored in 2bit color + 8bit ASCCI-code.
+//   (for simplicity atm. RAM has 48x16 words)
+// - content is mapped into memory and written by NIOSII processor
+// - Font is looked up in an extra ROM
 
-wire [15:0] txt_wraddr;
+wire [ 9:0] txt_wraddr;
 wire [ 1:0] txt_wrctrl;
-wire [ 2:0] txt_wrdata;
+wire [10:0] txt_wrdata;
 
 
 system system_u(
@@ -347,11 +348,11 @@ reg nVSYNC_pre = 1'b0;
 reg [9:0] h_cnt = 10'h0;
 reg [7:0] v_cnt =  8'h0;
 
-reg [2:0] draw_osd_window = 3'b000;
-reg [2:0]        en_txtrd = 3'b000;
+reg [8:0] txt_h_cnt = 9'h0;
+reg [7:0] txt_v_cnt = 8'h0;
 
-reg [9:0] txt_xrdaddr = 9'h0;
-reg [6:0] txt_yrdaddr = 7'h0;
+reg [4:0] draw_osd_window = 5'b00000;
+reg [4:0]        en_txtrd = 5'b00000;
 
 always @(negedge nCLK) begin
   if (~nDSYNC) begin
@@ -360,43 +361,57 @@ always @(negedge nCLK) begin
     if (nHSYNC_pre & ~nHSYNC_cur) begin
       h_cnt <= 10'h0;
       v_cnt <= ~&v_cnt ? v_cnt + 1'b1 : v_cnt;
-      if (v_cnt <= `OSD_HEADER_V_STOP)
-        txt_yrdaddr <= 7'h0;
-      else
-        txt_yrdaddr <= ~&txt_yrdaddr ? txt_yrdaddr + 1'b1 : txt_yrdaddr;
+      if (v_cnt <= `OSD_HEADER_V_STOP | v_cnt >= `OSD_FOOTER_V_START) begin
+        txt_v_cnt <= 7'h0;
+      end else if (~&txt_v_cnt[7:4]) begin
+        if (txt_v_cnt[3:0] == `OSD_FONT_HIGHT) begin
+          txt_v_cnt[3:0] <= 4'h0;
+          txt_v_cnt[7:4] <= txt_v_cnt[7:4] + 1'b1;
+        end else
+          txt_v_cnt <= txt_v_cnt + 1'b1;
+      end
     end
     if (nVSYNC_pre & ~nVSYNC_cur)
       v_cnt <= 8'h0;
 
-    if (en_txtrd[0])
-      txt_xrdaddr <= ~&txt_xrdaddr ? txt_xrdaddr + 1'b1 : txt_xrdaddr;
-    else
-      txt_xrdaddr <= 9'h0;
+    if (en_txtrd[0]) begin
+      if (txt_h_cnt[2:0] == `OSD_FONT_WIDTH) begin
+        txt_h_cnt[2:0] <= 3'h0;
+        txt_h_cnt[8:3] <= txt_h_cnt[8:3] + 1'b1;
+      end else
+        txt_h_cnt <= txt_h_cnt + 1'b1;
+    end else begin
+      txt_h_cnt <= 9'h0;
+    end
 
     nHSYNC_pre <= nHSYNC_cur;
     nVSYNC_pre <= nVSYNC_cur;
   end
 
-  draw_osd_window[2:1] <= draw_osd_window[1:0];
+  draw_osd_window[4:1] <= draw_osd_window[3:0];
   draw_osd_window[  0] <= (h_cnt > `OSD_WINDOW_H_START) && (h_cnt < `OSD_WINDOW_H_STOP) &&
                           (v_cnt > `OSD_WINDOW_V_START) && (v_cnt < `OSD_WINDOW_V_STOP);
 
-  en_txtrd[2:1] <= en_txtrd[1:0];
+  en_txtrd[4:1] <= en_txtrd[3:0];
   en_txtrd[  0] <=(h_cnt > `OSD_TXT_H_START)   && (h_cnt < `OSD_TXT_H_STOP)     &&
                   (v_cnt > `OSD_HEADER_V_STOP) && (v_cnt < `OSD_FOOTER_V_START);
   if (~nRST) begin
     h_cnt <= 10'h0;
     v_cnt <=  8'h0;
 
-    draw_osd_window <= 1'b0;
+    txt_h_cnt <= 9'h0;
+    txt_v_cnt <= 8'h0;
 
-    en_txtrd    <= 3'b000;
-    txt_xrdaddr <= 9'h0;
-    txt_yrdaddr <= 7'h0;
+    draw_osd_window <= 5'b00000;
+    en_txtrd    <= 5'b00000;
   end
 end
 
-wire [1:0] txt_data;
+wire [5:0] txt_xrdaddr = txt_h_cnt[8:3];
+wire [3:0] txt_yrdaddr = txt_v_cnt[7:4];
+
+wire [2:0] font_color_tmp;
+wire [7:0] font_addr_lsb;
 
 ram2port_1 virt_display_u(
   .data(txt_wrdata),
@@ -407,25 +422,68 @@ ram2port_1 virt_display_u(
   .wraddress(txt_wraddr),
   .wrclock(SYS_CLK),
   .wren(txt_wrctrl[0]),
-  .q(txt_data));
+  .q({font_color_tmp,font_addr_lsb})
+);
+
+ram1port_1 virt_display_mirror(
+  .address(txt_wraddr),
+  .clock(SYS_CLK),
+  .data(txt_wrdata),
+  .rden(1'b0),
+  .wren(txt_wrctrl[0])
+);
+
+reg [7:0] font_addr_msb  = 8'h0;
+reg [5:0] font_color_del = 6'h0;
+
+always @(negedge nCLK) begin
+  font_addr_msb  <= {font_addr_msb [3:0],txt_v_cnt[3:0]};
+  font_color_del <= {font_color_del[2:0],font_color_tmp};
+
+  if (~nRST) begin
+    font_addr_msb  <= 8'h0;
+    font_color_del <= 6'h0;
+  end
+end
+
+wire [2:0] font_color = font_color_del[5:3];
+wire [7:0] font_word;
+
+rom1port_1 font_mem_u(
+  .address({font_addr_msb[7:4],font_addr_lsb}),
+  .clock(~nCLK),
+  .rden(en_txtrd[2]),
+  .q(font_word)
+);
+
+reg [11:0] font_pixel_select = 12'h0;
+
+always @(negedge nCLK) begin
+  font_pixel_select  <= {font_pixel_select [8:0],txt_h_cnt[2:0]};
+
+  if (~nRST)
+    font_pixel_select  <= 12'h0;
+end
+
+wire pixel_is_set = font_word[font_pixel_select[11:9]];
 
 wire [5:0] window_bg_color = `OSD_WINDOW_BG_COLOR;
 
-wire [`VDATA_I_CO_SLICE] txt_color = (txt_data == 3'b001) ? `OSD_TXT_COLOR_WHITE  :
-                                     (txt_data == 3'b010) ? `OSD_TXT_COLOR_RED    :
-                                     (txt_data == 3'b011) ? `OSD_TXT_COLOR_GREEN  :
-                                     (txt_data == 3'b100) ? `OSD_TXT_COLOR_BLUE   :
-                                     (txt_data == 3'b101) ? `OSD_TXT_COLOR_YELLOW :
-                                     (txt_data == 3'b110) ? `OSD_TXT_COLOR_CYAN   :
-                                                            `OSD_TXT_COLOR_MAGENTA;
+wire [`VDATA_I_CO_SLICE] txt_color = (font_color == 3'b001) ? `OSD_TXT_COLOR_WHITE  :
+                                     (font_color == 3'b010) ? `OSD_TXT_COLOR_RED    :
+                                     (font_color == 3'b011) ? `OSD_TXT_COLOR_GREEN  :
+                                     (font_color == 3'b100) ? `OSD_TXT_COLOR_BLUE   :
+                                     (font_color == 3'b101) ? `OSD_TXT_COLOR_YELLOW :
+                                     (font_color == 3'b110) ? `OSD_TXT_COLOR_CYAN   :
+                                                              `OSD_TXT_COLOR_MAGENTA;
 
 always @(negedge nCLK) begin
   // pass through sync
   video_data_o[`VDATA_I_SY_SLICE] <= video_data_i[`VDATA_I_SY_SLICE];
 
   // draw menu window if needed
-  if (show_osd & draw_osd_window[2]) begin
-    if (en_txtrd[2] & |txt_data) begin
+  if (show_osd & draw_osd_window[4]) begin
+    if (&{en_txtrd[4],|font_color,pixel_is_set}) begin
       video_data_o[`VDATA_I_CO_SLICE] <= txt_color;
     end else begin
     // modify red
