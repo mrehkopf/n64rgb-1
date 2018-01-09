@@ -157,32 +157,46 @@ source_3bit_0 DeBlur_15bitmode_debug_src(
 // Part 1: Connect PLL
 // ===================
 
-wire CLK_4M, CLK_16k;
+wire CLK_100M, CLK_4M, CLK_16k;
 
 altpll_1 sys_pll(
   .inclk0(SYS_CLK),
   .c0(CLK_4M),
-  .c1(CLK_16k)
+  .c1(CLK_16k),
+  .c2(CLK_100M)
 );
 
 
 // Part 2: Controller Sniffing
 // ===========================
 
-reg [1:0] read_state  = 2'b0; // state machine
+reg [1:0]      rd_state  = 2'b0; // state machine
+reg [1:0] next_rd_state  = 2'b0; // next state
 
 parameter ST_WAIT4N64 = 2'b00; // wait for N64 sending request to controller
 parameter ST_N64_RD   = 2'b01; // N64 request sniffing
 parameter ST_CTRL_RD  = 2'b10; // controller response
 
-reg [3:0] sampling_point_n64  = 4'h8; // wait_cnt increased a few times since neg. edge -> sample data
-reg [3:0] sampling_point_ctrl = 4'h8; // (9 by default -> delay somewhere around 2.25us)
+reg [9:0] sampling_point_cnt  = 10'h0;  // used to estimated new sampling point
+reg [3:0] sampling_point_n64  =  4'h8;  // wait_cnt increased a few times since neg. edge -> sample data
+reg [3:0] sampling_point_ctrl =  4'h8;  // (9 by default -> delay somewhere around 2.25us)
 
 reg        prev_ctrl    =  1'b1;
 reg [11:0] wait_cnt     = 12'b0; // counter for wait state (needs appr. 1.0ms at CLK_4M clock to fill up from 0 to 4095)
 
-reg [15:0] data_stream      = 16'b0;
-reg  [3:0] data_cnt         =  4'h0;
+reg [31:0] serial_data = 32'h0;
+reg [ 5:0] data_cnt    =  6'h0;
+reg        new_data    =  1'b0;
+reg [31:0] ctrl_data[0:1];
+
+initial begin
+  ctrl_data[0] = 32'h0;
+  ctrl_data[1] = 32'h0;
+end
+
+wire [31:0] ctrl_data_deglitched = ((ctrl_data[1] & ctrl_data[0]) |
+                                    (ctrl_data[1] & serial_data ) |
+                                    (ctrl_data[0] & serial_data ));
 
 reg initiate_nrst = 1'b0;
 
@@ -203,90 +217,111 @@ reg UseJumperSet = 1'b1;
 // 16:23 - X axis
 // 24:31 - Y axis
 // 32    - Stop bit
-// (bits[0:15] used here)
 
 always @(posedge CLK_4M) begin
-  case (read_state)
+  case (rd_state)
     ST_WAIT4N64:
       if (&wait_cnt) begin // waiting duration ends (exit wait state only if CTRL was high for a certain duration)
-        read_state    <= ST_N64_RD;
-        data_stream   <= 16'h0000;
-        data_cnt      <=  4'h0;
-        initiate_nrst <=  1'b0;
+        next_rd_state <= ST_N64_RD;
+        serial_data   <= 32'h0;
+        data_cnt      <=  6'h0;
       end
     ST_N64_RD: begin
       if (wait_cnt[7:0] == {4'h0,sampling_point_n64}) begin // sample data
         if (data_cnt[3]) // eight bits read
-          if (data_stream[13:6] == 8'b00000001 & CTRL) begin // check command and stop bit
+          if (CTRL & (serial_data[29:22] == 8'b10000000)) begin // check command and stop bit
           // trick: the 2 LSB command bits lies where controller produces unused constant values
           //         -> (hopefully) no exchange with controller response
-            read_state  <= ST_CTRL_RD;
-            data_stream <= 16'h0000;
-            data_cnt    <=  4'h0;
+            next_rd_state <= ST_CTRL_RD;
+            serial_data   <= 32'h0;
+            data_cnt      <=  6'h0;
           end else
-            read_state  <= ST_WAIT4N64;
+            next_rd_state <= ST_WAIT4N64;
         else begin
-          data_stream[13:7] <= data_stream[12:6];
-          data_stream[6]    <= CTRL;
-          data_cnt          <= data_cnt + 1'b1;
+          serial_data[29:22] <= {CTRL,serial_data[29:23]};
+          data_cnt           <= data_cnt + 1'b1;
         end
       end
-      if (&{prev_ctrl,~CTRL,|data_cnt})
-        sampling_point_n64 <= wait_cnt[4:1];
     end
     ST_CTRL_RD: begin
       if (wait_cnt[7:0] == {4'h0,sampling_point_ctrl}) begin // sample data
-        if (&data_cnt) begin // sixteen bits read (analog values of stick not point of interest)
-          if ({data_stream[14:0], CTRL} == igr_deblur_off) begin // defined button combination pressed
-            nForceDeBlur <= 1'b0;
-            nDeBlurMan   <= 1'b1;
-          end
-          if ({data_stream[14:0], CTRL} == igr_deblur_on) begin // defined button combination pressed
-            nForceDeBlur <= 1'b0;
-            nDeBlurMan   <= 1'b0;
-          end
-          if ({data_stream[14:0], CTRL} == igr_15bitmode_off) begin // defined button combination pressed
-            n15bit_mode  <= 1'b1;
-          end
-          if ({data_stream[14:0], CTRL} == igr_15bitmode_on) begin // defined button combination pressed
-            n15bit_mode  <= 1'b0;
-          end
-          if ({data_stream[14:0], CTRL} == cmd_open_osd) begin // defined button combination pressed
-            show_osd  <= 1'b1;
-          end
-          if ({data_stream[14:0], CTRL} == cmd_close_osd) begin // defined button combination pressed
-            show_osd  <= 1'b0;
-          end
-          if ({data_stream[14:0], CTRL} == igr_reset) // defined button combination pressed
-            initiate_nrst <= 1'b1;
-          read_state  <= ST_WAIT4N64;
+        if (data_cnt[5]) begin // thirtytwo bits read
+          next_rd_state <= ST_WAIT4N64;
+          new_data      <= CTRL; // stop bit must be '1'
         end else begin
-          data_stream[15:1] <= data_stream[14:0];
-          data_stream[0]    <= CTRL;
-          data_cnt          <= data_cnt + 1'b1;
+          serial_data <= {CTRL,serial_data[31:1]};
+          data_cnt    <= data_cnt + 1'b1;
         end
       end
-      if (&{prev_ctrl,~CTRL,|data_cnt})
-        sampling_point_ctrl <= wait_cnt[4:1];
     end
-    default: read_state <= ST_WAIT4N64;
+    default: next_rd_state <= ST_WAIT4N64;
   endcase
 
-
-  if (prev_ctrl & ~CTRL) // counter resets on neg. edge
+  if (prev_ctrl & ~CTRL) begin    // counter resets on neg. edge
+    rd_state <= next_rd_state;
     wait_cnt <= 12'h000;
-  else if (~&wait_cnt) // saturate counter if needed
-    wait_cnt <= wait_cnt + 1'b1;
+    if (|next_rd_state) begin     // following statements not applied to ST_WAIT4N64
+      if (~|data_cnt)
+        sampling_point_cnt <= 10'h0;
+      else if (data_cnt[3] & (rd_state == ST_N64_RD))
+        sampling_point_n64 <= sampling_point_cnt[7:4];
+      else if (data_cnt[5] & (rd_state == ST_CTRL_RD))
+        sampling_point_ctrl <= sampling_point_cnt[9:6];
+    end
+  end else begin
+    if (~&wait_cnt) begin  // saturate counter if needed
+      wait_cnt <= wait_cnt + 1'b1;
+    end else begin                  // counter saturated
+      rd_state <= ST_WAIT4N64;
+      wait_cnt <= 12'h000;
+    end
+    
+    if (~&sampling_point_cnt)
+      sampling_point_cnt <= sampling_point_cnt + 1'b1;
+  end
 
   prev_ctrl <= CTRL;
 
-  if (nRST == 1'b0) begin
+  if (new_data) begin
+    new_data     <= 1'b0;
+    ctrl_data[1] <= ctrl_data_deglitched;
+    ctrl_data[0] <= serial_data;
+    
+    case (ctrl_data[1][15:0])
+      igr_deblur_off: begin
+        nForceDeBlur <= 1'b0;
+        nDeBlurMan   <= 1'b1;
+      end
+      igr_deblur_on: begin
+        nForceDeBlur <= 1'b0;
+        nDeBlurMan   <= 1'b0;
+      end
+      igr_15bitmode_off:
+        n15bit_mode <= 1'b1;
+      igr_15bitmode_on:
+        n15bit_mode <= 1'b0;
+      cmd_open_osd:
+        show_osd <= 1'b1;
+      cmd_close_osd:
+        show_osd <= 1'b0;
+      igr_reset:
+        initiate_nrst <= 1'b1;
+    endcase
+  end
+
+  if (!nRST) begin
     nForceDeBlur <= 1'b1;
 
-    read_state    <= ST_WAIT4N64;
+    rd_state      <= ST_WAIT4N64;
     wait_cnt      <= 12'h000;
     prev_ctrl     <=  1'b1;
     initiate_nrst <=  1'b0;
+
+    new_data     <=  1'b0;
+    ctrl_data[0] <= 32'h0;
+    ctrl_data[1] <= 32'h0;
+
+    show_osd  <= 1'b0;
   end
 
   if (~nfirstboot) begin

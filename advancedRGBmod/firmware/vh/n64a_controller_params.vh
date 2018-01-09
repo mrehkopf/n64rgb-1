@@ -38,34 +38,33 @@
 `define _n64a_controller_params_vh_
 
 
-  // controller data bits:
+  // controller serial data bits:
   //  0: 7 - A, B, Z, St, Du, Dd, Dl, Dr
   //  8:15 - 'Joystick reset', (0), L, R, Cu, Cd, Cl, Cr
   // 16:23 - X axis
   // 24:31 - Y axis
   // 32    - Stop bit
-  // (bits[0:15] used here)
 
   // define constants
   // don't edit these constants
 
-  `define A  16'h8000 // button A
-  `define B  16'h4000 // button B
-  `define Z  16'h2000 // trigger Z
-  `define St 16'h1000 // Start button
+  `define A  16'h0001 // button A
+  `define B  16'h0002 // button B
+  `define Z  16'h0004 // trigger Z
+  `define St 16'h0008 // Start button
 
-  `define Du 16'h0800 // D-pad up
-  `define Dd 16'h0400 // D-pad down
-  `define Dl 16'h0200 // D-pad left
-  `define Dr 16'h0100 // D-pad right
+  `define Du 16'h0010 // D-pad up
+  `define Dd 16'h0020 // D-pad down
+  `define Dl 16'h0040 // D-pad left
+  `define Dr 16'h0080 // D-pad right
 
-  `define L  16'h0020 // shoulder button L
-  `define R  16'h0010 // shoulder button R
+  `define L  16'h0400 // shoulder button L
+  `define R  16'h0800 // shoulder button R
 
-  `define Cu 16'h0008 // C-button up
-  `define Cd 16'h0004 // C-button down
-  `define Cl 16'h0002 // C-button left
-  `define Cr 16'h0001 // C-button right
+  `define Cu 16'h1000 // C-button up
+  `define Cd 16'h2000 // C-button down
+  `define Cl 16'h4000 // C-button left
+  `define Cr 16'h8000 // C-button right
 
 
   // define font size (every value - 1)
