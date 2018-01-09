@@ -2,7 +2,7 @@
 //
 // This file is part of the N64 RGB/YPbPr DAC project.
 //
-// Copyright (C) 2016-2017 by Peter Bartmann <borti4938@gmx.de>
+// Copyright (C) 2016-2018 by Peter Bartmann <borti4938@gmx.de>
 //
 // N64 RGB/YPbPr DAC is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -59,7 +59,7 @@ input [`VDATA_I_FU_SLICE] vdata_pre;        // whole vector
 input [color_width_i-1:0] vdata_cur;        // current D_i input
 
 input  [6:0] deblurparams_i;  // order: data_cnt,n64_480i,vmode,blurry_pixel_pos,nForceDeBlur,nDeBlurMan
-output [1:0] deblurparams_o;  // order: nblank_rgb,ndo_deblur
+output [1:0] deblurparams_o;  // order: ndo_deblur,nblank_rgb
 
 
 // some pre-assignments and definitions
