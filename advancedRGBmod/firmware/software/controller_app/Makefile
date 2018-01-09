@@ -142,8 +142,10 @@ ACDS_VERSION := 17.1
 ELF := controller_app.elf
 
 # Paths to C, C++, and assembly source files.
-C_SRCS += hello_world_small.c
-C_SRCS += virtual_display.c
+C_SRCS += main.c
+C_SRCS += n64.c
+C_SRCS += screens.c
+C_SRCS += vd_driver.c
 CXX_SRCS :=
 ASM_SRCS :=
 
