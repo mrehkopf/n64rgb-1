@@ -50,6 +50,7 @@ module n64a_controller (
 
   CTRL,
 
+  InfoSet,
   DefaultSet,
   ConfigSet,
 
@@ -69,9 +70,10 @@ inout nRST;
 
 input CTRL;
 
-//input  [ 7:0] DefaultSet;
-input  [ 5:0] DefaultSet;
-output [11:0] ConfigSet;
+input      [ 4:0] InfoSet;
+//input      [ 7:0] DefaultSet;
+input      [ 5:0] DefaultSet;
+output reg [11:0] ConfigSet;
 
 input nCLK;
 input nDSYNC;
@@ -338,7 +340,7 @@ end
 // Part 3: Trigger Reset on Demand
 // ===============================
 
-reg        drv_rst =  1'b0;
+reg       drv_rst =  1'b0;
 reg [9:0] rst_cnt = 10'b0; // ~64ms are needed to count from max downto 0 with CLK_16k.
 
 always @(posedge CLK_16k) begin
@@ -351,7 +353,7 @@ always @(posedge CLK_16k) begin
     drv_rst <= 1'b0; // end of reset
 end
 
-assign nRST = drv_rst ? 1'b0 : 1'bz;wire nHSYNC_cur = video_data_i[3*color_width_i+1];
+assign nRST = drv_rst ? 1'b0 : 1'bz;
 
 
 // Part 4: Display OSD Menu
@@ -367,15 +369,19 @@ wire [ 9:0] txt_wraddr;
 wire [ 1:0] txt_wrctrl;
 wire [10:0] txt_wrdata;
 
-
 system system_u(
-  .clk_clk(SYS_CLK),
+  .clk_clk(CLK_100M),
   .reset_reset_n(nRST),
   .txt_wraddr_export(txt_wraddr),
   .txt_wrctrl_export(txt_wrctrl),
-  .txt_wrdata_export(txt_wrdata)
+  .txt_wrdata_export(txt_wrdata),
+  .ctrl_data_in_export(ctrl_data[1]),
+  .cfg_set_in_export(ConfigSet),
+  .info_set_in_export({show_osd,InfoSet})
 );
 
+
+wire nHSYNC_cur = video_data_i[3*color_width_i+1];
 wire nVSYNC_cur = video_data_i[3*color_width_i+3];
 
 reg nHSYNC_pre = 1'b0;
@@ -456,14 +462,14 @@ ram2port_1 virt_display_u(
   .rdclock(~nCLK),
   .rden(en_txtrd[0]),
   .wraddress(txt_wraddr),
-  .wrclock(SYS_CLK),
+  .wrclock(CLK_100M),
   .wren(txt_wrctrl[0]),
   .q({font_color_tmp,font_addr_lsb})
 );
 
 ram1port_1 virt_display_mirror(
   .address(txt_wraddr),
-  .clock(SYS_CLK),
+  .clock(CLK_100M),
   .data(txt_wrdata),
   .rden(1'b0),
   .wren(txt_wrctrl[0])
@@ -524,13 +530,16 @@ always @(negedge nCLK) begin
     end else begin
     // modify red
       video_data_o[3*color_width_i-1:3*color_width_i-2] <= window_bg_color[5:4];
-      video_data_o[3*color_width_i-3:2*color_width_i]   <= video_data_i[3*color_width_i-1:2*color_width_i+2];
+      video_data_o[3*color_width_i-3                  ] <= 1'b0;
+      video_data_o[3*color_width_i-4:2*color_width_i  ] <= video_data_i[3*color_width_i-1:2*color_width_i+3];
     // modify green
       video_data_o[2*color_width_i-1:2*color_width_i-2] <= window_bg_color[3:2];
-      video_data_o[2*color_width_i-3:  color_width_i]   <= video_data_i[2*color_width_i-1:color_width_i+2];
+      video_data_o[2*color_width_i-3                  ] <= 1'b0;
+      video_data_o[2*color_width_i-4:  color_width_i  ] <= video_data_i[2*color_width_i-1:color_width_i+3];
     // modify blue
       video_data_o[color_width_i-1:color_width_i-2] <= window_bg_color[1:0];
-      video_data_o[color_width_i-3:              0] <= video_data_i[color_width_i-1:2];
+      video_data_o[color_width_i-3                ] <= 1'b0;
+      video_data_o[color_width_i-4:              0] <= video_data_i[color_width_i-1:3];
     end
   end else begin
     video_data_o[`VDATA_I_CO_SLICE] <= video_data_i[`VDATA_I_CO_SLICE];
@@ -569,7 +578,9 @@ wire cfg_n15bit_mode  = DeBlur_15bitmode_debug[2] ? DeBlur_15bitmode_debug[0] : 
 // finally
 // .......
 
-assign ConfigSet = {cfg_nDeBlurMan,cfg_nForceDeBlur,cfg_n15bit_mode,cfg_gamma,cfg_nEN_RGsB,cfg_nEN_YPbPr,cfg_SL_str,cfg_n240p,cfg_n480i_bob};
-
+always @(negedge nCLK) begin
+  if (&{~nDSYNC,nVSYNC_pre,~nVSYNC_cur} | ~nRST)
+    ConfigSet <= {cfg_nDeBlurMan,cfg_nForceDeBlur,cfg_n15bit_mode,cfg_gamma,cfg_nEN_RGsB,cfg_nEN_YPbPr,cfg_SL_str,cfg_n240p,cfg_n480i_bob};
+end
 
 endmodule

@@ -124,6 +124,7 @@ input       n480i_bob;
 
 assign SYS_CLKen = 1'b1;
 
+wire [ 4:0] InfoSet = {n64_480i,vmode,deblurparams_pass[1],UseVGA_HVSync,nFilterBypass};
 //wire [ 7:0] DefaultSet = {UseVGA_HVSync,nFilterBypass,nEN_RGsB,nEN_YPbPr,SL_str,n240p,n480i_bob};
 wire [ 5:0] DefaultSet = {nEN_RGsB,nEN_YPbPr,SL_str,n240p,n480i_bob};
 wire [11:0] ConfigSet;
@@ -132,6 +133,7 @@ n64a_controller controller_u(
   .SYS_CLK(SYS_CLK),
   .nRST(nRST),
   .CTRL(CTRL_i),
+  .InfoSet(InfoSet),
   .DefaultSet(DefaultSet),
   .ConfigSet(ConfigSet),
   .nCLK(nCLK),

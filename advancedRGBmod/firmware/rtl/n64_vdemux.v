@@ -69,7 +69,7 @@ output reg [`VDATA_I_FU_SLICE] vdata_r_6 = {vdata_width_i{1'b0}};
 wire [1:0] data_cnt  = demuxparams_i[4:3];
 wire ndo_deblur      = demuxparams_i[  2];
 wire nblank_rgb      = demuxparams_i[  1];
-reg  n15bit_mode; // = demuxparams_i[  0] (updated each frame)
+wire n15bit_mode     = demuxparams_i[  0];
 
 wire       en_gamma_boost = gammaparams_i[2];
 wire [1:0] gamma_rom_page = gammaparams_i[1:0];
@@ -94,8 +94,6 @@ end
 
 always @(negedge nCLK) begin // data register management
   if (~nDSYNC) begin
-    if (vdata_r_0[vdata_width_i-1] & ~D_i[3]) // negedge at nVSYNC detected - new frame, new setting for 15bit mode
-      n15bit_mode <= demuxparams_i[0];
     // shift data to output registers
     if(ndo_deblur)        // deblur inactive
       vdata_r_1[`VDATA_I_FU_SLICE] <= vdata_r_0[`VDATA_I_FU_SLICE];
