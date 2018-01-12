@@ -38,7 +38,7 @@ alt_u32 ctrl_data;
 alt_u8  info_data;
 
 // ToDo: export function into logic to save some memory space
-cmd_t ctrl_data_to_cmd(void)
+cmd_t ctrl_data_to_cmd()
 {
   cmd_t cmd_new = CMD_NON;
   static cmd_t cmd_pre = CMD_NON;

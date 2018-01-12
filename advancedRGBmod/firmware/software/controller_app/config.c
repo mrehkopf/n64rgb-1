@@ -53,7 +53,7 @@
 volatile alt_u16 cfg_data;
 
 
-void cfg_load_defaults(void)
+void cfg_load_defaults()
 {
   if(info_data & INFO_FALLBACKMODE_GETMASK)
     cfg_data = FALLBACK_DEFAULT_CONFIG;

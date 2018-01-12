@@ -19,7 +19,7 @@
  *
  *********************************************************************************
  *
- * screens.c
+ * menu.c
  *
  *  Created on: 09.01.2018
  *      Author: Peter Bartmann
@@ -33,7 +33,9 @@
 #include "system.h"
 #include "n64.h"
 #include "config.h"
+#include "menu.h"
 #include "vd_driver.h"
+
 
 
 #define INFO_HEADER_H_OFFSET  0
@@ -202,7 +204,7 @@ void print_cfg_screen()
 }
 
 
-void update_cfg_screen(alt_u8 force_update)
+void update_cfg_screen()
 {
   alt_u8 str_select;
 

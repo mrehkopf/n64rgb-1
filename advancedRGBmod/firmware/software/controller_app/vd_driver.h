@@ -87,8 +87,8 @@ static int inline vd_clear_fullcolumn (alt_u8 horiz_offset)
   { return vd_clear_area(horiz_offset, horiz_offset, 0, VD_HEIGHT-1); }
 int vd_print_string(alt_u8 horiz_offset, alt_u8 vert_offset, alt_u8 color, const char *string);
 int vd_print_char(alt_u8 horiz_offset, alt_u8 vert_offset, alt_u8 color, const char character);
-void vd_write_data(void);
-void vd_mute(void);
-void vd_unmute(void);
+void vd_write_data();
+void vd_mute();
+void vd_unmute();
 
 #endif /* VD_DRIVER_H_ */

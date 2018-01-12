@@ -150,11 +150,10 @@ typedef enum {
 } cmd_t;
 
 
-cmd_t ctrl_data_to_cmd(void);
-inline void get_ctrl_data(void)
+cmd_t ctrl_data_to_cmd();
+inline void get_ctrl_data()
   {  ctrl_data = IORD_ALTERA_AVALON_PIO_DATA(CTRL_DATA_IN_BASE);  };
-
-inline void get_info_data(void)
+inline void get_info_data()
   {  info_data = IORD_ALTERA_AVALON_PIO_DATA(INFO_SET_IN_BASE) & INFO_GETALL_MASK;  };
 
 #endif /* N64_H_ */

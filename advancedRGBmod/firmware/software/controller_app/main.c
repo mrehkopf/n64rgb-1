@@ -32,7 +32,7 @@
 #include "system.h"
 #include "n64.h"
 #include "config.h"
-#include "screens.h"
+#include "menu.h"
 #include "vd_driver.h"
 
 #define MAINLOOP_DELAY_MS 15

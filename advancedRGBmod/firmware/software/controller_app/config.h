@@ -103,8 +103,8 @@ extern volatile alt_u16 cfg_data;
 #define CFG_480IBOB_SETMASK       (1<<CFG_480IBOB_OFFSET)
 #define CFG_480IBOB_CLRMASK       (CFG_GETALL_MASK & ~CFG_480IBOB_SETMASK)
 
-void cfg_load_defaults(void);
-inline void get_config(void)
+void cfg_load_defaults();
+inline void get_config()
   {  cfg_data = IORD_ALTERA_AVALON_PIO_DATA(CFG_SET_OUT_BASE) & CFG_GETALL_MASK;  };
 inline void set_config(void)
   {  IOWR_ALTERA_AVALON_PIO_DATA(CFG_SET_OUT_BASE, (cfg_data & CFG_GETALL_MASK));  };

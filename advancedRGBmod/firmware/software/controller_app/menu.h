@@ -19,15 +19,15 @@
  *
  *********************************************************************************
  *
- * screens.h
+ * menu.h
  *
  *  Created on: 09.01.2018
  *      Author: Peter Bartmann
  *
  ********************************************************************************/
 
-#ifndef SCREENS_H_
-#define SCREENS_H_
+#ifndef MENU_H_
+#define MENU_H_
 
 #include "alt_types.h"
 #include "altera_avalon_pio_regs.h"
@@ -41,11 +41,11 @@ typedef enum {
 
 extern char szText[];
 
-void print_home_screen(void);
-void print_info_screen(void);
-void update_info_screen(void);
-void print_cfg_screen(void);
-void update_cfg_screen(void);
+void print_home_screen();
+void print_info_screen();
+void update_info_screen();
+void print_cfg_screen();
+void update_cfg_screen();
 
 
-#endif /* SCREENS_H_ */
+#endif /* MENU_H_ */
