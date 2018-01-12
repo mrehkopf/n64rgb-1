@@ -32,6 +32,8 @@
 #include "system.h"
 #include "n64.h"
 
+#define COMMAND_HISTORY_LENGTH  3
+
 alt_u32 ctrl_data;
 alt_u8  info_data;
 
@@ -40,6 +42,8 @@ cmd_t ctrl_data_to_cmd(void)
 {
   cmd_t cmd_new = CMD_NON;
   static cmd_t cmd_pre = CMD_NON;
+
+  static alt_u8 cmd_history_cnt = COMMAND_HISTORY_LENGTH;
 
   switch (ctrl_data & CTRL_GETALL_DIGITAL_MASK) {
     case BTN_OPEN_OSDMENU:
@@ -69,9 +73,13 @@ cmd_t ctrl_data_to_cmd(void)
   };
 
   if (cmd_pre != cmd_new) {
-    cmd_pre = cmd_new;
-    return cmd_new;
-  };
+    if (cmd_history_cnt == 0) {
+      cmd_pre = cmd_new;
+      return cmd_new;
+    } else
+      cmd_history_cnt--;
+  } else
+    cmd_history_cnt = COMMAND_HISTORY_LENGTH;
 
   return CMD_NON;
 };
