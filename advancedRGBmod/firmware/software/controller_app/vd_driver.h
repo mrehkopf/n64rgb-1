@@ -53,10 +53,10 @@
 #define VD_WRCTRL_GETALL_MASK   0x3
 #define VD_WRCTRL_WREN_GETMASK  0x1
 #define VD_WRCTRL_WREN_SETMASK  0x1
-#define VD_WRCTRL_WREN_CLRMASK  VD_WRCTRL_GETALL_MASK & ~VD_WRCTRL_WREN_SETMASK
+#define VD_WRCTRL_WREN_CLRMASK  (VD_WRCTRL_GETALL_MASK & ~VD_WRCTRL_WREN_SETMASK)
 #define VD_WRCTRL_ACLR_GETMASK  0x2
 #define VD_WRCTRL_ACLR_SETMASK  0x2
-#define VD_WRCTRL_ACLR_CLRMASK  VD_WRCTRL_GETALL_MASK & ~VD_WRCTRL_ACLR_SETMASK
+#define VD_WRCTRL_ACLR_CLRMASK  (VD_WRCTRL_GETALL_MASK & ~VD_WRCTRL_ACLR_SETMASK)
 
 
 // Color definitions
@@ -77,14 +77,14 @@
 // prototypes
 int vd_clear_column(alt_u8 horiz_offset, alt_u8 vert_offset_start, alt_u8 vert_offset_stop);
 int vd_clear_area(alt_u8 horiz_offset_start, alt_u8 horiz_offset_stop, alt_u8 vert_offset_start, alt_u8 vert_offset_stop);
-static void inline vd_clear_lineend (alt_u8 horiz_offset_start, alt_u8 vert_offset)
-  { vd_clear_area(horiz_offset_start, VD_WIDTH-1, vert_offset, vert_offset); }
-static void inline vd_clear_fullline (alt_u8 vert_offset)
-  { vd_clear_area(0, VD_WIDTH-1, vert_offset, vert_offset); }
-static void inline vd_clear_columnend (alt_u8 horiz_offset, alt_u8 vert_offset_start)
-  { vd_clear_area(horiz_offset, horiz_offset, vert_offset_start, VD_HEIGHT-1); }
-static void inline vd_clear_fullcolumn (alt_u8 horiz_offset)
-  { vd_clear_area(horiz_offset, horiz_offset, 0, VD_HEIGHT-1); }
+static int inline vd_clear_lineend (alt_u8 horiz_offset_start, alt_u8 vert_offset)
+  { return vd_clear_area(horiz_offset_start, VD_WIDTH-1, vert_offset, vert_offset); }
+static int inline vd_clear_fullline (alt_u8 vert_offset)
+  { return vd_clear_area(0, VD_WIDTH-1, vert_offset, vert_offset); }
+static int inline vd_clear_columnend (alt_u8 horiz_offset, alt_u8 vert_offset_start)
+  { return vd_clear_area(horiz_offset, horiz_offset, vert_offset_start, VD_HEIGHT-1); }
+static int inline vd_clear_fullcolumn (alt_u8 horiz_offset)
+  { return vd_clear_area(horiz_offset, horiz_offset, 0, VD_HEIGHT-1); }
 int vd_print_string(alt_u8 horiz_offset, alt_u8 vert_offset, alt_u8 color, const char *string);
 int vd_print_char(alt_u8 horiz_offset, alt_u8 vert_offset, alt_u8 color, const char character);
 void vd_write_data(void);

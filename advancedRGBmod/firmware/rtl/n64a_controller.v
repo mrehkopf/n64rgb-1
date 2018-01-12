@@ -51,7 +51,7 @@ module n64a_controller (
   CTRL,
 
   InfoSet,
-  DefaultSet,
+  DefaultConfigSet,
   ConfigSet,
 
   nCLK,
@@ -62,7 +62,6 @@ module n64a_controller (
 );
 
 `include "vh/n64a_params.vh"
-`include "vh/n64a_controller_params.vh"
 
 
 input SYS_CLK;
@@ -71,8 +70,7 @@ inout nRST;
 input CTRL;
 
 input      [ 4:0] InfoSet;
-//input      [ 7:0] DefaultSet;
-input      [ 5:0] DefaultSet;
+input      [ 5:0] DefaultConfigSet;
 output reg [11:0] ConfigSet;
 
 input nCLK;
@@ -82,94 +80,71 @@ input      [`VDATA_I_FU_SLICE] video_data_i;
 output reg [`VDATA_I_FU_SLICE] video_data_o;
 
 
-// some pre-assignments
-
-//wire       UseVGA_HVSync = DefaultSet[7];
-//wire       nFilterBypass = DefaultSet[6];
-wire       nEN_RGsB      = DefaultSet[5];
-wire       nEN_YPbPr     = DefaultSet[4];
-wire [1:0] SL_str        = DefaultSet[3:2];
-wire       n240p         = DefaultSet[1];
-wire       n480i_bob     = DefaultSet[0];
-
-
 // start of rtl
 
-
-// Part 0: Debug probes and sources
-// ================================
-
-wire [2:0] Linedoubler_debug;
-source_3bit_0 Linedoubler_debug_src(
-  .source(Linedoubler_debug)
-);
-
-// bit assignment for Linedoubler_debug[2:0]:
-// 2 - 0 = use J4 setting         | 1 = use debug setting
-// 1 - 0 = disable lineX2         | 1 = enable lineX2
-// 0 - 0 = enable 480i bob-deint. | 1 = output 480i
-
-
-wire [2:0] SL_debug;
-source_3bit_0 scanline_debug_src(
-  .source(SL_debug)
-);
-
-// bit assignment for SL_debug[2:0]:
-// 2   - 0 = use J3 setting | 1 = use debug setting
-// 1:0 - Scanline strength (00, 01, 10, 11 = 100%, 50%, 25%, 0%)
-
-
-wire [2:0] Vidout_debug;
-source_3bit_0 Vidout_debug_src(
-  .source(Vidout_debug)
-);
-
-// bit assignment for Vidout_debug[2:0]:
-// 2 - 0 = use J2 setting | 1 = use debug setting
-// 1 - 0 = enable RGsB    | 1 = disable RGsB
-// 0 - 0 = enable YPbPr   | 1 = disable YPbPr (beats RGsB)
-
-
-
-wire [2:0] gamma_debug;
-source_3bit_0 gamma_debug_src(
-  .source(gamma_debug)
-);
-
-// bit assignment for gamma_debug[2:0]:
-// 2   - use gamma table (don't use gamma table means gamma = 1.0)
-// 1:0 - 00 = 0.8
-//       01 = 0.9
-//       10 = 1.1
-//       11 = 1.2
-
-
-
-wire [2:0] DeBlur_15bitmode_debug;
-source_3bit_0 DeBlur_15bitmode_debug_src(
-  .source(DeBlur_15bitmode_debug)
-);
-
-// bit assignment for DeBlur_15bitmode_debug[2:0]:
-// 2 - 0 = use IGR setting | 1 = use debug setting
-// 1 - 0 = force de-blur   | 1 = don't use de-blur (replaces nDeBlurMan)
-// 0 - 0 = 15bit mode      | 1 = 21bit mode        (replaces n15bit_mode)
 
 // Part 1: Connect PLL
 // ===================
 
-wire CLK_100M, CLK_4M, CLK_16k;
+wire CLK_4M, CLK_16k, CLK_100M, PLL_LOCKED;
 
 altpll_1 sys_pll(
   .inclk0(SYS_CLK),
   .c0(CLK_4M),
   .c1(CLK_16k),
-  .c2(CLK_100M)
+  .c2(CLK_100M),
+  .locked(PLL_LOCKED)
 );
 
+wire nRST_pll = nRST & PLL_LOCKED;
 
-// Part 2: Controller Sniffing
+
+// Part 2: Instantiate NIOS II
+// ===========================
+
+
+reg newpowercycle = 1'b1;
+reg FallbackMode  = 1'b0;
+
+always @(posedge CLK_16k) begin
+  if (PLL_LOCKED) begin
+    if (nRST)
+      newpowercycle <= 1'b0;
+    else
+      FallbackMode <= newpowercycle;  // reset pressed during new power cycle
+                                      // -> activate fallback mode
+  end
+end
+
+wire [ 9:0] txt_wraddr;
+wire [ 1:0] txt_wrctrl;
+wire [10:0] txt_wrdata;
+
+wire [15:0] SysConfigSet;
+
+system system_u(
+  .clk_clk(CLK_100M),
+  .reset_reset_n(nRST_pll),
+  .txt_wraddr_export(txt_wraddr),
+  .txt_wrctrl_export(txt_wrctrl),
+  .txt_wrdata_export(txt_wrdata),
+  .ctrl_data_in_export({ctrl_analog_data,ctrl_digital_data[1]}),
+  .default_cfg_set_in_export(DefaultConfigSet),
+  .cfg_set_out_export(SysConfigSet),
+  .info_set_in_export({InfoSet,FallbackMode})
+);
+
+wire show_osd = SysConfigSet[13];
+wire use_igr  = SysConfigSet[12];
+
+always @(negedge nCLK) begin
+  if (&{~nDSYNC,nVSYNC_pre,~nVSYNC_cur} | ~nRST)
+    ConfigSet <= SysConfigSet[11:0];
+//    ConfigSet <= {cfg_nDeBlurMan,cfg_nForceDeBlur,cfg_n15bit_mode,cfg_gamma,cfg_nEN_RGsB,cfg_nEN_YPbPr,cfg_SL_str,cfg_n240p,cfg_n480i_bob};
+end
+
+
+// Part 3: Controller Sniffing
 // ===========================
 
 reg [1:0]      rd_state  = 2'b0; // state machine
@@ -186,31 +161,22 @@ reg [3:0] sampling_point_ctrl =  4'h8;  // (9 by default -> delay somewhere arou
 reg        prev_ctrl    =  1'b1;
 reg [11:0] wait_cnt     = 12'b0; // counter for wait state (needs appr. 1.0ms at CLK_4M clock to fill up from 0 to 4095)
 
-reg [31:0] serial_data = 32'h0;
-reg [ 5:0] data_cnt    =  6'h0;
-reg        new_data    =  1'b0;
-reg [31:0] ctrl_data[0:1];
+reg [31:0] serial_data      = 32'h0;
+reg [ 5:0] ctrl_data_cnt    =  6'h0;
+reg        new_ctrl_data    =  1'b0;
+reg [15:0] ctrl_analog_data = 16'h0;
+reg [15:0] ctrl_digital_data[0:1];
 
 initial begin
-  ctrl_data[0] = 32'h0;
-  ctrl_data[1] = 32'h0;
+  ctrl_digital_data[0] = 16'h0;
+  ctrl_digital_data[1] = 16'h0;
 end
 
-wire [31:0] ctrl_data_deglitched = ((ctrl_data[1] & ctrl_data[0]) |
-                                    (ctrl_data[1] & serial_data ) |
-                                    (ctrl_data[0] & serial_data ));
+wire [15:0] ctrl_digital_data_deglitched = ((ctrl_digital_data[1] & ctrl_digital_data[0]) |
+                                            (ctrl_digital_data[1] & serial_data[15:0]   ) |
+                                            (ctrl_digital_data[0] & serial_data[15:0]   ));
 
 reg initiate_nrst = 1'b0;
-
-reg nfirstboot = 1'b0;
-
-reg show_osd = 1'b0;
-
-reg nDeBlurMan   = 1'b1;
-reg nForceDeBlur = 1'b1;
-reg n15bit_mode  = 1'b1;
-
-reg UseJumperSet = 1'b1;
 
 
 // controller data bits:
@@ -226,33 +192,33 @@ always @(posedge CLK_4M) begin
       if (&wait_cnt) begin // waiting duration ends (exit wait state only if CTRL was high for a certain duration)
         next_rd_state <= ST_N64_RD;
         serial_data   <= 32'h0;
-        data_cnt      <=  6'h0;
+        ctrl_data_cnt <=  6'h0;
       end
     ST_N64_RD: begin
       if (wait_cnt[7:0] == {4'h0,sampling_point_n64}) begin // sample data
-        if (data_cnt[3]) // eight bits read
+        if (ctrl_data_cnt[3]) // eight bits read
           if (CTRL & (serial_data[29:22] == 8'b10000000)) begin // check command and stop bit
           // trick: the 2 LSB command bits lies where controller produces unused constant values
           //         -> (hopefully) no exchange with controller response
             next_rd_state <= ST_CTRL_RD;
             serial_data   <= 32'h0;
-            data_cnt      <=  6'h0;
+            ctrl_data_cnt <=  6'h0;
           end else
             next_rd_state <= ST_WAIT4N64;
         else begin
           serial_data[29:22] <= {CTRL,serial_data[29:23]};
-          data_cnt           <= data_cnt + 1'b1;
+          ctrl_data_cnt      <= ctrl_data_cnt + 1'b1;
         end
       end
     end
     ST_CTRL_RD: begin
       if (wait_cnt[7:0] == {4'h0,sampling_point_ctrl}) begin // sample data
-        if (data_cnt[5]) begin // thirtytwo bits read
+        if (ctrl_data_cnt[5]) begin // thirtytwo bits read
           next_rd_state <= ST_WAIT4N64;
-          new_data      <= CTRL; // stop bit must be '1'
+          new_ctrl_data <= CTRL; // stop bit must be '1'
         end else begin
-          serial_data <= {CTRL,serial_data[31:1]};
-          data_cnt    <= data_cnt + 1'b1;
+          serial_data   <= {CTRL,serial_data[31:1]};
+          ctrl_data_cnt <= ctrl_data_cnt + 1'b1;
         end
       end
     end
@@ -263,11 +229,11 @@ always @(posedge CLK_4M) begin
     rd_state <= next_rd_state;
     wait_cnt <= 12'h000;
     if (|next_rd_state) begin     // following statements not applied to ST_WAIT4N64
-      if (~|data_cnt)
+      if (~|ctrl_data_cnt)
         sampling_point_cnt <= 10'h0;
-      else if (data_cnt[3] & (rd_state == ST_N64_RD))
+      else if (ctrl_data_cnt[3] & (rd_state == ST_N64_RD))
         sampling_point_n64 <= sampling_point_cnt[7:4];
-      else if (data_cnt[5] & (rd_state == ST_CTRL_RD))
+      else if (ctrl_data_cnt[5] & (rd_state == ST_CTRL_RD))
         sampling_point_ctrl <= sampling_point_cnt[9:6];
     end
   end else begin
@@ -284,60 +250,34 @@ always @(posedge CLK_4M) begin
 
   prev_ctrl <= CTRL;
 
-  if (new_data) begin
-    new_data     <= 1'b0;
-    ctrl_data[1] <= ctrl_data_deglitched;
-    ctrl_data[0] <= serial_data;
+  if (new_ctrl_data) begin
+    new_ctrl_data <= 1'b0;
+
+    ctrl_analog_data     <= serial_data[31:16];
+    ctrl_digital_data[1] <= ctrl_digital_data_deglitched;
+    ctrl_digital_data[0] <= serial_data[15: 0];
     
-    case (ctrl_data[1][15:0])
-      igr_deblur_off: begin
-        nForceDeBlur <= 1'b0;
-        nDeBlurMan   <= 1'b1;
-      end
-      igr_deblur_on: begin
-        nForceDeBlur <= 1'b0;
-        nDeBlurMan   <= 1'b0;
-      end
-      igr_15bitmode_off:
-        n15bit_mode <= 1'b1;
-      igr_15bitmode_on:
-        n15bit_mode <= 1'b0;
-      cmd_open_osd:
-        show_osd <= 1'b1;
-      cmd_close_osd:
-        show_osd <= 1'b0;
-      igr_reset:
-        initiate_nrst <= 1'b1;
-    endcase
+    if (use_igr & (ctrl_digital_data[1][15:0] == `IGR_RESET))
+      initiate_nrst <= 1'b1;
   end
 
-  if (!nRST) begin
-    nForceDeBlur <= 1'b1;
-
+  if (!nRST_pll) begin
     rd_state      <= ST_WAIT4N64;
     wait_cnt      <= 12'h000;
     prev_ctrl     <=  1'b1;
     initiate_nrst <=  1'b0;
 
-    new_data     <=  1'b0;
-    ctrl_data[0] <= 32'h0;
-    ctrl_data[1] <= 32'h0;
+    new_ctrl_data <=  1'b0;
 
-    show_osd  <= 1'b0;
-  end
-
-  if (~nfirstboot) begin
-    nfirstboot   <= 1'b1;
-    nDeBlurMan   <= 1'b0;
-    nForceDeBlur <= 1'b1;
-
-    UseJumperSet <= nRST;  // fallback if reset pressed on power cycle
+    ctrl_analog_data     <= 16'h0;
+    ctrl_digital_data[0] <= 16'h0;
+    ctrl_digital_data[1] <= 16'h0;
   end
 end
 
 
 
-// Part 3: Trigger Reset on Demand
+// Part 4: Trigger Reset on Demand
 // ===============================
 
 reg       drv_rst =  1'b0;
@@ -356,7 +296,7 @@ end
 assign nRST = drv_rst ? 1'b0 : 1'bz;
 
 
-// Part 4: Display OSD Menu
+// Part 5: Display OSD Menu
 // ========================
 
 // concept:
@@ -364,21 +304,6 @@ assign nRST = drv_rst ? 1'b0 : 1'bz;
 //   (for simplicity atm. RAM has 48x16 words)
 // - content is mapped into memory and written by NIOSII processor
 // - Font is looked up in an extra ROM
-
-wire [ 9:0] txt_wraddr;
-wire [ 1:0] txt_wrctrl;
-wire [10:0] txt_wrdata;
-
-system system_u(
-  .clk_clk(CLK_100M),
-  .reset_reset_n(nRST),
-  .txt_wraddr_export(txt_wraddr),
-  .txt_wrctrl_export(txt_wrctrl),
-  .txt_wrdata_export(txt_wrdata),
-  .ctrl_data_in_export(ctrl_data[1]),
-  .cfg_set_in_export(ConfigSet),
-  .info_set_in_export({show_osd,InfoSet})
-);
 
 
 wire nHSYNC_cur = video_data_i[3*color_width_i+1];
@@ -467,14 +392,6 @@ ram2port_1 virt_display_u(
   .q({font_color_tmp,font_addr_lsb})
 );
 
-ram1port_1 virt_display_mirror(
-  .address(txt_wraddr),
-  .clock(CLK_100M),
-  .data(txt_wrdata),
-  .rden(1'b0),
-  .wren(txt_wrctrl[0])
-);
-
 reg [7:0] font_addr_msb  = 8'h0;
 reg [5:0] font_color_del = 6'h0;
 
@@ -544,43 +461,6 @@ always @(negedge nCLK) begin
   end else begin
     video_data_o[`VDATA_I_CO_SLICE] <= video_data_i[`VDATA_I_CO_SLICE];
   end
-end
-
-
-
-
-// some post-assignments
-
-// fallback mode
-// .............
-
-wire n240p_active     = UseJumperSet ? n240p     : 1'b0;  // fallback only to 240p and RGB
-wire nEN_YPbPr_active = UseJumperSet ? nEN_YPbPr : 1'b1;  // (sync output on G/Y in any case to see at least something even with a component cable)
-
-
-// debug sources
-// .............
-
-wire     cfg_n240p = Linedoubler_debug[2] ? Linedoubler_debug[1] : n240p_active;
-wire cfg_n480i_bob = Linedoubler_debug[2] ? Linedoubler_debug[0] : n480i_bob;
-
-wire [1:0] cfg_SL_str = SL_debug[2] ? SL_debug[1:0] : SL_str;
-
-wire cfg_nEN_RGsB  = Vidout_debug[2] ? Vidout_debug[1] : (nEN_RGsB & nEN_YPbPr);
-wire cfg_nEN_YPbPr = Vidout_debug[2] ? Vidout_debug[0] : nEN_YPbPr_active;
-
-wire [2:0] cfg_gamma = gamma_debug;
-
-wire cfg_nForceDeBlur = DeBlur_15bitmode_debug[2] ? 1'b0 : nForceDeBlur;
-wire cfg_nDeBlurMan   = DeBlur_15bitmode_debug[2] ? DeBlur_15bitmode_debug[1] : nDeBlurMan;
-wire cfg_n15bit_mode  = DeBlur_15bitmode_debug[2] ? DeBlur_15bitmode_debug[0] : n15bit_mode;
-
-// finally
-// .......
-
-always @(negedge nCLK) begin
-  if (&{~nDSYNC,nVSYNC_pre,~nVSYNC_cur} | ~nRST)
-    ConfigSet <= {cfg_nDeBlurMan,cfg_nForceDeBlur,cfg_n15bit_mode,cfg_gamma,cfg_nEN_RGsB,cfg_nEN_YPbPr,cfg_SL_str,cfg_n240p,cfg_n480i_bob};
 end
 
 endmodule

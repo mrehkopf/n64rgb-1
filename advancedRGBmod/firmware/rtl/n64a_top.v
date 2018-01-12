@@ -124,9 +124,8 @@ input       n480i_bob;
 
 assign SYS_CLKen = 1'b1;
 
-wire [ 4:0] InfoSet = {n64_480i,vmode,deblurparams_pass[1],UseVGA_HVSync,nFilterBypass};
-//wire [ 7:0] DefaultSet = {UseVGA_HVSync,nFilterBypass,nEN_RGsB,nEN_YPbPr,SL_str,n240p,n480i_bob};
-wire [ 5:0] DefaultSet = {nEN_RGsB,nEN_YPbPr,SL_str,n240p,n480i_bob};
+wire [ 4:0] InfoSet = {n64_480i,vmode,~deblurparams_pass[1],UseVGA_HVSync,nFilterBypass};
+wire [ 5:0] DefaultConfigSet = {nEN_RGsB,nEN_YPbPr,SL_str,n240p,n480i_bob};
 wire [11:0] ConfigSet;
 
 n64a_controller controller_u(
@@ -134,7 +133,7 @@ n64a_controller controller_u(
   .nRST(nRST),
   .CTRL(CTRL_i),
   .InfoSet(InfoSet),
-  .DefaultSet(DefaultSet),
+  .DefaultConfigSet(DefaultConfigSet),
   .ConfigSet(ConfigSet),
   .nCLK(nCLK),
   .nDSYNC(nDSYNC),
@@ -142,15 +141,15 @@ n64a_controller controller_u(
   .video_data_o(vdata_r[3])
 );
 
-wire       nDeBlurMan    = ConfigSet[11];
-wire       nForceDeBlur  = ConfigSet[10];
-wire       n15bit_mode   = ConfigSet[ 9];
-wire [2:0] cfg_gamma     = ConfigSet[ 8:6];
-wire       cfg_nEN_RGsB  = ConfigSet[ 5];
-wire       cfg_nEN_YPbPr = ConfigSet[ 4];
-wire [1:0] cfg_SL_str    = ConfigSet[ 3:2];
-wire       cfg_n240p     = ConfigSet[ 1];
-wire       cfg_n480i_bob = ConfigSet[ 0];
+wire       nDeBlurMan    = ~ConfigSet[11];
+wire       nForceDeBlur  = ~ConfigSet[10];
+wire       n15bit_mode   = ~ConfigSet[ 9];
+wire [2:0] cfg_gamma     =  ConfigSet[ 8:6];
+wire       cfg_nEN_RGsB  = ~ConfigSet[ 5];
+wire       cfg_nEN_YPbPr = ~ConfigSet[ 4];
+wire [1:0] cfg_SL_str    =  ConfigSet[ 3:2];
+wire       cfg_n240p     =  ConfigSet[ 1];
+wire       cfg_n480i_bob = ~ConfigSet[ 0];
 
 
 // Part 2 - 4: RGB Demux with De-Blur Add-On

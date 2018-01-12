@@ -88,17 +88,3 @@ Software build needs a current version of the BSP. If the BSP is outdated, the c
 If you have to compile the HDL code make sure that the _project\_folder_/software/controller\_app/mem\_init/system\_onchip\_memory2\_0.hex exists!
 
 If you still have a compiled version of your HDL code and just have updated the software click on _Processing_ -> _Update Memory Initialization File_. Afterwards just run the _Assembler (Generate programming files)_ to get your new files (\*.jic file has to be generated using conversion tool; see section  "How to Build the HDL Firmware")
-
-
-### Use the Debug Cores
-
-The **_project\_folder_/debug/sources.spf** can be open using Quartus Prime. Make sure that _All Files_ are displayed in the _Open File_ windows. The **_In-System Sources and Probes Editor_** will open.  
-After configuring the JTAG chain (select USB Blaster and _Scan Chain_) you are able to **update the settings using the USB Blaster**.
-
-With the **In-System Memory Content Editor** (_Tools_ -> _In-System Memory Content Editor_) you can display the memory content of the virtual display which is written by the NIOS II program.
-- Memory addresses:
-  - four LSBs : vertical axis (from top to down)
-  - six MSBs : horizontal axis (from left to right)
-- Memory content:
-  - eight LSBs: ASCII code of char
-  - three MSBs: displayed color

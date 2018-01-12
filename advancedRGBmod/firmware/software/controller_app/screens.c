@@ -32,6 +32,7 @@
 #include <unistd.h>
 #include "system.h"
 #include "n64.h"
+#include "config.h"
 #include "vd_driver.h"
 
 
@@ -39,7 +40,7 @@
 #define INFO_HEADER_V_OFFSET  0
 #define INFO_OVERLAY_H_OFFSET 1
 #define INFO_OVERLAY_V_OFFSET 2
-#define INFO_VALS_H_OFFSET    29 + INFO_OVERLAY_H_OFFSET
+#define INFO_VALS_H_OFFSET    (29 + INFO_OVERLAY_H_OFFSET)
 #define INFO_VALS_V_OFFSET    INFO_OVERLAY_V_OFFSET
 
 #define CFG_HEADER_H_OFFSET   INFO_HEADER_H_OFFSET
@@ -49,20 +50,21 @@
 #define CFG_VALS_H_OFFSET     INFO_VALS_H_OFFSET
 #define CFG_VALS_V_OFFSET     INFO_VALS_V_OFFSET
 
-#define INFO_VIN_V_OFFSET     INFO_OVERLAY_V_OFFSET+1
-#define INFO_VOUT_V_OFFSET    INFO_OVERLAY_V_OFFSET+2
-#define INFO_COL_V_OFFSET     INFO_OVERLAY_V_OFFSET+3
-#define INFO_FORMAT_V_OFFSET  INFO_OVERLAY_V_OFFSET+4
-#define INFO_DEBLUR_V_OFFSET  INFO_OVERLAY_V_OFFSET+5
-#define INFO_FAO_V_OFFSET     INFO_OVERLAY_V_OFFSET+6
+#define INFO_VIN_V_OFFSET     (INFO_OVERLAY_V_OFFSET+1)
+#define INFO_VOUT_V_OFFSET    (INFO_OVERLAY_V_OFFSET+2)
+#define INFO_COL_V_OFFSET     (INFO_OVERLAY_V_OFFSET+3)
+#define INFO_FORMAT_V_OFFSET  (INFO_OVERLAY_V_OFFSET+4)
+#define INFO_DEBLUR_V_OFFSET  (INFO_OVERLAY_V_OFFSET+5)
+#define INFO_FAO_V_OFFSET     (INFO_OVERLAY_V_OFFSET+6)
 
-#define CFG_LINEX2_V_OFFSET   CFG_OVERLAY_V_OFFSET+1
-#define CFG_480IBOB_V_OFFSET  CFG_OVERLAY_V_OFFSET+2
-#define CFG_SLSTR_V_OFFSET    CFG_OVERLAY_V_OFFSET+3
-#define CFG_FORMAT_V_OFFSET   CFG_OVERLAY_V_OFFSET+4
-#define CFG_DEBLUR_V_OFFSET   CFG_OVERLAY_V_OFFSET+5
-#define CFG_15BIT_V_OFFSET    CFG_OVERLAY_V_OFFSET+6
-#define CFG_GAMMA_V_OFFSET    CFG_OVERLAY_V_OFFSET+7
+#define CFG_LINEX2_V_OFFSET   (CFG_OVERLAY_V_OFFSET+1)
+#define CFG_480IBOB_V_OFFSET  (CFG_OVERLAY_V_OFFSET+2)
+#define CFG_SLSTR_V_OFFSET    (CFG_OVERLAY_V_OFFSET+3)
+#define CFG_FORMAT_V_OFFSET   (CFG_OVERLAY_V_OFFSET+4)
+#define CFG_DEBLUR_V_OFFSET   (CFG_OVERLAY_V_OFFSET+5)
+#define CFG_15BIT_V_OFFSET    (CFG_OVERLAY_V_OFFSET+6)
+#define CFG_GAMMA_V_OFFSET    (CFG_OVERLAY_V_OFFSET+7)
+
 
 static const char *info_screen_header =  "Info-Screen\n"
                                          "=============";
@@ -85,12 +87,12 @@ static const char *cfg_screen_overlay =  "* Linedoubling\n"
                                          "* 15bit Mode:\n"
                                          "* Gamma Value:";
 
-static const char *OnOff[]        = {"On","Off"};
+static const char *OffOn[]        = {"Off","On"};
 static const char *VideoMode[]    = {"240p60","288p50","480i60","576i50","480p60","576p50"};
-static const char *VideoColor[]   = {"15bit","21bit"};
-static const char *VideoFormat[]  = {"RGBS/RGsB","RGBS","YPbPr"};
-static const char *DeBlur[]       = {"(forced)","(estimated)","(480i/576i)"};
-static const char *DeBlurCfg[]    = {"Auto","Always","Off"};
+static const char *VideoColor[]   = {"21bit","15bit"};
+static const char *VideoFormat[]  = {"RGBS","RGBS/RGsB","YPbPr"};
+static const char *DeBlur[]       = {"(estimated)","(forced)","(480i/576i)"};
+static const char *DeBlurCfg[]    = {"Auto","Off","Always"};
 static const char *FilterAddOn[]  = {"not installed","9.5MHz","18MHz","Filter bypassed"};
 static const char *SLStrength[]   = {"0%","25%","50%","100%"};
 static const char *GammaValue[]   = {"1.0","0.8","0.9","1.1","1.2"};
@@ -134,16 +136,17 @@ void update_info_screen()
   vd_print_string(INFO_VALS_H_OFFSET, INFO_VIN_V_OFFSET, FONTCOLOR_WHITE, VideoMode[str_select]);
 
   // Video Output
-  switch(((cfg_data & (CFG_N240P_GETMASK | CFG_N480IBOB_GETMASK)) << 2) | str_select) {
-    case 0xD: // 1101
-    case 0xB: // 1011
-    case 0x9: // 1001
+  switch(((cfg_data & (CFG_LINEX2_GETMASK | CFG_480IBOB_GETMASK)) << 2) | str_select) {
+   /* order: lineX2, 480ibob, 480i, pal */
+    case 0xF: /* 1111 */
+    case 0xD: /* 1101 */
+    case 0x9: /* 1001 */
       str_select  = 5;
       video_sd_ed = 1;
       break;
-    case 0xC: // 1100
-    case 0xA: // 1010
-    case 0x8: // 1000
+    case 0xE: /* 1110 */
+    case 0xC: /* 1100 */
+    case 0x8: /* 1000 */
       str_select  = 4;
       video_sd_ed = 1;
       break;
@@ -155,15 +158,15 @@ void update_info_screen()
   vd_print_string(INFO_VALS_H_OFFSET, INFO_VOUT_V_OFFSET, FONTCOLOR_WHITE, VideoMode[str_select]);
 
   // Color Depth
-  str_select = (cfg_data & CFG_N15BIT_GETMASK) >> CFG_N15BIT_OFFSET;
+  str_select = (cfg_data & CFG_15BITMODE_GETMASK) >> CFG_15BITMODE_OFFSET;
   vd_clear_lineend(INFO_VALS_H_OFFSET, INFO_COL_V_OFFSET);
   vd_print_string(INFO_VALS_H_OFFSET, INFO_COL_V_OFFSET, FONTCOLOR_WHITE, VideoColor[str_select]);
 
   // Video Format
-  if (cfg_data & CFG_NYPBPR_GETMASK)
-    str_select = (cfg_data & CFG_NRGSB_GETMASK) >> CFG_NRGSB_OFFSET;
-  else
+  if (cfg_data & CFG_YPBPR_GETMASK)
     str_select = 2;
+  else
+    str_select = (cfg_data & CFG_RGSB_GETMASK) >> CFG_RGSB_OFFSET;
   vd_clear_lineend(INFO_VALS_H_OFFSET, INFO_FORMAT_V_OFFSET);
   vd_print_string(INFO_VALS_H_OFFSET, INFO_FORMAT_V_OFFSET, FONTCOLOR_WHITE, VideoFormat[str_select]);
 
@@ -173,9 +176,9 @@ void update_info_screen()
     str_select = 2;
     vd_print_string(INFO_VALS_H_OFFSET, INFO_DEBLUR_V_OFFSET, FONTCOLOR_RED, DeBlur[str_select]);
   } else {
-    str_select = (info_data & INFO_NDODEBLUR_GETMASK) >> INFO_NDODEBLUR_OFFSET;
-    vd_print_string(INFO_VALS_H_OFFSET, INFO_DEBLUR_V_OFFSET, FONTCOLOR_WHITE, OnOff[str_select]);
-    str_select = (cfg_data & CFG_NFORCEDEBLUR_GETMASK) >> CFG_NFORCEDEBLUR_OFFSET;
+    str_select = (info_data & INFO_DODEBLUR_GETMASK) >> INFO_DODEBLUR_OFFSET;
+    vd_print_string(INFO_VALS_H_OFFSET, INFO_DEBLUR_V_OFFSET, FONTCOLOR_WHITE, OffOn[str_select]);
+    str_select = (cfg_data & CFG_FORCEDEBLUR_GETMASK) >> CFG_FORCEDEBLUR_OFFSET;
     vd_print_string(INFO_VALS_H_OFFSET + 4, INFO_DEBLUR_V_OFFSET, FONTCOLOR_WHITE, DeBlur[str_select]);
   }
 
@@ -204,37 +207,37 @@ void update_cfg_screen(alt_u8 force_update)
   alt_u8 str_select;
 
   // Linedoubling
-  str_select = (~cfg_data & CFG_N240P_GETMASK) >> CFG_N240P_OFFSET;
+  str_select = (cfg_data & CFG_LINEX2_GETMASK) >> CFG_LINEX2_OFFSET;
   vd_clear_lineend(CFG_VALS_H_OFFSET, CFG_LINEX2_V_OFFSET);
-  vd_print_string(CFG_VALS_H_OFFSET, CFG_LINEX2_V_OFFSET, FONTCOLOR_WHITE, OnOff[str_select]);
+  vd_print_string(CFG_VALS_H_OFFSET, CFG_LINEX2_V_OFFSET, FONTCOLOR_WHITE, OffOn[str_select]);
 
-  str_select = (cfg_data & CFG_N480IBOB_GETMASK) >> CFG_N480IBOB_OFFSET;
+  str_select = (cfg_data & CFG_480IBOB_GETMASK) >> CFG_480IBOB_OFFSET;
   vd_clear_lineend(CFG_VALS_H_OFFSET, CFG_480IBOB_V_OFFSET);
   if (info_data & INFO_480I_GETMASK)
-    vd_print_string(CFG_VALS_H_OFFSET, CFG_480IBOB_V_OFFSET, FONTCOLOR_RED, OnOff[str_select]);
+    vd_print_string(CFG_VALS_H_OFFSET, CFG_480IBOB_V_OFFSET, FONTCOLOR_RED, OffOn[str_select]);
   else
-    vd_print_string(CFG_VALS_H_OFFSET, CFG_480IBOB_V_OFFSET, FONTCOLOR_WHITE, OnOff[str_select]);
+    vd_print_string(CFG_VALS_H_OFFSET, CFG_480IBOB_V_OFFSET, FONTCOLOR_WHITE, OffOn[str_select]);
 
-  str_select = (~cfg_data & CFG_SLSTR_GETMASK) >> CFG_SLSTR_OFFSET;
+  str_select = (cfg_data & CFG_SLSTR_GETMASK) >> CFG_SLSTR_OFFSET;
   vd_clear_lineend(CFG_VALS_H_OFFSET, CFG_SLSTR_V_OFFSET);
-  if ((cfg_data & CFG_N240P_GETMASK) && (~info_data & INFO_480I_GETMASK))
+  if ((cfg_data & CFG_LINEX2_GETMASK) && (~info_data & INFO_480I_GETMASK))
     vd_print_string(CFG_VALS_H_OFFSET, CFG_SLSTR_V_OFFSET, FONTCOLOR_WHITE, SLStrength[str_select]);
   else
     vd_print_string(CFG_VALS_H_OFFSET, CFG_SLSTR_V_OFFSET, FONTCOLOR_RED, SLStrength[str_select]);
 
   // Output Format
-  if (cfg_data & CFG_NYPBPR_GETMASK)
-    str_select = (cfg_data & CFG_NRGSB_GETMASK) >> CFG_NRGSB_OFFSET;
-  else
+  if (cfg_data & CFG_YPBPR_GETMASK)
     str_select = 2;
+  else
+    str_select = (cfg_data & CFG_RGSB_GETMASK) >> CFG_RGSB_OFFSET;
   vd_clear_lineend(CFG_VALS_H_OFFSET, CFG_FORMAT_V_OFFSET);
   vd_print_string(CFG_VALS_H_OFFSET, CFG_FORMAT_V_OFFSET, FONTCOLOR_WHITE, VideoFormat[str_select]);
 
   // 240p DeBlur
-  if (cfg_data & CFG_NFORCEDEBLUR_GETMASK)
-    str_select = 0;
+  if (cfg_data & CFG_FORCEDEBLUR_GETMASK)
+    str_select = ((cfg_data & CFG_DEBLUR_GETMASK) >> CFG_DEBLUR_OFFSET) + 1;
   else
-    str_select = ((cfg_data & CFG_NDEBLUR_GETMASK) >> CFG_NDEBLUR_OFFSET) + 1;
+    str_select = 0;
   vd_clear_lineend(CFG_VALS_H_OFFSET, CFG_DEBLUR_V_OFFSET);
   if (info_data & INFO_480I_GETMASK)
     vd_print_string(CFG_VALS_H_OFFSET, CFG_DEBLUR_V_OFFSET, FONTCOLOR_RED, DeBlurCfg[str_select]);
@@ -242,9 +245,9 @@ void update_cfg_screen(alt_u8 force_update)
     vd_print_string(CFG_VALS_H_OFFSET, CFG_DEBLUR_V_OFFSET, FONTCOLOR_WHITE, DeBlurCfg[str_select]);
 
   // 15bit mode
-  str_select = (cfg_data & CFG_N15BIT_GETMASK) >> CFG_N15BIT_OFFSET;
+  str_select = (cfg_data & CFG_15BITMODE_GETMASK) >> CFG_15BITMODE_OFFSET;
   vd_clear_lineend(CFG_VALS_H_OFFSET, CFG_15BIT_V_OFFSET);
-  vd_print_string(CFG_VALS_H_OFFSET, CFG_15BIT_V_OFFSET, FONTCOLOR_WHITE, OnOff[str_select]);
+  vd_print_string(CFG_VALS_H_OFFSET, CFG_15BIT_V_OFFSET, FONTCOLOR_WHITE, OffOn[str_select]);
 
   // Gamma
   str_select = ((cfg_data & CFG_GAMMASEL_GETMASK) >> CFG_GAMMASEL_OFFSET) + 1;

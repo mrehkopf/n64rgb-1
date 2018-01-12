@@ -314,12 +314,12 @@ always @(posedge PX_CLK_4x) begin
   if (rden[2]) begin
     if (rdcnt) begin
       case (SL_str)
-        2'b11: begin
+        2'b00: begin
           R_o <= {R_buf,1'b0};
           G_o <= {G_buf,1'b0};
           B_o <= {B_buf,1'b0};
         end
-        2'b10: begin
+        2'b01: begin
           R_o <= {1'b0 ,R_buf[color_width_i-1:0]} +
                  {2'b00,R_buf[color_width_i-1:1]};
           G_o <= {1'b0 ,G_buf[color_width_i-1:0]} +
@@ -327,12 +327,12 @@ always @(posedge PX_CLK_4x) begin
           B_o <= {1'b0 ,B_buf[color_width_i-1:0]} +
                  {2'b00,B_buf[color_width_i-1:1]};
         end
-        2'b01: begin
+        2'b10: begin
           R_o <= {1'b0,R_buf[color_width_i-1:0]};
           G_o <= {1'b0,G_buf[color_width_i-1:0]};
           B_o <= {1'b0,B_buf[color_width_i-1:0]};
         end
-        2'b00: begin
+        2'b11: begin
           R_o <= {color_width_o{1'b0}};
           G_o <= {color_width_o{1'b0}};
           B_o <= {color_width_o{1'b0}};

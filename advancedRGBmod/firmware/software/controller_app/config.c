@@ -19,59 +19,46 @@
  *
  *********************************************************************************
  *
- * n64.h
+ * config.c
  *
- *  Created on: 06.01.2018
+ *  Created on: 11.01.2018
  *      Author: Peter Bartmann
  *
  ********************************************************************************/
-
 
 #include "alt_types.h"
 #include "altera_avalon_pio_regs.h"
 #include "system.h"
 #include "n64.h"
+#include "config.h"
 
-alt_u32 ctrl_data;
-alt_u8  info_data;
 
-// ToDo: export function into logic to save some memory space
-cmd_t ctrl_data_to_cmd(void)
+#define FALLBACK_DEFAULT_CONFIG (             \
+  CFG_GETALL_MASK & ( CFG_USEIGR_SETMASK    | \
+                      CFG_RGSB_SETMASK      | \
+                      CFG_SLSTR_0_SETMASK     ))
+#define DEFAULT0_CONFIG (                      \
+  CFG_GETALL_MASK & ( CFG_USEIGR_SETMASK    | \
+                      CFG_SLSTR_0_SETMASK     ))
+
+#define DEFAULT_CFG_ALLMASK           0x3F
+#define DEFAULT_CFG_NRGSB_GETMASK     (1<<CFG_RGSB_OFFSET)
+#define DEFAULT_CFG_NYPBPR_GETMASK    (1<<CFG_YPBPR_OFFSET)
+#define DEFAULT_CFG_NSLSTR_GETMASK    (3<<CFG_SLSTR_OFFSET)
+#define DEFAULT_CFG_LINEX2_GETMASK    (1<<CFG_LINEX2_OFFSET)
+#define DEFAULT_CFG_N480IBOB_GETMASK  (1<<CFG_480IBOB_OFFSET)
+#define DEFAULT_CFG_JUMPERINV_MASK    0x3D  /* inversion due to nature of jumper */
+
+
+volatile alt_u16 cfg_data;
+
+
+void cfg_load_defaults(void)
 {
-  cmd_t cmd_new = CMD_NON;
-  static cmd_t cmd_pre = CMD_NON;
+  if(info_data & INFO_FALLBACKMODE_GETMASK)
+    cfg_data = FALLBACK_DEFAULT_CONFIG;
+  else
+    cfg_data = DEFAULT0_CONFIG | ((IORD_ALTERA_AVALON_PIO_DATA(DEFAULT_CFG_SET_IN_BASE) ^ DEFAULT_CFG_JUMPERINV_MASK) & DEFAULT_CFG_ALLMASK);
 
-  switch (ctrl_data & CTRL_GETALL_DIGITAL_MASK) {
-    case BTN_OPEN_OSDMENU:
-      cmd_new = CMD_OPEN_MENU;
-      break;
-    case BTN_CLOSE_OSDMENU:
-      cmd_new = CMD_CLOSE_MENU;
-      break;
-    case BTN_DEBLUR_QUICK_ON:
-      cmd_new = CMD_DEBLUR_QUICK_ON;
-      break;
-    case BTN_DEBLUR_QUICK_OFF:
-      cmd_new = CMD_DEBLUR_QUICK_OFF;
-      break;
-    case BTN_15BIT_QUICK_ON:
-      cmd_new = CMD_15BIT_QUICK_ON;
-      break;
-    case BTN_15BIT_QUICK_OFF:
-      cmd_new = CMD_15BIT_QUICK_OFF;
-      break;
-    case BTN_MENU_ENTER:
-      cmd_new = CMD_MENU_ENTER;
-      break;
-    case BTN_MENU_BACK:
-      cmd_new = CMD_MENU_BACK;
-      break;
-  };
-
-  if (cmd_pre != cmd_new) {
-    cmd_pre = cmd_new;
-    return cmd_new;
-  };
-
-  return CMD_NON;
-};
+  set_config();
+}

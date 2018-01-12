@@ -9,19 +9,19 @@
    categories="System" />
  <parameter name="bonusData"><![CDATA[bonusData 
 {
-   element cfg_set_in
+   element cfg_set_out
    {
       datum _sortIndex
       {
-         value = "8";
+         value = "9";
          type = "int";
       }
    }
-   element cfg_set_in.s1
+   element cfg_set_out.s1
    {
       datum baseAddress
       {
-         value = "69648";
+         value = "69664";
          type = "String";
       }
    }
@@ -45,7 +45,23 @@
    {
       datum baseAddress
       {
-         value = "69664";
+         value = "69680";
+         type = "String";
+      }
+   }
+   element default_cfg_set_in
+   {
+      datum _sortIndex
+      {
+         value = "8";
+         type = "int";
+      }
+   }
+   element default_cfg_set_in.s1
+   {
+      datum baseAddress
+      {
+         value = "69632";
          type = "String";
       }
    }
@@ -53,7 +69,7 @@
    {
       datum _sortIndex
       {
-         value = "9";
+         value = "10";
          type = "int";
       }
    }
@@ -61,7 +77,7 @@
    {
       datum baseAddress
       {
-         value = "69632";
+         value = "69648";
          type = "String";
       }
    }
@@ -77,7 +93,7 @@
    {
       datum baseAddress
       {
-         value = "69728";
+         value = "69744";
          type = "String";
       }
    }
@@ -125,7 +141,7 @@
    {
       datum baseAddress
       {
-         value = "69696";
+         value = "69712";
          type = "String";
       }
    }
@@ -141,7 +157,7 @@
    {
       datum baseAddress
       {
-         value = "69680";
+         value = "69696";
          type = "String";
       }
    }
@@ -157,7 +173,7 @@
    {
       datum baseAddress
       {
-         value = "69712";
+         value = "69728";
          type = "String";
       }
    }
@@ -183,14 +199,19 @@
  <parameter name="useTestBenchNamingPattern" value="false" />
  <instanceScript></instanceScript>
  <interface
-   name="cfg_set_in"
-   internal="cfg_set_in.external_connection"
+   name="cfg_set_out"
+   internal="cfg_set_out.external_connection"
    type="conduit"
    dir="end" />
  <interface name="clk" internal="clk_0.clk_in" type="clock" dir="end" />
  <interface
    name="ctrl_data_in"
    internal="ctrl_data_in.external_connection"
+   type="conduit"
+   dir="end" />
+ <interface
+   name="default_cfg_set_in"
+   internal="default_cfg_set_in.external_connection"
    type="conduit"
    dir="end" />
  <interface
@@ -214,19 +235,23 @@
    internal="txt_wrdata.external_connection"
    type="conduit"
    dir="end" />
- <module name="cfg_set_in" kind="altera_avalon_pio" version="17.1" enabled="1">
+ <module
+   name="cfg_set_out"
+   kind="altera_avalon_pio"
+   version="17.1"
+   enabled="1">
   <parameter name="bitClearingEdgeCapReg" value="false" />
   <parameter name="bitModifyingOutReg" value="false" />
   <parameter name="captureEdge" value="false" />
   <parameter name="clockRate" value="100000000" />
-  <parameter name="direction" value="Input" />
+  <parameter name="direction" value="Output" />
   <parameter name="edgeType" value="RISING" />
   <parameter name="generateIRQ" value="false" />
   <parameter name="irqType" value="LEVEL" />
-  <parameter name="resetValue" value="0" />
+  <parameter name="resetValue" value="56839" />
   <parameter name="simDoTestBenchWiring" value="false" />
   <parameter name="simDrivenValue" value="0" />
-  <parameter name="width" value="12" />
+  <parameter name="width" value="16" />
  </module>
  <module name="clk_0" kind="clock_source" version="17.1" enabled="1">
   <parameter name="clockFrequency" value="100000000" />
@@ -251,6 +276,24 @@
   <parameter name="simDoTestBenchWiring" value="false" />
   <parameter name="simDrivenValue" value="0" />
   <parameter name="width" value="32" />
+ </module>
+ <module
+   name="default_cfg_set_in"
+   kind="altera_avalon_pio"
+   version="17.1"
+   enabled="1">
+  <parameter name="bitClearingEdgeCapReg" value="false" />
+  <parameter name="bitModifyingOutReg" value="false" />
+  <parameter name="captureEdge" value="false" />
+  <parameter name="clockRate" value="100000000" />
+  <parameter name="direction" value="Input" />
+  <parameter name="edgeType" value="RISING" />
+  <parameter name="generateIRQ" value="false" />
+  <parameter name="irqType" value="LEVEL" />
+  <parameter name="resetValue" value="0" />
+  <parameter name="simDoTestBenchWiring" value="false" />
+  <parameter name="simDrivenValue" value="0" />
+  <parameter name="width" value="6" />
  </module>
  <module
    name="info_set_in"
@@ -313,7 +356,7 @@
   <parameter name="dataAddrWidth" value="17" />
   <parameter name="dataMasterHighPerformanceAddrWidth" value="1" />
   <parameter name="dataMasterHighPerformanceMapParam" value="" />
-  <parameter name="dataSlaveMapParam"><![CDATA[<address-map><slave name='onchip_memory2_0.s1' start='0x8000' end='0xD000' type='altera_avalon_onchip_memory2.s1' /><slave name='nios2_gen2_0.debug_mem_slave' start='0x10800' end='0x11000' type='altera_nios2_gen2.debug_mem_slave' /><slave name='info_set_in.s1' start='0x11000' end='0x11010' type='altera_avalon_pio.s1' /><slave name='cfg_set_in.s1' start='0x11010' end='0x11020' type='altera_avalon_pio.s1' /><slave name='ctrl_data_in.s1' start='0x11020' end='0x11030' type='altera_avalon_pio.s1' /><slave name='txt_wrctrl.s1' start='0x11030' end='0x11040' type='altera_avalon_pio.s1' /><slave name='txt_wraddr.s1' start='0x11040' end='0x11050' type='altera_avalon_pio.s1' /><slave name='txt_wrdata.s1' start='0x11050' end='0x11060' type='altera_avalon_pio.s1' /><slave name='jtag_uart_0.avalon_jtag_slave' start='0x11060' end='0x11068' type='altera_avalon_jtag_uart.avalon_jtag_slave' /></address-map>]]></parameter>
+  <parameter name="dataSlaveMapParam"><![CDATA[<address-map><slave name='onchip_memory2_0.s1' start='0x8000' end='0xF800' type='altera_avalon_onchip_memory2.s1' /><slave name='nios2_gen2_0.debug_mem_slave' start='0x10800' end='0x11000' type='altera_nios2_gen2.debug_mem_slave' /><slave name='default_cfg_set_in.s1' start='0x11000' end='0x11010' type='altera_avalon_pio.s1' /><slave name='info_set_in.s1' start='0x11010' end='0x11020' type='altera_avalon_pio.s1' /><slave name='cfg_set_out.s1' start='0x11020' end='0x11030' type='altera_avalon_pio.s1' /><slave name='ctrl_data_in.s1' start='0x11030' end='0x11040' type='altera_avalon_pio.s1' /><slave name='txt_wrctrl.s1' start='0x11040' end='0x11050' type='altera_avalon_pio.s1' /><slave name='txt_wraddr.s1' start='0x11050' end='0x11060' type='altera_avalon_pio.s1' /><slave name='txt_wrdata.s1' start='0x11060' end='0x11070' type='altera_avalon_pio.s1' /><slave name='jtag_uart_0.avalon_jtag_slave' start='0x11070' end='0x11078' type='altera_avalon_jtag_uart.avalon_jtag_slave' /></address-map>]]></parameter>
   <parameter name="data_master_high_performance_paddr_base" value="0" />
   <parameter name="data_master_high_performance_paddr_size" value="0" />
   <parameter name="data_master_paddr_base" value="0" />
@@ -352,7 +395,7 @@
   <parameter name="icache_tagramBlockType" value="Automatic" />
   <parameter name="impl" value="Tiny" />
   <parameter name="instAddrWidth" value="17" />
-  <parameter name="instSlaveMapParam"><![CDATA[<address-map><slave name='onchip_memory2_0.s1' start='0x8000' end='0xD000' type='altera_avalon_onchip_memory2.s1' /><slave name='nios2_gen2_0.debug_mem_slave' start='0x10800' end='0x11000' type='altera_nios2_gen2.debug_mem_slave' /></address-map>]]></parameter>
+  <parameter name="instSlaveMapParam"><![CDATA[<address-map><slave name='onchip_memory2_0.s1' start='0x8000' end='0xF800' type='altera_avalon_onchip_memory2.s1' /><slave name='nios2_gen2_0.debug_mem_slave' start='0x10800' end='0x11000' type='altera_nios2_gen2.debug_mem_slave' /></address-map>]]></parameter>
   <parameter name="instructionMasterHighPerformanceAddrWidth" value="1" />
   <parameter name="instructionMasterHighPerformanceMapParam" value="" />
   <parameter name="instruction_master_high_performance_paddr_base" value="0" />
@@ -491,7 +534,7 @@
   <parameter name="initMemContent" value="true" />
   <parameter name="initializationFileName">software/controller_app/mem_init/system_onchip_memory2_0.hex</parameter>
   <parameter name="instanceID" value="NONE" />
-  <parameter name="memorySize" value="20480" />
+  <parameter name="memorySize" value="30720" />
   <parameter name="readDuringWriteMode" value="DONT_CARE" />
   <parameter name="resetrequest_enabled" value="true" />
   <parameter name="simAllowMRAMContentsFile" value="false" />
@@ -551,7 +594,7 @@
    start="nios2_gen2_0.data_master"
    end="jtag_uart_0.avalon_jtag_slave">
   <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x00011060" />
+  <parameter name="baseAddress" value="0x00011070" />
   <parameter name="defaultConnection" value="false" />
  </connection>
  <connection
@@ -578,7 +621,7 @@
    start="nios2_gen2_0.data_master"
    end="txt_wrdata.s1">
   <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x00011050" />
+  <parameter name="baseAddress" value="0x00011060" />
   <parameter name="defaultConnection" value="false" />
  </connection>
  <connection
@@ -587,7 +630,7 @@
    start="nios2_gen2_0.data_master"
    end="txt_wraddr.s1">
   <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x00011040" />
+  <parameter name="baseAddress" value="0x00011050" />
   <parameter name="defaultConnection" value="false" />
  </connection>
  <connection
@@ -596,7 +639,7 @@
    start="nios2_gen2_0.data_master"
    end="txt_wrctrl.s1">
   <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x00011030" />
+  <parameter name="baseAddress" value="0x00011040" />
   <parameter name="defaultConnection" value="false" />
  </connection>
  <connection
@@ -605,6 +648,15 @@
    start="nios2_gen2_0.data_master"
    end="ctrl_data_in.s1">
   <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x00011030" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="17.1"
+   start="nios2_gen2_0.data_master"
+   end="cfg_set_out.s1">
+  <parameter name="arbitrationPriority" value="1" />
   <parameter name="baseAddress" value="0x00011020" />
   <parameter name="defaultConnection" value="false" />
  </connection>
@@ -612,7 +664,7 @@
    kind="avalon"
    version="17.1"
    start="nios2_gen2_0.data_master"
-   end="cfg_set_in.s1">
+   end="info_set_in.s1">
   <parameter name="arbitrationPriority" value="1" />
   <parameter name="baseAddress" value="0x00011010" />
   <parameter name="defaultConnection" value="false" />
@@ -621,7 +673,7 @@
    kind="avalon"
    version="17.1"
    start="nios2_gen2_0.data_master"
-   end="info_set_in.s1">
+   end="default_cfg_set_in.s1">
   <parameter name="arbitrationPriority" value="1" />
   <parameter name="baseAddress" value="0x00011000" />
   <parameter name="defaultConnection" value="false" />
@@ -650,8 +702,13 @@
  <connection kind="clock" version="17.1" start="clk_0.clk" end="txt_wrctrl.clk" />
  <connection kind="clock" version="17.1" start="clk_0.clk" end="jtag_uart_0.clk" />
  <connection kind="clock" version="17.1" start="clk_0.clk" end="ctrl_data_in.clk" />
- <connection kind="clock" version="17.1" start="clk_0.clk" end="cfg_set_in.clk" />
+ <connection kind="clock" version="17.1" start="clk_0.clk" end="cfg_set_out.clk" />
  <connection kind="clock" version="17.1" start="clk_0.clk" end="info_set_in.clk" />
+ <connection
+   kind="clock"
+   version="17.1"
+   start="clk_0.clk"
+   end="default_cfg_set_in.clk" />
  <connection
    kind="clock"
    version="17.1"
@@ -698,12 +755,17 @@
    kind="reset"
    version="17.1"
    start="clk_0.clk_reset"
-   end="cfg_set_in.reset" />
+   end="cfg_set_out.reset" />
  <connection
    kind="reset"
    version="17.1"
    start="clk_0.clk_reset"
    end="info_set_in.reset" />
+ <connection
+   kind="reset"
+   version="17.1"
+   start="clk_0.clk_reset"
+   end="default_cfg_set_in.reset" />
  <connection
    kind="reset"
    version="17.1"
