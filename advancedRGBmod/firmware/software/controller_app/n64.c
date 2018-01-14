@@ -70,6 +70,22 @@ cmd_t ctrl_data_to_cmd()
     case BTN_MENU_BACK:
       cmd_new = CMD_MENU_BACK;
       break;
+    case CTRL_DU_SETMASK:
+    case CTRL_CU_SETMASK:
+      cmd_new = CMD_MENU_UP;
+      break;
+    case CTRL_DD_SETMASK:
+    case CTRL_CD_SETMASK:
+      cmd_new = CMD_MENU_DOWN;
+      break;
+    case CTRL_DL_SETMASK:
+    case CTRL_CL_SETMASK:
+      cmd_new = CMD_MENU_LEFT;
+      break;
+    case CTRL_DR_SETMASK:
+    case CTRL_CR_SETMASK:
+      cmd_new = CMD_MENU_RIGHT;
+      break;
   };
 
   if (cmd_pre != cmd_new) {

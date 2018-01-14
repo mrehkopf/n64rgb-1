@@ -60,5 +60,5 @@ void cfg_load_defaults()
   else
     cfg_data = DEFAULT0_CONFIG | ((IORD_ALTERA_AVALON_PIO_DATA(DEFAULT_CFG_SET_IN_BASE) ^ DEFAULT_CFG_JUMPERINV_MASK) & DEFAULT_CFG_ALLMASK);
 
-  set_config();
+  cfg_apply();
 }

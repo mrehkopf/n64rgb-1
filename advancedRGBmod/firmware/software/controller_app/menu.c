@@ -30,104 +30,152 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include "alt_types.h"
+#include "altera_avalon_pio_regs.h"
 #include "system.h"
 #include "n64.h"
 #include "config.h"
 #include "menu.h"
+#include "menutexts.h"
 #include "vd_driver.h"
 
 
+menu_t vinfo_screen = {
+    .type = INFO,
+    .header = &vinfo_header,
+    .overlay = &vinfo_overlay,
+    .parent = &home_menu
+};
 
-#define INFO_HEADER_H_OFFSET  0
-#define INFO_HEADER_V_OFFSET  0
-#define INFO_OVERLAY_H_OFFSET 1
-#define INFO_OVERLAY_V_OFFSET 2
-#define INFO_VALS_H_OFFSET    (29 + INFO_OVERLAY_H_OFFSET)
-#define INFO_VALS_V_OFFSET    INFO_OVERLAY_V_OFFSET
+menu_t thanks_screen = {
+   .type = TEXT,
+   .overlay = &thanks_overlay,
+   .parent = &home_menu
+};
 
-#define CFG_HEADER_H_OFFSET   INFO_HEADER_H_OFFSET
-#define CFG_HEADER_V_OFFSET   INFO_HEADER_V_OFFSET
-#define CFG_OVERLAY_H_OFFSET  INFO_OVERLAY_H_OFFSET
-#define CFG_OVERLAY_V_OFFSET  INFO_OVERLAY_V_OFFSET
-#define CFG_VALS_H_OFFSET     INFO_VALS_H_OFFSET
-#define CFG_VALS_V_OFFSET     INFO_VALS_V_OFFSET
+menu_t about_screen = {
+   .type = TEXT,
+   .overlay = &about_overlay,
+   .parent = &home_menu
+};
 
-#define INFO_VIN_V_OFFSET     (INFO_OVERLAY_V_OFFSET+1)
-#define INFO_VOUT_V_OFFSET    (INFO_OVERLAY_V_OFFSET+2)
-#define INFO_COL_V_OFFSET     (INFO_OVERLAY_V_OFFSET+3)
-#define INFO_FORMAT_V_OFFSET  (INFO_OVERLAY_V_OFFSET+4)
-#define INFO_DEBLUR_V_OFFSET  (INFO_OVERLAY_V_OFFSET+5)
-#define INFO_FAO_V_OFFSET     (INFO_OVERLAY_V_OFFSET+6)
+menu_t license_screen = {
+   .type = TEXT,
+   .overlay = &license_overlay,
+   .parent = &home_menu
+};
 
-#define CFG_LINEX2_V_OFFSET   (CFG_OVERLAY_V_OFFSET+1)
-#define CFG_480IBOB_V_OFFSET  (CFG_OVERLAY_V_OFFSET+2)
-#define CFG_SLSTR_V_OFFSET    (CFG_OVERLAY_V_OFFSET+3)
-#define CFG_FORMAT_V_OFFSET   (CFG_OVERLAY_V_OFFSET+4)
-#define CFG_DEBLUR_V_OFFSET   (CFG_OVERLAY_V_OFFSET+5)
-#define CFG_15BIT_V_OFFSET    (CFG_OVERLAY_V_OFFSET+6)
-#define CFG_GAMMA_V_OFFSET    (CFG_OVERLAY_V_OFFSET+7)
+menu_t home_menu = {
+    .type = HOME,
+    .header  = &home_header,
+    .overlay = &home_overlay,
+    .arrowshape = ARROW_RIGHT,
+    .current_selection = 0,
+    .number_selections = 6,
+    .hpos_selections = 0,
+    .leaves = {
+        {.id = (0+OVERLAY_V_OFFSET_WH), .leavetype = ISUBMENU, .submenu = &vinfo_screen},
+        {.id = (1+OVERLAY_V_OFFSET_WH), .leavetype = ISUBMENU, .submenu = NULL},
+        {.id = (2+OVERLAY_V_OFFSET_WH), .leavetype = ISUBMENU, .submenu = NULL},
+        {.id = (4+OVERLAY_V_OFFSET_WH), .leavetype = ISUBMENU, .submenu = &about_screen},
+        {.id = (5+OVERLAY_V_OFFSET_WH), .leavetype = ISUBMENU, .submenu = &thanks_screen},
+        {.id = (6+OVERLAY_V_OFFSET_WH), .leavetype = ISUBMENU, .submenu = &license_screen}
+    }
+};
 
-
-static const char *info_screen_header =  "Info-Screen\n"
-                                         "=============";
-static const char *info_screen_overlay = "* Video\n"
-                                         "  - Input:\n"
-                                         "  - Output:\n"
-                                         "  - Color Depth:\n"
-                                         "  - Format:\n"
-                                         "* 240p-DeBlur:\n"
-                                         "* Filter AddOn:";
-
-static const char *cfg_screen_header =   "Config-Status\n"
-                                         "=============";
-static const char *cfg_screen_overlay =  "* Linedoubling\n"
-                                         "  - LineX2:\n"
-                                         "  - 480i de-interlace (bob):\n"
-                                         "  - Scanlines:\n"
-                                         "* Output Format:\n"
-                                         "* 240p-DeBlur:\n"
-                                         "* 15bit Mode:\n"
-                                         "* Gamma Value:";
-
-static const char *OffOn[]        = {"Off","On"};
-static const char *VideoMode[]    = {"240p60","288p50","480i60","576i50","480p60","576p50"};
-static const char *VideoColor[]   = {"21bit","15bit"};
-static const char *VideoFormat[]  = {"RGBS","RGBS/RGsB","YPbPr"};
-static const char *DeBlur[]       = {"(estimated)","(forced)","(480i/576i)"};
-static const char *DeBlurCfg[]    = {"Auto","Off","Always"};
-static const char *FilterAddOn[]  = {"not installed","9.5MHz","18MHz","Filter bypassed"};
-static const char *SLStrength[]   = {"0%","25%","50%","100%"};
-static const char *GammaValue[]   = {"1.0","0.8","0.9","1.1","1.2"};
-
-char szText[VD_WIDTH];
-
-
-void print_home_screen()
+updateaction_t apply_command(cmd_t command, menu_t* *current_menu)
 {
-  VD_CLEAR_SCREEN;
-  sprintf(szText, "Top Left");
-  vd_print_string(0, 0, FONTCOLOR_RED, &szText[0]);
-  sprintf(szText, "Hello World! Your N64A here.  ");
-  szText[29] = 0x01;
-  vd_print_string(8, 3, FONTCOLOR_GREEN, &szText[0]);
-  sprintf(szText, "... press A to show video information");
-  vd_print_string(3, 5, FONTCOLOR_GREEN, &szText[0]);
-  sprintf(szText, "... press B to show configuration set");
-  vd_print_string(3, 6, FONTCOLOR_GREEN, &szText[0]);
-  sprintf(szText, "Bottom Right");
-  alt_u8 text_tpx = VD_WIDTH - strlen(szText);
-  vd_print_string(text_tpx, VD_HEIGHT-1, FONTCOLOR_RED, &szText[0]);
+  if ((command == CMD_OPEN_MENU) ||
+      (command == CMD_CLOSE_MENU)) {
+    while ((*current_menu)->parent) {
+      (*current_menu)->current_selection = 0;
+      *current_menu = (*current_menu)->parent;
+    }
+    (*current_menu)->current_selection = 0;
+    return ((command == CMD_OPEN_MENU) ? MENU_OPEN : MENU_CLOSE);
+  }
+
+  updateaction_t todo = NON;
+
+  if (((*current_menu)->type == TEXT) ||
+      ((*current_menu)->type == INFO)) {
+    switch (command) {
+      case CMD_MENU_LEFT:
+      case CMD_MENU_BACK:
+        *current_menu = (*current_menu)->parent;
+        return NEW_OVERLAY;
+        break;
+      default:
+        break;
+    }
+  }
+
+  if ((*current_menu)->type == HOME) {
+    switch (command) {
+      case CMD_MENU_RIGHT:
+      case CMD_MENU_ENTER:
+        if ((*current_menu)->leaves[(*current_menu)->current_selection].submenu) {
+          *current_menu = (*current_menu)->leaves[(*current_menu)->current_selection].submenu;
+          return NEW_OVERLAY;
+        }
+        break;
+      case CMD_MENU_LEFT:
+      case CMD_MENU_BACK:
+        (*current_menu)->current_selection = 0;
+        return MENU_CLOSE;
+      case CMD_MENU_DOWN:
+        (*current_menu)->current_selection++;
+        if ((*current_menu)->current_selection == (*current_menu)->number_selections)
+          (*current_menu)->current_selection = 0;
+        todo = NEW_SELECTION;
+        break;
+      case CMD_MENU_UP:
+        if ((*current_menu)->current_selection == 0)
+          (*current_menu)->current_selection =  (*current_menu)->number_selections - 1;
+        else
+          (*current_menu)->current_selection--;
+        todo = NEW_SELECTION;
+        break;
+      default:
+        break;
+    }
+  }
+
+  return todo;
 }
 
-void print_info_screen()
+void print_overlay(menu_t* current_menu)
 {
   VD_CLEAR_SCREEN;
-  vd_print_string(INFO_HEADER_H_OFFSET, INFO_HEADER_V_OFFSET, FONTCOLOR_RED, info_screen_header);
-  vd_print_string(INFO_OVERLAY_H_OFFSET, INFO_OVERLAY_V_OFFSET, FONTCOLOR_WHITE, info_screen_overlay);
+  alt_u8 overlay_h_offset = (current_menu->type == TEXT) ? TEXTOVERLAY_H_OFFSET : HOMEOVERLAY_H_OFFSET;
+  alt_u8 overlay_v_offset = 0;
+  if (current_menu->header) {
+    overlay_v_offset = OVERLAY_V_OFFSET_WH;
+    vd_print_string(HEADER_H_OFFSET,0,FONTCOLOR_WHITE,*current_menu->header);
+  }
+  vd_print_string(overlay_h_offset,overlay_v_offset,FONTCOLOR_WHITE,*current_menu->overlay);
+  switch (current_menu->type) {
+    case HOME:
+      vd_print_string(COPYRIGHT_H_OFFSET,COPYRIGHT_V_OFFSET,FONTCOLOR_RED,copyright_note);
+      vd_print_string(BTN_OVERLAY_H_OFFSET,BTN_OVERLAY_V_OFFSET,FONTCOLOR_GREEN,btn_overlay_0);
+      break;
+    default:
+      break;
+  }
 }
 
+void print_select(menu_t* current_menu)
+{
+  alt_u8 h_select = current_menu->hpos_selections;
+  alt_u8 v_run;
+  for (v_run = 0; v_run < current_menu->number_selections; v_run++)
+    if (v_run == current_menu->current_selection)
+      vd_print_char(h_select,current_menu->leaves[v_run].id,FONTCOLOR_WHITE,(char) current_menu->arrowshape);
+    else
+      vd_clear_char(h_select,current_menu->leaves[v_run].id);
+}
 
-void update_info_screen()
+void update_vinfo_screen()
 {
   alt_u8 str_select;
   static alt_u8 video_sd_ed;
@@ -196,65 +244,101 @@ void update_info_screen()
 }
 
 
-void print_cfg_screen()
-{
-  VD_CLEAR_SCREEN;
-  vd_print_string(CFG_HEADER_H_OFFSET, CFG_HEADER_V_OFFSET, FONTCOLOR_RED, cfg_screen_header);
-  vd_print_string(CFG_OVERLAY_H_OFFSET, CFG_OVERLAY_V_OFFSET, FONTCOLOR_WHITE, cfg_screen_overlay);
-}
+//#define INFO_HEADER_H_OFFSET  0
+//#define INFO_HEADER_V_OFFSET  0
+//
+//#define CFG_HEADER_H_OFFSET   INFO_HEADER_H_OFFSET
+//#define CFG_HEADER_V_OFFSET   INFO_HEADER_V_OFFSET
+//#define CFG_OVERLAY_H_OFFSET  INFO_OVERLAY_H_OFFSET
+//#define CFG_OVERLAY_V_OFFSET  INFO_OVERLAY_V_OFFSET
+//#define CFG_VALS_H_OFFSET     INFO_VALS_H_OFFSET
+//#define CFG_VALS_V_OFFSET     INFO_VALS_V_OFFSET
+//
+//
+//#define CFG_LINEX2_V_OFFSET   (CFG_OVERLAY_V_OFFSET+1)
+//#define CFG_480IBOB_V_OFFSET  (CFG_OVERLAY_V_OFFSET+2)
+//#define CFG_SLSTR_V_OFFSET    (CFG_OVERLAY_V_OFFSET+3)
+//#define CFG_FORMAT_V_OFFSET   (CFG_OVERLAY_V_OFFSET+4)
+//#define CFG_DEBLUR_V_OFFSET   (CFG_OVERLAY_V_OFFSET+5)
+//#define CFG_15BIT_V_OFFSET    (CFG_OVERLAY_V_OFFSET+6)
+//#define CFG_GAMMA_V_OFFSET    (CFG_OVERLAY_V_OFFSET+7)
 
 
-void update_cfg_screen()
-{
-  alt_u8 str_select;
-
-  // Linedoubling
-  str_select = (cfg_data & CFG_LINEX2_GETMASK) >> CFG_LINEX2_OFFSET;
-  vd_clear_lineend(CFG_VALS_H_OFFSET, CFG_LINEX2_V_OFFSET);
-  vd_print_string(CFG_VALS_H_OFFSET, CFG_LINEX2_V_OFFSET, FONTCOLOR_WHITE, OffOn[str_select]);
-
-  str_select = (cfg_data & CFG_480IBOB_GETMASK) >> CFG_480IBOB_OFFSET;
-  vd_clear_lineend(CFG_VALS_H_OFFSET, CFG_480IBOB_V_OFFSET);
-  if (info_data & INFO_480I_GETMASK)
-    vd_print_string(CFG_VALS_H_OFFSET, CFG_480IBOB_V_OFFSET, FONTCOLOR_RED, OffOn[str_select]);
-  else
-    vd_print_string(CFG_VALS_H_OFFSET, CFG_480IBOB_V_OFFSET, FONTCOLOR_WHITE, OffOn[str_select]);
-
-  str_select = (cfg_data & CFG_SLSTR_GETMASK) >> CFG_SLSTR_OFFSET;
-  vd_clear_lineend(CFG_VALS_H_OFFSET, CFG_SLSTR_V_OFFSET);
-  if ((cfg_data & CFG_LINEX2_GETMASK) && (~info_data & INFO_480I_GETMASK))
-    vd_print_string(CFG_VALS_H_OFFSET, CFG_SLSTR_V_OFFSET, FONTCOLOR_WHITE, SLStrength[str_select]);
-  else
-    vd_print_string(CFG_VALS_H_OFFSET, CFG_SLSTR_V_OFFSET, FONTCOLOR_RED, SLStrength[str_select]);
-
-  // Output Format
-  if (cfg_data & CFG_YPBPR_GETMASK)
-    str_select = 2;
-  else
-    str_select = (cfg_data & CFG_RGSB_GETMASK) >> CFG_RGSB_OFFSET;
-  vd_clear_lineend(CFG_VALS_H_OFFSET, CFG_FORMAT_V_OFFSET);
-  vd_print_string(CFG_VALS_H_OFFSET, CFG_FORMAT_V_OFFSET, FONTCOLOR_WHITE, VideoFormat[str_select]);
-
-  // 240p DeBlur
-  if (cfg_data & CFG_FORCEDEBLUR_GETMASK)
-    str_select = ((cfg_data & CFG_DEBLUR_GETMASK) >> CFG_DEBLUR_OFFSET) + 1;
-  else
-    str_select = 0;
-  vd_clear_lineend(CFG_VALS_H_OFFSET, CFG_DEBLUR_V_OFFSET);
-  if (info_data & INFO_480I_GETMASK)
-    vd_print_string(CFG_VALS_H_OFFSET, CFG_DEBLUR_V_OFFSET, FONTCOLOR_RED, DeBlurCfg[str_select]);
-  else
-    vd_print_string(CFG_VALS_H_OFFSET, CFG_DEBLUR_V_OFFSET, FONTCOLOR_WHITE, DeBlurCfg[str_select]);
-
-  // 15bit mode
-  str_select = (cfg_data & CFG_15BITMODE_GETMASK) >> CFG_15BITMODE_OFFSET;
-  vd_clear_lineend(CFG_VALS_H_OFFSET, CFG_15BIT_V_OFFSET);
-  vd_print_string(CFG_VALS_H_OFFSET, CFG_15BIT_V_OFFSET, FONTCOLOR_WHITE, OffOn[str_select]);
-
-  // Gamma
-  str_select = ((cfg_data & CFG_GAMMASEL_GETMASK) >> CFG_GAMMASEL_OFFSET) + 1;
-  if (!(cfg_data & CFG_USEGAMMA_GETMASK))
-    str_select = 0;
-  vd_clear_lineend(CFG_VALS_H_OFFSET, CFG_GAMMA_V_OFFSET);
-  vd_print_string(CFG_VALS_H_OFFSET, CFG_GAMMA_V_OFFSET, FONTCOLOR_WHITE, GammaValue[str_select]);
-}
+//
+//static const char *cfg_screen_header =   "Config-Status\n"
+//                                         "=============";
+//static const char *cfg_screen_overlay =  "* Linedoubling\n"
+//                                         "  - LineX2:\n"
+//                                         "  - 480i de-interlace (bob):\n"
+//                                         "  - Scanlines:\n"
+//                                         "* Output Format:\n"
+//                                         "* 240p-DeBlur:\n"
+//                                         "* 15bit Mode:\n"
+//                                         "* Gamma Value:";
+//
+//
+//char szText[VD_WIDTH];
+//
+//
+//void print_cfg_screen()
+//{
+//  VD_CLEAR_SCREEN;
+//  vd_print_string(CFG_HEADER_H_OFFSET, CFG_HEADER_V_OFFSET, FONTCOLOR_RED, cfg_screen_header);
+//  vd_print_string(CFG_OVERLAY_H_OFFSET, CFG_OVERLAY_V_OFFSET, FONTCOLOR_WHITE, cfg_screen_overlay);
+//}
+//
+//
+//void update_cfg_screen()
+//{
+//  alt_u8 str_select;
+//
+//  // Linedoubling
+//  str_select = (cfg_data & CFG_LINEX2_GETMASK) >> CFG_LINEX2_OFFSET;
+//  vd_clear_lineend(CFG_VALS_H_OFFSET, CFG_LINEX2_V_OFFSET);
+//  vd_print_string(CFG_VALS_H_OFFSET, CFG_LINEX2_V_OFFSET, FONTCOLOR_WHITE, OffOn[str_select]);
+//
+//  str_select = (cfg_data & CFG_480IBOB_GETMASK) >> CFG_480IBOB_OFFSET;
+//  vd_clear_lineend(CFG_VALS_H_OFFSET, CFG_480IBOB_V_OFFSET);
+//  if (info_data & INFO_480I_GETMASK)
+//    vd_print_string(CFG_VALS_H_OFFSET, CFG_480IBOB_V_OFFSET, FONTCOLOR_RED, OffOn[str_select]);
+//  else
+//    vd_print_string(CFG_VALS_H_OFFSET, CFG_480IBOB_V_OFFSET, FONTCOLOR_WHITE, OffOn[str_select]);
+//
+//  str_select = (cfg_data & CFG_SLSTR_GETMASK) >> CFG_SLSTR_OFFSET;
+//  vd_clear_lineend(CFG_VALS_H_OFFSET, CFG_SLSTR_V_OFFSET);
+//  if ((cfg_data & CFG_LINEX2_GETMASK) && (~info_data & INFO_480I_GETMASK))
+//    vd_print_string(CFG_VALS_H_OFFSET, CFG_SLSTR_V_OFFSET, FONTCOLOR_WHITE, SLStrength[str_select]);
+//  else
+//    vd_print_string(CFG_VALS_H_OFFSET, CFG_SLSTR_V_OFFSET, FONTCOLOR_RED, SLStrength[str_select]);
+//
+//  // Output Format
+//  if (cfg_data & CFG_YPBPR_GETMASK)
+//    str_select = 2;
+//  else
+//    str_select = (cfg_data & CFG_RGSB_GETMASK) >> CFG_RGSB_OFFSET;
+//  vd_clear_lineend(CFG_VALS_H_OFFSET, CFG_FORMAT_V_OFFSET);
+//  vd_print_string(CFG_VALS_H_OFFSET, CFG_FORMAT_V_OFFSET, FONTCOLOR_WHITE, VideoFormat[str_select]);
+//
+//  // 240p DeBlur
+//  if (cfg_data & CFG_FORCEDEBLUR_GETMASK)
+//    str_select = ((cfg_data & CFG_DEBLUR_GETMASK) >> CFG_DEBLUR_OFFSET) + 1;
+//  else
+//    str_select = 0;
+//  vd_clear_lineend(CFG_VALS_H_OFFSET, CFG_DEBLUR_V_OFFSET);
+//  if (info_data & INFO_480I_GETMASK)
+//    vd_print_string(CFG_VALS_H_OFFSET, CFG_DEBLUR_V_OFFSET, FONTCOLOR_RED, DeBlurCfg[str_select]);
+//  else
+//    vd_print_string(CFG_VALS_H_OFFSET, CFG_DEBLUR_V_OFFSET, FONTCOLOR_WHITE, DeBlurCfg[str_select]);
+//
+//  // 15bit mode
+//  str_select = (cfg_data & CFG_15BITMODE_GETMASK) >> CFG_15BITMODE_OFFSET;
+//  vd_clear_lineend(CFG_VALS_H_OFFSET, CFG_15BIT_V_OFFSET);
+//  vd_print_string(CFG_VALS_H_OFFSET, CFG_15BIT_V_OFFSET, FONTCOLOR_WHITE, OffOn[str_select]);
+//
+//  // Gamma
+//  str_select = ((cfg_data & CFG_GAMMASEL_GETMASK) >> CFG_GAMMASEL_OFFSET) + 1;
+//  if (!(cfg_data & CFG_USEGAMMA_GETMASK))
+//    str_select = 0;
+//  vd_clear_lineend(CFG_VALS_H_OFFSET, CFG_GAMMA_V_OFFSET);
+//  vd_print_string(CFG_VALS_H_OFFSET, CFG_GAMMA_V_OFFSET, FONTCOLOR_WHITE, GammaValue[str_select]);
+//}

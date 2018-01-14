@@ -34,7 +34,7 @@
 
 
 // define virtual display (memory mapped)
-#define VD_WIDTH  48
+#define VD_WIDTH  49
 #define VD_HEIGHT 12
 
 // define some masks and shifts
@@ -69,6 +69,12 @@
 #define FONTCOLOR_CYAN    0x6
 #define FONTCOLOR_MAGENTA 0x7
 
+// some special chars
+#define TRIANGLE_RIGTH  0x10
+#define TRIANGLE_LEFT   0x11
+#define ARROW_RIGHT     0x1a
+#define ARROW_LEFT      0x1b
+
 // some macros
 #define VD_SET_ADDR(h,v) IOWR_ALTERA_AVALON_PIO_DATA(TXT_WRADDR_BASE,((h<<VD_WRADDR_HSHIFT_OFFSET) & VD_WRADDR_H_ANDMASK) | (v & VD_WRADDR_V_ANDMASK))
 #define VD_SET_DATA(c,f) IOWR_ALTERA_AVALON_PIO_DATA(TXT_WRDATA_BASE,((c<<VD_WRDATA_COLOR_OFFSET) & VD_WRDATA_COLOR_ANDMASK) | (f & VD_WRDATA_FONT_ANDMASK))
@@ -85,6 +91,8 @@ static int inline vd_clear_columnend (alt_u8 horiz_offset, alt_u8 vert_offset_st
   { return vd_clear_area(horiz_offset, horiz_offset, vert_offset_start, VD_HEIGHT-1); }
 static int inline vd_clear_fullcolumn (alt_u8 horiz_offset)
   { return vd_clear_area(horiz_offset, horiz_offset, 0, VD_HEIGHT-1); }
+static int inline vd_clear_char (alt_u8 horiz_offset, alt_u8 vert_offset)
+  { return vd_clear_area(horiz_offset, horiz_offset, vert_offset, vert_offset); }
 int vd_print_string(alt_u8 horiz_offset, alt_u8 vert_offset, alt_u8 color, const char *string);
 int vd_print_char(alt_u8 horiz_offset, alt_u8 vert_offset, alt_u8 color, const char character);
 void vd_write_data();

@@ -32,20 +32,67 @@
 #include "alt_types.h"
 #include "altera_avalon_pio_regs.h"
 #include "system.h"
+#include "config.h"
+
 
 typedef enum {
-  HOME_SCR = 0,
-  INFO_SCREEN,
-  CFG_SCREEN
+  NON = 0,
+  MENU_OPEN,
+  MENU_CLOSE,
+  NEW_OVERLAY,
+  NEW_SELECTION,
+  NEW_CONF_VALUE
+} updateaction_t;
+
+typedef enum {
+  HOME = 0,
+  INFO,
+  CONFIG,
+  TEXT
 } screentype_t;
 
-extern char szText[];
+typedef enum {
+  ICONFIG,
+  ISUBMENU,
+  IFUNC
+} leavetype_t;
 
-void print_home_screen();
-void print_info_screen();
-void update_info_screen();
-void print_cfg_screen();
-void update_cfg_screen();
+typedef struct {
+  alt_u8      id;
+  leavetype_t leavetype;
+  union {
+    struct menu     *submenu;
+    config_t        *config_value;
+  };
+} leaves_t;
+
+typedef struct menu {
+  const screentype_t  type;
+  const char*         *header;
+  const char*         *overlay;
+  struct menu         *parent;
+  const alt_u8        arrowshape;
+  alt_u8              current_selection;
+  const alt_u8        number_selections;
+  alt_u8              hpos_selections;
+  leaves_t            leaves[];
+
+} menu_t;
+
+extern menu_t home_menu;
+
+updateaction_t apply_command(cmd_t command, menu_t** current_menu);
+void print_overlay(menu_t* current_menu);
+void print_select(menu_t* current_menu);
+void update_vinfo_screen();
+
+
+//extern char szText[];
+//
+//void print_home_screen();
+//void print_info_screen();
+//void print_cfg_screen();
+//void update_cfg_screen();
 
 
 #endif /* MENU_H_ */
