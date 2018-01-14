@@ -139,6 +139,15 @@ parameter vdata_width_o = 4 + 3*color_width_o;
   `define OSD_WINDOW_BG_COLOR 6'b000001
 
   // define text color
+  `define FONTCOLOR_NON          4'h0
+  `define FONTCOLOR_WHITE        4'h1
+  `define FONTCOLOR_RED          4'h2
+  `define FONTCOLOR_GREEN        4'h3
+  `define FONTCOLOR_BLUE         4'h4
+  `define FONTCOLOR_YELLOW       4'h5
+  `define FONTCOLOR_CYAN         4'h6
+  `define FONTCOLOR_MAGENTA      4'h7
+
   `define OSD_TXT_COLOR_WHITE   21'h1FFFFF
   `define OSD_TXT_COLOR_RED     21'h1FC000
   `define OSD_TXT_COLOR_GREEN   21'h003F80

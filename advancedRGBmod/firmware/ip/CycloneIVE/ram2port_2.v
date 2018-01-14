@@ -4,7 +4,7 @@
 // MODULE: altsyncram 
 
 // ============================================================
-// File Name: ram2port_1.v
+// File Name: ram2port_2.v
 // Megafunction Name(s):
 // 			altsyncram
 //
@@ -36,7 +36,7 @@
 // synopsys translate_off
 `timescale 1 ps / 1 ps
 // synopsys translate_on
-module ram2port_1 (
+module ram2port_2 (
 	data,
 	rdaddress,
 	rdclock,
@@ -105,7 +105,6 @@ module ram2port_1 (
 		altsyncram_component.outdata_aclr_b = "NONE",
 		altsyncram_component.outdata_reg_b = "CLOCK1",
 		altsyncram_component.power_up_uninitialized = "FALSE",
-		altsyncram_component.ram_block_type = "M9K",
 		altsyncram_component.rdcontrol_reg_b = "CLOCK1",
 		altsyncram_component.widthad_a = 10,
 		altsyncram_component.widthad_b = 10,
@@ -155,12 +154,12 @@ endmodule
 // Retrieval info: PRIVATE: OPERATION_MODE NUMERIC "2"
 // Retrieval info: PRIVATE: OUTDATA_ACLR_B NUMERIC "0"
 // Retrieval info: PRIVATE: OUTDATA_REG_B NUMERIC "1"
-// Retrieval info: PRIVATE: RAM_BLOCK_TYPE NUMERIC "2"
+// Retrieval info: PRIVATE: RAM_BLOCK_TYPE NUMERIC "0"
 // Retrieval info: PRIVATE: READ_DURING_WRITE_MODE_MIXED_PORTS NUMERIC "2"
 // Retrieval info: PRIVATE: READ_DURING_WRITE_MODE_PORT_A NUMERIC "3"
 // Retrieval info: PRIVATE: READ_DURING_WRITE_MODE_PORT_B NUMERIC "3"
 // Retrieval info: PRIVATE: REGdata NUMERIC "1"
-// Retrieval info: PRIVATE: REGq NUMERIC "0"
+// Retrieval info: PRIVATE: REGq NUMERIC "1"
 // Retrieval info: PRIVATE: REGrdaddress NUMERIC "1"
 // Retrieval info: PRIVATE: REGrren NUMERIC "1"
 // Retrieval info: PRIVATE: REGwraddress NUMERIC "1"
@@ -192,7 +191,6 @@ endmodule
 // Retrieval info: CONSTANT: OUTDATA_ACLR_B STRING "NONE"
 // Retrieval info: CONSTANT: OUTDATA_REG_B STRING "CLOCK1"
 // Retrieval info: CONSTANT: POWER_UP_UNINITIALIZED STRING "FALSE"
-// Retrieval info: CONSTANT: RAM_BLOCK_TYPE STRING "M9K"
 // Retrieval info: CONSTANT: RDCONTROL_REG_B STRING "CLOCK1"
 // Retrieval info: CONSTANT: WIDTHAD_A NUMERIC "10"
 // Retrieval info: CONSTANT: WIDTHAD_B NUMERIC "10"
@@ -215,10 +213,10 @@ endmodule
 // Retrieval info: CONNECT: @rden_b 0 0 0 0 rden 0 0 0 0
 // Retrieval info: CONNECT: @wren_a 0 0 0 0 wren 0 0 0 0
 // Retrieval info: CONNECT: q 0 0 8 0 @q_b 0 0 8 0
-// Retrieval info: GEN_FILE: TYPE_NORMAL ram2port_1.v TRUE
-// Retrieval info: GEN_FILE: TYPE_NORMAL ram2port_1.inc FALSE
-// Retrieval info: GEN_FILE: TYPE_NORMAL ram2port_1.cmp FALSE
-// Retrieval info: GEN_FILE: TYPE_NORMAL ram2port_1.bsf FALSE
-// Retrieval info: GEN_FILE: TYPE_NORMAL ram2port_1_inst.v FALSE
-// Retrieval info: GEN_FILE: TYPE_NORMAL ram2port_1_bb.v FALSE
+// Retrieval info: GEN_FILE: TYPE_NORMAL ram2port_2.v TRUE
+// Retrieval info: GEN_FILE: TYPE_NORMAL ram2port_2.inc FALSE
+// Retrieval info: GEN_FILE: TYPE_NORMAL ram2port_2.cmp FALSE
+// Retrieval info: GEN_FILE: TYPE_NORMAL ram2port_2.bsf FALSE
+// Retrieval info: GEN_FILE: TYPE_NORMAL ram2port_2_inst.v FALSE
+// Retrieval info: GEN_FILE: TYPE_NORMAL ram2port_2_bb.v FALSE
 // Retrieval info: LIB_FILE: altera_mf

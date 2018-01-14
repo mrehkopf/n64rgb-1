@@ -33,19 +33,26 @@
 #include <unistd.h>
 
 
-#define TEXTOVERLAY_H_OFFSET   0
-#define HEADER_H_OFFSET       10
-#define OVERLAY_V_OFFSET_WH    2
-#define HOMEOVERLAY_H_OFFSET   2
+#define HEADER_UNDERLINE      0x08
+#define HOME_LOWSEC_UNDERLINE 0x00
+#define HEADER_H_OFFSET       0
+#define OVERLAY_V_OFFSET_WH   2
+#define TEXTOVERLAY_H_OFFSET  0
+#define HOMEOVERLAY_H_OFFSET  3
 
-#define COPYRIGHT_H_OFFSET  (VD_WIDTH - 30)
-#define COPYRIGHT_V_OFFSET  (VD_HEIGHT - 1)
+#define COPYRIGHT_SIGN          0x0A
+#define COPYRIGHT_H_OFFSET      (VD_WIDTH - 15)
+#define COPYRIGHT_V_OFFSET      (VD_HEIGHT - 1)
+#define COPYRIGHT_SIGN_H_OFFSET (COPYRIGHT_H_OFFSET - 2)
 
-#define VERSION_H_OFFSET 26
+#define CR_SIGN_LICENSE_H_OFFSET  15
+#define CR_SIGN_LICENSE_V_OFFSET   2
+
+#define VERSION_H_OFFSET 20
 #define VERSION_V_OFFSET  5
 
 #define BTN_OVERLAY_H_OFFSET  (VD_WIDTH - 12)
-#define BTN_OVERLAY_V_OFFSET  (VD_HEIGHT - 4)
+#define BTN_OVERLAY_V_OFFSET  (VD_HEIGHT - 5)
 
 #define INFO_OVERLAY_H_OFFSET 2
 #define INFO_OVERLAY_V_OFFSET 2
@@ -61,15 +68,14 @@
 
 
 static const char *copyright_note =
-    "N64 Advanced ё 2018 borti4938"; /* 29 chars */
+    "2018 borti4938"; /* 14 chars */
 
 static const char *btn_overlay_0 =
     "A ... Enter\n"
     "B ... Close";
 
 static const char *vinfo_header =
-    "N64 Advanced - Video-Info\n"
-    "ооооооооооооооооооооооооо";
+    "N64 Advanced - Video-Info";
 static const char *vinfo_overlay =
     "* Video\n"
     "  - Input:\n"
@@ -82,9 +88,9 @@ static const char *vinfo_overlay =
 static const char *thanks_overlay =
     "The N64 RGB project would not be what it is with\n"
     "without the contributions many other people.\n"
-    "I want to point out here especially:\n"
-    " - viletim :  First public DIY N64 DAC project\n"
-    " - Ikari_01:  Initial implementation of PAL/NTSC\n"
+    "Here, I want to point out especially:\n"
+    " - viletim  : First public DIY N64 DAC project\n"
+    " - Ikari_01 : Initial implementation of PAL/NTSC\n"
     "              as well as 480i/576i detection\n"
     " - sftwninja: Pushing me to the N64A project\n"
     " - Xenogears: Sponsoring of prototypes\n\n"
@@ -98,8 +104,8 @@ static const char *about_overlay =
     "PCB files, HDL and SW sources are provided\n"
     "to you FOR FREE!\n\n"
     "Your version\n"
-    " - firmware (HDL)       :\n"
-    " - firmware (SW)        :\n\n"
+    " - firmware (HDL):\n"
+    " - firmware (SW) :\n\n"
     "Questions / Support:\n"
     " - GitHub: <https://github.com/borti4938/n64rgb>\n"
     " - Email:  <borti4938@gmx.de>";
@@ -108,7 +114,7 @@ static const char *about_overlay =
 static const char *license_overlay =
     "The N64Advanced is part of the\n"
     "N64 RGB/YPbPr DAC project\n"
-    "     Copyright ё 2015 - 2018 Peter Bartmann\n"
+    "     Copyright   2015 - 2018 Peter Bartmann\n"
     "This project is published under GNU GPL v3.0 or\n"
     "later. You should have received a copy of the\n"
     "GNU General Public License along with this\n"
@@ -119,8 +125,7 @@ static const char *license_overlay =
   /* 123456789012345678901234567890123456789012345678  */
 
 static const char *home_header =
-    "N64 Advanced - Main Menu\n"
-    "ооооооооооооооооооооооооо";
+    "N64 Advanced - Main Menu";
 static const char *home_overlay =
     "[Video-Info]\n"
     "[Configuration]\n"

@@ -85,24 +85,18 @@ void vd_write_data()
 {
   alt_u8 wrctrl;
 
-  wrctrl = IORD_ALTERA_AVALON_PIO_DATA(TXT_WRCTRL_BASE) | VD_WRCTRL_WREN_SETMASK;
-  IOWR_ALTERA_AVALON_PIO_DATA(TXT_WRCTRL_BASE,wrctrl);
+  wrctrl = IORD_ALTERA_AVALON_PIO_DATA(VD_WRCTRL_BASE) | VD_WRCTRL_WREN_SETMASK;
+  IOWR_ALTERA_AVALON_PIO_DATA(VD_WRCTRL_BASE,wrctrl);
   wrctrl = wrctrl & VD_WRCTRL_WREN_CLRMASK;
-  IOWR_ALTERA_AVALON_PIO_DATA(TXT_WRCTRL_BASE,wrctrl);
+  IOWR_ALTERA_AVALON_PIO_DATA(VD_WRCTRL_BASE,wrctrl);
 }
 
-void vd_mute()
-{
-  alt_u8 wrctrl;
-
-  wrctrl = IORD_ALTERA_AVALON_PIO_DATA(TXT_WRCTRL_BASE) | VD_WRCTRL_ACLR_SETMASK;
-  IOWR_ALTERA_AVALON_PIO_DATA(TXT_WRCTRL_BASE,wrctrl);
-}
-
-void vd_unmute()
-{
-  alt_u8 wrctrl;
-
-  wrctrl = IORD_ALTERA_AVALON_PIO_DATA(TXT_WRCTRL_BASE) & VD_WRCTRL_ACLR_CLRMASK;
-  IOWR_ALTERA_AVALON_PIO_DATA(TXT_WRCTRL_BASE,wrctrl);
-}
+//void vd_mute()
+//{
+//  // ToDo
+//}
+//
+//void vd_unmute()
+//{
+//  // ToDo
+//}

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <EnsembleReport name="system" kind="system" version="1.0" fabric="QSYS">
  <!-- Format version 17.1 593 (Future versions may contain additional information.) -->
- <!-- 2018.01.14.14:11:14 -->
+ <!-- 2018.01.14.21:42:43 -->
  <!-- A collection of modules and connections -->
  <parameter name="AUTO_GENERATION_ID">
   <type>java.lang.Integer</type>
-  <value>1515935473</value>
+  <value>1515962562</value>
   <derived>false</derived>
   <enabled>true</enabled>
   <visible>false</visible>
@@ -1116,21 +1116,21 @@ parameters are a RESULT of the module parameters. -->
    </clockDomainMember>
    <clockDomainMember>
     <isBridge>false</isBridge>
-    <moduleName>txt_wrdata</moduleName>
+    <moduleName>vd_wrdata</moduleName>
     <slaveName>clk</slaveName>
-    <name>txt_wrdata.clk</name>
+    <name>vd_wrdata.clk</name>
    </clockDomainMember>
    <clockDomainMember>
     <isBridge>false</isBridge>
-    <moduleName>txt_wraddr</moduleName>
+    <moduleName>vd_wraddr</moduleName>
     <slaveName>clk</slaveName>
-    <name>txt_wraddr.clk</name>
+    <name>vd_wraddr.clk</name>
    </clockDomainMember>
    <clockDomainMember>
     <isBridge>false</isBridge>
-    <moduleName>txt_wrctrl</moduleName>
+    <moduleName>vd_wrctrl</moduleName>
     <slaveName>clk</slaveName>
-    <name>txt_wrctrl.clk</name>
+    <name>vd_wrctrl.clk</name>
    </clockDomainMember>
    <clockDomainMember>
     <isBridge>false</isBridge>
@@ -5873,7 +5873,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="dataSlaveMapParam">
    <type>java.lang.String</type>
-   <value><![CDATA[<address-map><slave name='onchip_memory2_0.s1' start='0x8000' end='0xF800' type='altera_avalon_onchip_memory2.s1' /><slave name='nios2_gen2_0.debug_mem_slave' start='0x10800' end='0x11000' type='altera_nios2_gen2.debug_mem_slave' /><slave name='default_cfg_set_in.s1' start='0x11000' end='0x11010' type='altera_avalon_pio.s1' /><slave name='info_set_in.s1' start='0x11010' end='0x11020' type='altera_avalon_pio.s1' /><slave name='cfg_set_out.s1' start='0x11020' end='0x11030' type='altera_avalon_pio.s1' /><slave name='ctrl_data_in.s1' start='0x11030' end='0x11040' type='altera_avalon_pio.s1' /><slave name='txt_wrctrl.s1' start='0x11040' end='0x11050' type='altera_avalon_pio.s1' /><slave name='txt_wraddr.s1' start='0x11050' end='0x11060' type='altera_avalon_pio.s1' /><slave name='txt_wrdata.s1' start='0x11060' end='0x11070' type='altera_avalon_pio.s1' /><slave name='jtag_uart_0.avalon_jtag_slave' start='0x11070' end='0x11078' type='altera_avalon_jtag_uart.avalon_jtag_slave' /></address-map>]]></value>
+   <value><![CDATA[<address-map><slave name='onchip_memory2_0.s1' start='0x8000' end='0xF800' type='altera_avalon_onchip_memory2.s1' /><slave name='nios2_gen2_0.debug_mem_slave' start='0x10800' end='0x11000' type='altera_nios2_gen2.debug_mem_slave' /><slave name='default_cfg_set_in.s1' start='0x11000' end='0x11010' type='altera_avalon_pio.s1' /><slave name='info_set_in.s1' start='0x11010' end='0x11020' type='altera_avalon_pio.s1' /><slave name='cfg_set_out.s1' start='0x11020' end='0x11030' type='altera_avalon_pio.s1' /><slave name='ctrl_data_in.s1' start='0x11030' end='0x11040' type='altera_avalon_pio.s1' /><slave name='vd_wrctrl.s1' start='0x11040' end='0x11050' type='altera_avalon_pio.s1' /><slave name='vd_wraddr.s1' start='0x11050' end='0x11060' type='altera_avalon_pio.s1' /><slave name='vd_wrdata.s1' start='0x11060' end='0x11070' type='altera_avalon_pio.s1' /><slave name='jtag_uart_0.avalon_jtag_slave' start='0x11070' end='0x11078' type='altera_avalon_jtag_uart.avalon_jtag_slave' /></address-map>]]></value>
    <derived>false</derived>
    <enabled>true</enabled>
    <visible>false</visible>
@@ -6565,25 +6565,25 @@ parameters are a RESULT of the module parameters. -->
    </memoryBlock>
    <memoryBlock>
     <isBridge>false</isBridge>
-    <moduleName>txt_wrdata</moduleName>
+    <moduleName>vd_wrdata</moduleName>
     <slaveName>s1</slaveName>
-    <name>txt_wrdata.s1</name>
+    <name>vd_wrdata.s1</name>
     <baseAddress>69728</baseAddress>
     <span>16</span>
    </memoryBlock>
    <memoryBlock>
     <isBridge>false</isBridge>
-    <moduleName>txt_wraddr</moduleName>
+    <moduleName>vd_wraddr</moduleName>
     <slaveName>s1</slaveName>
-    <name>txt_wraddr.s1</name>
+    <name>vd_wraddr.s1</name>
     <baseAddress>69712</baseAddress>
     <span>16</span>
    </memoryBlock>
    <memoryBlock>
     <isBridge>false</isBridge>
-    <moduleName>txt_wrctrl</moduleName>
+    <moduleName>vd_wrctrl</moduleName>
     <slaveName>s1</slaveName>
-    <name>txt_wrctrl.s1</name>
+    <name>vd_wrctrl.s1</name>
     <baseAddress>69696</baseAddress>
     <span>16</span>
    </memoryBlock>
@@ -8393,10 +8393,10 @@ parameters are a RESULT of the module parameters. -->
   </interface>
  </module>
  <module
-   name="txt_wraddr"
+   name="vd_wraddr"
    kind="altera_avalon_pio"
    version="17.1"
-   path="txt_wraddr">
+   path="vd_wraddr">
   <!-- Describes a single module. Module parameters are
 the requested settings for a module instance. -->
   <assignment>
@@ -9171,10 +9171,10 @@ parameters are a RESULT of the module parameters. -->
   </interface>
  </module>
  <module
-   name="txt_wrctrl"
+   name="vd_wrctrl"
    kind="altera_avalon_pio"
    version="17.1"
-   path="txt_wrctrl">
+   path="vd_wrctrl">
   <!-- Describes a single module. Module parameters are
 the requested settings for a module instance. -->
   <assignment>
@@ -9949,10 +9949,10 @@ parameters are a RESULT of the module parameters. -->
   </interface>
  </module>
  <module
-   name="txt_wrdata"
+   name="vd_wrdata"
    kind="altera_avalon_pio"
    version="17.1"
-   path="txt_wrdata">
+   path="vd_wrdata">
   <!-- Describes a single module. Module parameters are
 the requested settings for a module instance. -->
   <assignment>
@@ -9969,7 +9969,7 @@ the requested settings for a module instance. -->
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.DATA_WIDTH</name>
-   <value>11</value>
+   <value>13</value>
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.DO_TEST_BENCH_WIRING</name>
@@ -10021,7 +10021,7 @@ the requested settings for a module instance. -->
   </assignment>
   <assignment>
    <name>embeddedsw.dts.params.altr,gpio-bank-width</name>
-   <value>11</value>
+   <value>13</value>
   </assignment>
   <assignment>
    <name>embeddedsw.dts.params.resetvalue</name>
@@ -10113,7 +10113,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="width">
    <type>int</type>
-   <value>11</value>
+   <value>13</value>
    <derived>false</derived>
    <enabled>true</enabled>
    <visible>true</visible>
@@ -10721,7 +10721,7 @@ parameters are a RESULT of the module parameters. -->
    <port>
     <name>out_port</name>
     <direction>Output</direction>
-    <width>11</width>
+    <width>13</width>
     <role>export</role>
    </port>
   </interface>
@@ -10880,11 +10880,11 @@ parameters are a RESULT of the module parameters. -->
   <endConnectionPoint>s1</endConnectionPoint>
  </connection>
  <connection
-   name="nios2_gen2_0.data_master/txt_wrdata.s1"
+   name="nios2_gen2_0.data_master/vd_wrdata.s1"
    kind="avalon"
    version="17.1"
    start="nios2_gen2_0.data_master"
-   end="txt_wrdata.s1">
+   end="vd_wrdata.s1">
   <parameter name="arbitrationPriority">
    <type>int</type>
    <value>1</value>
@@ -10927,15 +10927,15 @@ parameters are a RESULT of the module parameters. -->
   </parameter>
   <startModule>nios2_gen2_0</startModule>
   <startConnectionPoint>data_master</startConnectionPoint>
-  <endModule>txt_wrdata</endModule>
+  <endModule>vd_wrdata</endModule>
   <endConnectionPoint>s1</endConnectionPoint>
  </connection>
  <connection
-   name="nios2_gen2_0.data_master/txt_wraddr.s1"
+   name="nios2_gen2_0.data_master/vd_wraddr.s1"
    kind="avalon"
    version="17.1"
    start="nios2_gen2_0.data_master"
-   end="txt_wraddr.s1">
+   end="vd_wraddr.s1">
   <parameter name="arbitrationPriority">
    <type>int</type>
    <value>1</value>
@@ -10978,15 +10978,15 @@ parameters are a RESULT of the module parameters. -->
   </parameter>
   <startModule>nios2_gen2_0</startModule>
   <startConnectionPoint>data_master</startConnectionPoint>
-  <endModule>txt_wraddr</endModule>
+  <endModule>vd_wraddr</endModule>
   <endConnectionPoint>s1</endConnectionPoint>
  </connection>
  <connection
-   name="nios2_gen2_0.data_master/txt_wrctrl.s1"
+   name="nios2_gen2_0.data_master/vd_wrctrl.s1"
    kind="avalon"
    version="17.1"
    start="nios2_gen2_0.data_master"
-   end="txt_wrctrl.s1">
+   end="vd_wrctrl.s1">
   <parameter name="arbitrationPriority">
    <type>int</type>
    <value>1</value>
@@ -11029,7 +11029,7 @@ parameters are a RESULT of the module parameters. -->
   </parameter>
   <startModule>nios2_gen2_0</startModule>
   <startConnectionPoint>data_master</startConnectionPoint>
-  <endModule>txt_wrctrl</endModule>
+  <endModule>vd_wrctrl</endModule>
   <endConnectionPoint>s1</endConnectionPoint>
  </connection>
  <connection
@@ -11366,11 +11366,11 @@ parameters are a RESULT of the module parameters. -->
   <endConnectionPoint>clk</endConnectionPoint>
  </connection>
  <connection
-   name="clk_0.clk/txt_wrdata.clk"
+   name="clk_0.clk/vd_wrdata.clk"
    kind="clock"
    version="17.1"
    start="clk_0.clk"
-   end="txt_wrdata.clk">
+   end="vd_wrdata.clk">
   <parameter name="deviceFamily">
    <type>java.lang.String</type>
    <value>UNKNOWN</value>
@@ -11389,15 +11389,15 @@ parameters are a RESULT of the module parameters. -->
   </parameter>
   <startModule>clk_0</startModule>
   <startConnectionPoint>clk</startConnectionPoint>
-  <endModule>txt_wrdata</endModule>
+  <endModule>vd_wrdata</endModule>
   <endConnectionPoint>clk</endConnectionPoint>
  </connection>
  <connection
-   name="clk_0.clk/txt_wraddr.clk"
+   name="clk_0.clk/vd_wraddr.clk"
    kind="clock"
    version="17.1"
    start="clk_0.clk"
-   end="txt_wraddr.clk">
+   end="vd_wraddr.clk">
   <parameter name="deviceFamily">
    <type>java.lang.String</type>
    <value>UNKNOWN</value>
@@ -11416,15 +11416,15 @@ parameters are a RESULT of the module parameters. -->
   </parameter>
   <startModule>clk_0</startModule>
   <startConnectionPoint>clk</startConnectionPoint>
-  <endModule>txt_wraddr</endModule>
+  <endModule>vd_wraddr</endModule>
   <endConnectionPoint>clk</endConnectionPoint>
  </connection>
  <connection
-   name="clk_0.clk/txt_wrctrl.clk"
+   name="clk_0.clk/vd_wrctrl.clk"
    kind="clock"
    version="17.1"
    start="clk_0.clk"
-   end="txt_wrctrl.clk">
+   end="vd_wrctrl.clk">
   <parameter name="deviceFamily">
    <type>java.lang.String</type>
    <value>UNKNOWN</value>
@@ -11443,7 +11443,7 @@ parameters are a RESULT of the module parameters. -->
   </parameter>
   <startModule>clk_0</startModule>
   <startConnectionPoint>clk</startConnectionPoint>
-  <endModule>txt_wrctrl</endModule>
+  <endModule>vd_wrctrl</endModule>
   <endConnectionPoint>clk</endConnectionPoint>
  </connection>
  <connection
@@ -11671,11 +11671,11 @@ parameters are a RESULT of the module parameters. -->
   <endConnectionPoint>reset</endConnectionPoint>
  </connection>
  <connection
-   name="clk_0.clk_reset/txt_wrdata.reset"
+   name="clk_0.clk_reset/vd_wrdata.reset"
    kind="reset"
    version="17.1"
    start="clk_0.clk_reset"
-   end="txt_wrdata.reset">
+   end="vd_wrdata.reset">
   <parameter name="deviceFamily">
    <type>java.lang.String</type>
    <value>UNKNOWN</value>
@@ -11694,15 +11694,15 @@ parameters are a RESULT of the module parameters. -->
   </parameter>
   <startModule>clk_0</startModule>
   <startConnectionPoint>clk_reset</startConnectionPoint>
-  <endModule>txt_wrdata</endModule>
+  <endModule>vd_wrdata</endModule>
   <endConnectionPoint>reset</endConnectionPoint>
  </connection>
  <connection
-   name="clk_0.clk_reset/txt_wraddr.reset"
+   name="clk_0.clk_reset/vd_wraddr.reset"
    kind="reset"
    version="17.1"
    start="clk_0.clk_reset"
-   end="txt_wraddr.reset">
+   end="vd_wraddr.reset">
   <parameter name="deviceFamily">
    <type>java.lang.String</type>
    <value>UNKNOWN</value>
@@ -11721,15 +11721,15 @@ parameters are a RESULT of the module parameters. -->
   </parameter>
   <startModule>clk_0</startModule>
   <startConnectionPoint>clk_reset</startConnectionPoint>
-  <endModule>txt_wraddr</endModule>
+  <endModule>vd_wraddr</endModule>
   <endConnectionPoint>reset</endConnectionPoint>
  </connection>
  <connection
-   name="clk_0.clk_reset/txt_wrctrl.reset"
+   name="clk_0.clk_reset/vd_wrctrl.reset"
    kind="reset"
    version="17.1"
    start="clk_0.clk_reset"
-   end="txt_wrctrl.reset">
+   end="vd_wrctrl.reset">
   <parameter name="deviceFamily">
    <type>java.lang.String</type>
    <value>UNKNOWN</value>
@@ -11748,7 +11748,7 @@ parameters are a RESULT of the module parameters. -->
   </parameter>
   <startModule>clk_0</startModule>
   <startConnectionPoint>clk_reset</startConnectionPoint>
-  <endModule>txt_wrctrl</endModule>
+  <endModule>vd_wrctrl</endModule>
   <endConnectionPoint>reset</endConnectionPoint>
  </connection>
  <connection

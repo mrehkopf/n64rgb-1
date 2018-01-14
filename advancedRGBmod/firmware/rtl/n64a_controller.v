@@ -116,18 +116,18 @@ always @(posedge CLK_16k) begin
   end
 end
 
-wire [ 9:0] txt_wraddr;
-wire [ 1:0] txt_wrctrl;
-wire [10:0] txt_wrdata;
+wire [ 9:0] vd_wraddr;
+wire [ 1:0] vd_wrctrl;
+wire [12:0] vd_wrdata;
 
 wire [15:0] SysConfigSet;
 
 system system_u(
   .clk_clk(CLK_100M),
   .reset_reset_n(nRST_pll),
-  .txt_wraddr_export(txt_wraddr),
-  .txt_wrctrl_export(txt_wrctrl),
-  .txt_wrdata_export(txt_wrdata),
+  .vd_wraddr_export(vd_wraddr),
+  .vd_wrctrl_export(vd_wrctrl),
+  .vd_wrdata_export(vd_wrdata),
   .ctrl_data_in_export({ctrl_analog_data,ctrl_digital_data[1]}),
   .default_cfg_set_in_export(DefaultConfigSet),
   .cfg_set_out_export(SysConfigSet),
@@ -377,35 +377,46 @@ end
 wire [5:0] txt_xrdaddr = txt_h_cnt[8:3];
 wire [3:0] txt_yrdaddr = txt_v_cnt[7:4];
 
-wire [2:0] font_color_tmp;
-wire [7:0] font_addr_lsb;
+wire [1:0] background_tmp;
+wire [3:0] font_color_tmp;
+wire [6:0] font_addr_lsb;
 
-ram2port_1 virt_display_u(
-  .data(txt_wrdata),
-  .rd_aclr(txt_wrctrl[1]),
+ram2port_1 vd_text_u(
+  .data(vd_wrdata[6:0]),
   .rdaddress({txt_xrdaddr,txt_yrdaddr}),
   .rdclock(~nCLK),
   .rden(en_txtrd[0]),
-  .wraddress(txt_wraddr),
+  .wraddress(vd_wraddr),
   .wrclock(CLK_100M),
-  .wren(txt_wrctrl[0]),
-  .q({font_color_tmp,font_addr_lsb})
+  .wren(vd_wrctrl[0]),
+  .q(font_addr_lsb)
+);
+
+ram2port_2 vd_color_u(
+  .data(vd_wrdata[12:7]),
+  .rdaddress({txt_xrdaddr,txt_yrdaddr}),
+  .rdclock(~nCLK),
+  .rden(en_txtrd[0]),
+  .wraddress(vd_wraddr),
+  .wrclock(CLK_100M),
+  .wren(vd_wrctrl[1]),
+  .q({background_tmp,font_color_tmp})
 );
 
 reg [7:0] font_addr_msb  = 8'h0;
-reg [5:0] font_color_del = 6'h0;
+reg [7:0] font_color_del = 8'h0;
 
 always @(negedge nCLK) begin
   font_addr_msb  <= {font_addr_msb [3:0],txt_v_cnt[3:0]};
-  font_color_del <= {font_color_del[2:0],font_color_tmp};
+  font_color_del <= {font_color_del[3:0],font_color_tmp};
 
   if (~nRST) begin
     font_addr_msb  <= 8'h0;
-    font_color_del <= 6'h0;
+    font_color_del <= 8'h0;
   end
 end
 
-wire [2:0] font_color = font_color_del[5:3];
+wire [3:0] font_color = font_color_del[7:4];
 wire [7:0] font_word;
 
 rom1port_1 font_mem_u(
@@ -428,13 +439,13 @@ wire pixel_is_set = font_word[font_pixel_select[11:9]];
 
 wire [5:0] window_bg_color = `OSD_WINDOW_BG_COLOR;
 
-wire [`VDATA_I_CO_SLICE] txt_color = (font_color == 3'b001) ? `OSD_TXT_COLOR_WHITE  :
-                                     (font_color == 3'b010) ? `OSD_TXT_COLOR_RED    :
-                                     (font_color == 3'b011) ? `OSD_TXT_COLOR_GREEN  :
-                                     (font_color == 3'b100) ? `OSD_TXT_COLOR_BLUE   :
-                                     (font_color == 3'b101) ? `OSD_TXT_COLOR_YELLOW :
-                                     (font_color == 3'b110) ? `OSD_TXT_COLOR_CYAN   :
-                                                              `OSD_TXT_COLOR_MAGENTA;
+wire [`VDATA_I_CO_SLICE] txt_color = (font_color == `FONTCOLOR_WHITE)  ? `OSD_TXT_COLOR_WHITE  :
+                                     (font_color == `FONTCOLOR_RED)    ? `OSD_TXT_COLOR_RED    :
+                                     (font_color == `FONTCOLOR_GREEN)  ? `OSD_TXT_COLOR_GREEN  :
+                                     (font_color == `FONTCOLOR_BLUE)   ? `OSD_TXT_COLOR_BLUE   :
+                                     (font_color == `FONTCOLOR_YELLOW) ? `OSD_TXT_COLOR_YELLOW :
+                                     (font_color == `FONTCOLOR_CYAN)   ? `OSD_TXT_COLOR_CYAN   :
+                                                                         `OSD_TXT_COLOR_MAGENTA;
 
 always @(negedge nCLK) begin
   // pass through sync

@@ -72,7 +72,7 @@ menu_t home_menu = {
     .arrowshape = ARROW_RIGHT,
     .current_selection = 0,
     .number_selections = 6,
-    .hpos_selections = 0,
+    .hpos_selections = 1,
     .leaves = {
         {.id = (0+OVERLAY_V_OFFSET_WH), .leavetype = ISUBMENU, .submenu = &vinfo_screen},
         {.id = (1+OVERLAY_V_OFFSET_WH), .leavetype = ISUBMENU, .submenu = NULL},
@@ -146,18 +146,28 @@ updateaction_t apply_command(cmd_t command, menu_t* *current_menu)
 
 void print_overlay(menu_t* current_menu)
 {
+  alt_u8 i;
   VD_CLEAR_SCREEN;
   alt_u8 overlay_h_offset = (current_menu->type == TEXT) ? TEXTOVERLAY_H_OFFSET : HOMEOVERLAY_H_OFFSET;
   alt_u8 overlay_v_offset = 0;
   if (current_menu->header) {
     overlay_v_offset = OVERLAY_V_OFFSET_WH;
-    vd_print_string(HEADER_H_OFFSET,0,FONTCOLOR_WHITE,*current_menu->header);
+    vd_print_string(HEADER_H_OFFSET,0,FONTCOLOR_RED,*current_menu->header);
+    for (i = 0; i < VD_WIDTH; i++)
+      vd_print_char(i,1,FONTCOLOR_YELLOW,(char) HEADER_UNDERLINE);
   }
   vd_print_string(overlay_h_offset,overlay_v_offset,FONTCOLOR_WHITE,*current_menu->overlay);
   switch (current_menu->type) {
     case HOME:
       vd_print_string(COPYRIGHT_H_OFFSET,COPYRIGHT_V_OFFSET,FONTCOLOR_RED,copyright_note);
+      vd_print_char(COPYRIGHT_SIGN_H_OFFSET,COPYRIGHT_V_OFFSET,FONTCOLOR_RED,(char) COPYRIGHT_SIGN);
       vd_print_string(BTN_OVERLAY_H_OFFSET,BTN_OVERLAY_V_OFFSET,FONTCOLOR_GREEN,btn_overlay_0);
+      for (i = 0; i < VD_WIDTH; i++)
+        vd_print_char(i,VD_HEIGHT-2,FONTCOLOR_YELLOW,(char) HOME_LOWSEC_UNDERLINE);
+      break;
+    case TEXT:
+      if (&(*current_menu->overlay) == &license_overlay)
+        vd_print_char(CR_SIGN_LICENSE_H_OFFSET,CR_SIGN_LICENSE_V_OFFSET,FONTCOLOR_WHITE,(char) COPYRIGHT_SIGN);
       break;
     default:
       break;
