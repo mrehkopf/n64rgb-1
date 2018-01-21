@@ -140,17 +140,21 @@ A complete installation and setup guide to this modding kit is provided in the m
 - Use PCB files to order your own PCB or simply use the shared project on OSHPark
 - Source the components you need, e.g. from Mouser
 - Wait for everything to arrive
-- Assemble your PCB
-  * If you use a MaxII CPLD, you don't need U3 and optionally you can left out C31, C32 and C33. You simply have to close J1.
-  * If you use a MaxV CPLD, you need U3 (a 1.8V voltage regulator). Don't touch J1 in this case; a short at J1 harms U1 and U3!
-  * To keep it short: **NEVER** close J1 and assemble U3!
+- Assemble your PCB (**N64RGBv1**):
+  * If you use a MaxII CPLD, you have to assemble FB2 and must not use U3, C31 and C32.
+  * If you use a MaxV CPLD, you need U3 (a 1.8V voltage regulator), C31 and C32. Don't touch FB2 in this case!
+- Assemble your PCB (**N64RGBv2**):
+  * If you use a MaxII CPLD, you have to assemble FB3 and must not use U4, C41 and C42.
+  * If you use a MaxV CPLD, you need U4 (a 1.8V voltage regulator), C41 and C42. Don't touch FB3 in this case!
+- If you use a 570LEs CPLD, close J1
 - Flash the firmware to the CPLD:
   * You need a Altera USB Blaster
   * The board needs to be powered; so you may consider to install the PCB into your N64 first and then use the N64 for powering the board
   * If you want to build an adapter, you may take a look onto [my DIY adapter](https://oshpark.com/shared_projects/mEwjoesz) at [my profile on OSHPark](https://oshpark.com/profiles/borti4938)
 - Install the modding board:
   * Installation description is part of the guide located in the top folder.
-  * However an installation guide of a simalar product made by viletim is provided [here](http://etim.net.au/n64rgb/). The minor differences / extra pads are as follows:
+  * However an installation guide of a similar product made by viletim is provided [here](http://etim.net.au/n64rgb/). The minor differences / extra pads are as follows:
+    * N64RGBv2: J2 shorts 3.3V from CPLD with power rail of the ADV7125 (DAC). **If you use 5V at the analog power rail of the ADV7125, you must not close J2!**
     * Pad *Fil*: controls the low pass filter mode (v1 only, see above)
     * Pad *Rst#*: connect this pad to the PIF-NUS pin 27
     * Pad *Ctrl*: connect this pin to the middle pin of the controller port you want to use for the IGR functions (controller port 1 is probably connected to PIF-NUS pin 16; check that before soldering a wire)
@@ -160,8 +164,8 @@ A complete installation and setup guide to this modding kit is provided in the m
 ### Source the PCB
 Choose the PCB service which suits you. Here are some:
 
-- OSHPark: [Link to the Main PCB v1](https://oshpark.com/shared_projects/0wcOS9Yw) (If the PCB was updated and I forgot to update this link, look onto [my profile](https://oshpark.com/profiles/borti4938))
-- OSHPark: [Link to the Main PCB v2](https://oshpark.com/shared_projects/hLhwaglc) (If the PCB was updated and I forgot to update this link, look onto [my profile](https://oshpark.com/profiles/borti4938))
+- OSHPark: [Link to the Main PCB v1](https://oshpark.com/shared_projects/zPCxky4e) (If the PCB was updated and I forgot to update this link, look onto [my profile](https://oshpark.com/profiles/borti4938))
+- OSHPark: [Link to the Main PCB v2](https://oshpark.com/shared_projects/KUxvVUbc) (If the PCB was updated and I forgot to update this link, look onto [my profile](https://oshpark.com/profiles/borti4938))
 - PCBWay.com: [Link](http://www.pcbway.com/), [Affiliate Link](http://www.pcbway.com/setinvite.aspx?inviteid=10658)
 
 ### BOM / Part List for the PCB
