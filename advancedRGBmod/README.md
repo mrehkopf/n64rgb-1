@@ -172,7 +172,7 @@ There are some jumpers spreaded over the PCB, namely _J1_, _J2_, _J3_, _J4_, _J5
 _J5_ is the JTAG connector.
 
 #### J6 (Power supply of analog outputs)
-The analog part can be power with **either** 3.3V **or** 5V. If you want to power this part of the PCB with 3.3V, close J5 and leave pad . If you want to power this part with 5V, leave _J6_ opened and connect pad _5V_ to +5V power rail of the N64. **NEVER connect 5V and close J5.**
+The analog part can be power with **either** 3.3V **or** 5V. If you want to power this part of the PCB with 3.3V, close _J6_ and leave pad _5V_ unconnected. If you want to power this part with 5V, leave _J6_ opened and connect pad _5V_ to +5V power rail of the N64. **NEVER connect 5V and close J6.**
 
 #### Fallback Mode
 
