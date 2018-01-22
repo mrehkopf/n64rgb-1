@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="8.4.3">
+<eagle version="8.5.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -5759,24 +5759,6 @@ Source: http://www.vishay.com/docs/10129/hpc0201a.pdf</description>
 <text x="-0.785" y="-1.865" size="1.27" layer="27">&gt;VALUE</text>
 <rectangle x1="-0.305" y1="-0.15" x2="0.305" y2="0.15" layer="51"/>
 </package>
-<package name="C0805">
-<description>&lt;b&gt;CAPACITOR&lt;/b&gt;&lt;p&gt;</description>
-<wire x1="-1.973" y1="0.983" x2="1.973" y2="0.983" width="0.0508" layer="39"/>
-<wire x1="1.973" y1="-0.983" x2="-1.973" y2="-0.983" width="0.0508" layer="39"/>
-<wire x1="-1.973" y1="-0.983" x2="-1.973" y2="0.983" width="0.0508" layer="39"/>
-<wire x1="-0.381" y1="0.66" x2="0.381" y2="0.66" width="0.1016" layer="51"/>
-<wire x1="-0.356" y1="-0.66" x2="0.381" y2="-0.66" width="0.1016" layer="51"/>
-<wire x1="1.973" y1="0.983" x2="1.973" y2="-0.983" width="0.0508" layer="39"/>
-<smd name="1" x="-0.95" y="0" dx="1.3" dy="1.5" layer="1"/>
-<smd name="2" x="0.95" y="0" dx="1.3" dy="1.5" layer="1"/>
-<text x="-1.27" y="1.27" size="1.27" layer="25">&gt;NAME</text>
-<text x="-1.27" y="-2.54" size="1.27" layer="27">&gt;VALUE</text>
-<rectangle x1="-1.0922" y1="-0.7239" x2="-0.3421" y2="0.7262" layer="51"/>
-<rectangle x1="0.3556" y1="-0.7239" x2="1.1057" y2="0.7262" layer="51"/>
-<rectangle x1="-0.1001" y1="-0.4001" x2="0.1001" y2="0.4001" layer="35"/>
-<wire x1="-0.381" y1="0.635" x2="0.381" y2="0.635" width="0.1524" layer="21"/>
-<wire x1="-0.381" y1="-0.635" x2="0.381" y2="-0.635" width="0.1524" layer="21"/>
-</package>
 <package name="C1206">
 <description>&lt;b&gt;CAPACITOR&lt;/b&gt;</description>
 <wire x1="-2.473" y1="0.983" x2="2.473" y2="0.983" width="0.0508" layer="39"/>
@@ -5880,6 +5862,24 @@ Metric Code Size 3225</description>
 <rectangle x1="-0.3" y1="-0.8999" x2="0.3" y2="0.8999" layer="35"/>
 <wire x1="-0.635" y1="1.27" x2="0.635" y2="1.27" width="0.1524" layer="21"/>
 <wire x1="-0.635" y1="-1.27" x2="0.635" y2="-1.27" width="0.1524" layer="21"/>
+</package>
+<package name="C0805">
+<description>&lt;b&gt;CAPACITOR&lt;/b&gt;&lt;p&gt;</description>
+<wire x1="-1.973" y1="0.983" x2="1.973" y2="0.983" width="0.0508" layer="39"/>
+<wire x1="1.973" y1="-0.983" x2="-1.973" y2="-0.983" width="0.0508" layer="39"/>
+<wire x1="-1.973" y1="-0.983" x2="-1.973" y2="0.983" width="0.0508" layer="39"/>
+<wire x1="-0.381" y1="0.66" x2="0.381" y2="0.66" width="0.1016" layer="51"/>
+<wire x1="-0.356" y1="-0.66" x2="0.381" y2="-0.66" width="0.1016" layer="51"/>
+<wire x1="1.973" y1="0.983" x2="1.973" y2="-0.983" width="0.0508" layer="39"/>
+<smd name="1" x="-0.95" y="0" dx="1.3" dy="1.5" layer="1"/>
+<smd name="2" x="0.95" y="0" dx="1.3" dy="1.5" layer="1"/>
+<text x="-1.27" y="1.27" size="1.27" layer="25">&gt;NAME</text>
+<text x="-1.27" y="-2.54" size="1.27" layer="27">&gt;VALUE</text>
+<rectangle x1="-1.0922" y1="-0.7239" x2="-0.3421" y2="0.7262" layer="51"/>
+<rectangle x1="0.3556" y1="-0.7239" x2="1.1057" y2="0.7262" layer="51"/>
+<rectangle x1="-0.1001" y1="-0.4001" x2="0.1001" y2="0.4001" layer="35"/>
+<wire x1="-0.381" y1="0.6604" x2="0.381" y2="0.6604" width="0.1524" layer="21"/>
+<wire x1="-0.381" y1="-0.6604" x2="0.381" y2="-0.6604" width="0.1524" layer="21"/>
 </package>
 </packages>
 <symbols>
@@ -8001,6 +8001,13 @@ Metric Code Size 3225</description>
 <text x="-2.54" y="-2.54" size="1.778" layer="96" rot="R90">&gt;VALUE</text>
 <pin name="VCC" x="0" y="-2.54" visible="off" length="short" direction="sup" rot="R90"/>
 </symbol>
+<symbol name="VCCINT" urn="urn:adsk.eagle:symbol:26945/1" library_version="1">
+<wire x1="1.27" y1="-1.905" x2="0" y2="0" width="0.254" layer="94"/>
+<wire x1="0" y1="0" x2="-1.27" y2="-1.905" width="0.254" layer="94"/>
+<text x="-2.54" y="-2.54" size="1.778" layer="96" rot="R90">&gt;VALUE</text>
+<text x="-0.889" y="0.254" size="0.8128" layer="94">INT</text>
+<pin name="VCCINT" x="0" y="-2.54" visible="off" length="short" direction="sup" rot="R90"/>
+</symbol>
 </symbols>
 <devicesets>
 <deviceset name="GND" urn="urn:adsk.eagle:component:26954/1" prefix="GND" library_version="1">
@@ -8020,6 +8027,19 @@ Metric Code Size 3225</description>
 <description>&lt;b&gt;SUPPLY SYMBOL&lt;/b&gt;</description>
 <gates>
 <gate name="VCC" symbol="VCC" x="0" y="0"/>
+</gates>
+<devices>
+<device name="">
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="VCCINT" urn="urn:adsk.eagle:component:26975/1" prefix="VCC" library_version="1">
+<description>&lt;b&gt;SUPPLY SYMBOL&lt;/b&gt;</description>
+<gates>
+<gate name="G$1" symbol="VCCINT" x="0" y="0"/>
 </gates>
 <devices>
 <device name="">
@@ -8677,8 +8697,8 @@ Source: http://www.ctscorp.com/components/Datasheets/CTSChipArrayDs.pdf</descrip
 <part name="P+8" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="VCC" device="" value="VCC@3.3V"/>
 <part name="P+9" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="VCC" device="" value="VCC@1.8V"/>
 <part name="P+10" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="VCC" device="" value="VCC@1.8V"/>
+<part name="C31" library="rcl" deviceset="C-EU" device="C0603" value="1u"/>
 <part name="C32" library="rcl" deviceset="C-EU" device="C0603" value="1u"/>
-<part name="C33" library="rcl" deviceset="C-EU" device="C0603" value="1u"/>
 <part name="P+11" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="VCC" device="" value="VCC@1.8V"/>
 <part name="P+12" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="VCC" device="" value="VCC@1.8V"/>
 <part name="GND17" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
@@ -8696,8 +8716,6 @@ Source: http://www.ctscorp.com/components/Datasheets/CTSChipArrayDs.pdf</descrip
 <part name="C16" library="rcl" deviceset="C-EU" device="C0603" value="0.1u"/>
 <part name="C17" library="rcl" deviceset="C-EU" device="C0603" value="0.1u"/>
 <part name="U1" library="altera" deviceset="5M570ZT100C5" device=""/>
-<part name="P+15" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="VCC" device="" value="VCC@1.8V"/>
-<part name="P+16" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="VCC" device="" value="VCC@1.8V"/>
 <part name="C18" library="rcl" deviceset="C-EU" device="C0603" value="0.1u"/>
 <part name="C19" library="rcl" deviceset="C-EU" device="C0603" value="0.1u"/>
 <part name="C10" library="rcl" deviceset="C-EU" device="C0603" value="0.1u"/>
@@ -8709,7 +8727,7 @@ Source: http://www.ctscorp.com/components/Datasheets/CTSChipArrayDs.pdf</descrip
 <part name="C22" library="rcl" deviceset="C-EU" device="C1206K" value="22u"/>
 <part name="C1" library="rcl" deviceset="C-EU" device="C1206K" value="100u"/>
 <part name="L1" library="rcl" deviceset="L-US" device="L3230M" value="10u"/>
-<part name="C31" library="rcl" deviceset="C-EU" device="C1206K" value="10u"/>
+<part name="C2" library="rcl" deviceset="C-EU" device="C0805" value="10u"/>
 <part name="LPF_BYPASS" library="wirepad" deviceset="SMD2" device=""/>
 <part name="P_GND1" library="wirepad" deviceset="SMD2" device=""/>
 <part name="GND14" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
@@ -8755,6 +8773,13 @@ Source: http://www.ctscorp.com/components/Datasheets/CTSChipArrayDs.pdf</descrip
 <part name="GND13" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="GND18" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="J1" library="jumper" deviceset="SJ" device=""/>
+<part name="VCC1" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="VCCINT" device=""/>
+<part name="VCC2" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="VCCINT" device=""/>
+<part name="VCC3" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="VCCINT" device=""/>
+<part name="FB2" library="rcl" deviceset="R-EU_" device="R0603"/>
+<part name="C3" library="rcl" deviceset="C-EU" device="C0805" value="10u"/>
+<part name="C1A" library="rcl" deviceset="C-EU" device="C0805"/>
+<part name="C22A" library="rcl" deviceset="C-EU" device="C0805"/>
 </parts>
 <sheets>
 <sheet>
@@ -8789,35 +8814,35 @@ Source: http://www.ctscorp.com/components/Datasheets/CTSChipArrayDs.pdf</descrip
 <instance part="GND4" gate="1" x="264.16" y="27.94"/>
 <instance part="R14" gate="G$1" x="264.16" y="35.56" rot="R90"/>
 <instance part="R13" gate="G$1" x="256.54" y="43.18"/>
-<instance part="C21" gate="G$1" x="381" y="165.1"/>
+<instance part="C21" gate="G$1" x="391.16" y="165.1"/>
 <instance part="GND5" gate="1" x="342.9" y="165.1"/>
 <instance part="GND6" gate="1" x="373.38" y="154.94"/>
-<instance part="GND7" gate="1" x="381" y="154.94"/>
+<instance part="GND7" gate="1" x="391.16" y="154.94"/>
 <instance part="RST" gate="1" x="68.58" y="185.42"/>
 <instance part="CTRL" gate="1" x="60.96" y="182.88"/>
-<instance part="C11" gate="G$1" x="147.32" y="213.36"/>
+<instance part="C11" gate="G$1" x="157.48" y="228.6"/>
 <instance part="FB1" gate="G$1" x="55.88" y="233.68"/>
 <instance part="P+3" gate="VCC" x="71.12" y="238.76"/>
 <instance part="GND15" gate="1" x="71.12" y="215.9"/>
 <instance part="P_VCC0" gate="1" x="33.02" y="233.68"/>
 <instance part="P_GND0" gate="1" x="33.02" y="220.98"/>
-<instance part="C12" gate="G$1" x="154.94" y="213.36"/>
-<instance part="C13" gate="G$1" x="162.56" y="213.36"/>
-<instance part="C14" gate="G$1" x="180.34" y="213.36"/>
-<instance part="C15" gate="G$1" x="187.96" y="213.36"/>
-<instance part="GND16" gate="1" x="177.8" y="200.66"/>
-<instance part="P+4" gate="VCC" x="175.26" y="223.52"/>
+<instance part="C12" gate="G$1" x="142.24" y="228.6"/>
+<instance part="C13" gate="G$1" x="165.1" y="228.6"/>
+<instance part="C14" gate="G$1" x="185.42" y="228.6"/>
+<instance part="C15" gate="G$1" x="193.04" y="228.6"/>
+<instance part="GND16" gate="1" x="182.88" y="215.9"/>
+<instance part="P+4" gate="VCC" x="180.34" y="238.76"/>
 <instance part="P+5" gate="VCC" x="76.2" y="132.08" rot="R90"/>
 <instance part="P+6" gate="VCC" x="208.28" y="111.76" rot="R270"/>
 <instance part="P+7" gate="VCC" x="165.1" y="185.42"/>
 <instance part="P+8" gate="VCC" x="127" y="53.34" rot="R180"/>
 <instance part="P+9" gate="VCC" x="76.2" y="121.92" rot="R90"/>
 <instance part="P+10" gate="VCC" x="208.28" y="121.92" rot="R270"/>
-<instance part="C32" gate="G$1" x="81.28" y="228.6"/>
-<instance part="C33" gate="G$1" x="116.84" y="228.6"/>
+<instance part="C31" gate="G$1" x="81.28" y="228.6"/>
+<instance part="C32" gate="G$1" x="116.84" y="228.6"/>
 <instance part="P+11" gate="VCC" x="121.92" y="238.76"/>
-<instance part="P+12" gate="VCC" x="134.62" y="223.52"/>
-<instance part="GND17" gate="1" x="134.62" y="200.66"/>
+<instance part="P+12" gate="VCC" x="129.54" y="238.76"/>
+<instance part="GND17" gate="1" x="129.54" y="215.9"/>
 <instance part="D0" gate="G$1" x="5.08" y="101.6"/>
 <instance part="D1" gate="G$1" x="10.16" y="104.14"/>
 <instance part="D2" gate="G$1" x="15.24" y="106.68"/>
@@ -8829,14 +8854,12 @@ Source: http://www.ctscorp.com/components/Datasheets/CTSChipArrayDs.pdf</descrip
 <instance part="P+13" gate="VCC" x="162.56" y="53.34" rot="R180"/>
 <instance part="P+14" gate="VCC" x="129.54" y="185.42"/>
 <instance part="GND1" gate="1" x="132.08" y="124.46"/>
-<instance part="C16" gate="G$1" x="195.58" y="213.36"/>
-<instance part="C17" gate="G$1" x="203.2" y="213.36"/>
+<instance part="C16" gate="G$1" x="200.66" y="228.6"/>
+<instance part="C17" gate="G$1" x="208.28" y="228.6"/>
 <instance part="U1" gate="G$1" x="144.78" y="121.92"/>
-<instance part="P+15" gate="VCC" x="144.78" y="185.42"/>
-<instance part="P+16" gate="VCC" x="147.32" y="53.34" rot="R180"/>
-<instance part="C18" gate="G$1" x="210.82" y="213.36"/>
-<instance part="C19" gate="G$1" x="218.44" y="213.36"/>
-<instance part="C10" gate="G$1" x="139.7" y="213.36"/>
+<instance part="C18" gate="G$1" x="215.9" y="228.6"/>
+<instance part="C19" gate="G$1" x="223.52" y="228.6"/>
+<instance part="C10" gate="G$1" x="134.62" y="228.6"/>
 <instance part="C23" gate="G$1" x="398.78" y="101.6"/>
 <instance part="C24" gate="G$1" x="401.32" y="91.44"/>
 <instance part="C25" gate="G$1" x="403.86" y="81.28"/>
@@ -8845,7 +8868,7 @@ Source: http://www.ctscorp.com/components/Datasheets/CTSChipArrayDs.pdf</descrip
 <instance part="C22" gate="G$1" x="373.38" y="165.1"/>
 <instance part="C1" gate="G$1" x="43.18" y="228.6"/>
 <instance part="L1" gate="G$1" x="55.88" y="238.76" rot="R90"/>
-<instance part="C31" gate="G$1" x="71.12" y="228.6"/>
+<instance part="C2" gate="G$1" x="71.12" y="228.6"/>
 <instance part="LPF_BYPASS" gate="1" x="73.66" y="187.96"/>
 <instance part="P_GND1" gate="1" x="152.4" y="147.32" rot="R90"/>
 <instance part="GND14" gate="1" x="238.76" y="66.04" rot="R270"/>
@@ -8890,7 +8913,14 @@ Source: http://www.ctscorp.com/components/Datasheets/CTSChipArrayDs.pdf</descrip
 <instance part="J11" gate="G$1" x="137.16" y="190.5" rot="R90"/>
 <instance part="GND13" gate="1" x="210.82" y="129.54" rot="R90"/>
 <instance part="GND18" gate="1" x="137.16" y="182.88"/>
-<instance part="J1" gate="1" x="101.6" y="248.92"/>
+<instance part="J1" gate="1" x="149.86" y="233.68"/>
+<instance part="VCC1" gate="G$1" x="165.1" y="238.76"/>
+<instance part="VCC2" gate="G$1" x="144.78" y="182.88"/>
+<instance part="VCC3" gate="G$1" x="147.32" y="60.96" rot="R180"/>
+<instance part="FB2" gate="G$1" x="99.06" y="248.92"/>
+<instance part="C3" gate="G$1" x="124.46" y="228.6"/>
+<instance part="C1A" gate="G$1" x="48.26" y="228.6"/>
+<instance part="C22A" gate="G$1" x="381" y="165.1"/>
 </instances>
 <busses>
 </busses>
@@ -8930,11 +8960,16 @@ Source: http://www.ctscorp.com/components/Datasheets/CTSChipArrayDs.pdf</descrip
 <pinref part="GND6" gate="1" pin="GND"/>
 <wire x1="373.38" y1="160.02" x2="373.38" y2="157.48" width="0.1524" layer="91"/>
 <pinref part="C22" gate="G$1" pin="2"/>
-</segment>
-<segment>
+<pinref part="C22A" gate="G$1" pin="2"/>
+<wire x1="381" y1="160.02" x2="381" y2="157.48" width="0.1524" layer="91"/>
+<wire x1="381" y1="157.48" x2="373.38" y2="157.48" width="0.1524" layer="91"/>
+<junction x="373.38" y="157.48"/>
 <pinref part="C21" gate="G$1" pin="2"/>
 <pinref part="GND7" gate="1" pin="GND"/>
-<wire x1="381" y1="160.02" x2="381" y2="157.48" width="0.1524" layer="91"/>
+<wire x1="391.16" y1="160.02" x2="391.16" y2="157.48" width="0.1524" layer="91"/>
+<wire x1="381" y1="157.48" x2="391.16" y2="157.48" width="0.1524" layer="91"/>
+<junction x="381" y="157.48"/>
+<junction x="391.16" y="157.48"/>
 </segment>
 <segment>
 <pinref part="GND15" gate="1" pin="GND"/>
@@ -8943,13 +8978,14 @@ Source: http://www.ctscorp.com/components/Datasheets/CTSChipArrayDs.pdf</descrip
 <wire x1="71.12" y1="220.98" x2="71.12" y2="218.44" width="0.1524" layer="91"/>
 <wire x1="35.56" y1="220.98" x2="43.18" y2="220.98" width="0.1524" layer="91"/>
 <junction x="71.12" y="220.98"/>
-<pinref part="C32" gate="G$1" pin="2"/>
-<wire x1="43.18" y1="220.98" x2="71.12" y2="220.98" width="0.1524" layer="91"/>
+<pinref part="C31" gate="G$1" pin="2"/>
+<wire x1="43.18" y1="220.98" x2="48.26" y2="220.98" width="0.1524" layer="91"/>
+<wire x1="48.26" y1="220.98" x2="71.12" y2="220.98" width="0.1524" layer="91"/>
 <wire x1="86.36" y1="220.98" x2="81.28" y2="220.98" width="0.1524" layer="91"/>
 <wire x1="81.28" y1="220.98" x2="71.12" y2="220.98" width="0.1524" layer="91"/>
 <wire x1="81.28" y1="220.98" x2="81.28" y2="223.52" width="0.1524" layer="91"/>
 <junction x="81.28" y="220.98"/>
-<pinref part="C33" gate="G$1" pin="2"/>
+<pinref part="C32" gate="G$1" pin="2"/>
 <wire x1="86.36" y1="220.98" x2="116.84" y2="220.98" width="0.1524" layer="91"/>
 <wire x1="116.84" y1="220.98" x2="116.84" y2="223.52" width="0.1524" layer="91"/>
 <pinref part="U3" gate="G$1" pin="GND"/>
@@ -8959,53 +8995,60 @@ Source: http://www.ctscorp.com/components/Datasheets/CTSChipArrayDs.pdf</descrip
 <pinref part="C1" gate="G$1" pin="2"/>
 <wire x1="43.18" y1="223.52" x2="43.18" y2="220.98" width="0.1524" layer="91"/>
 <junction x="43.18" y="220.98"/>
-<pinref part="C31" gate="G$1" pin="2"/>
+<pinref part="C2" gate="G$1" pin="2"/>
+<pinref part="C3" gate="G$1" pin="2"/>
+<wire x1="116.84" y1="220.98" x2="124.46" y2="220.98" width="0.1524" layer="91"/>
+<wire x1="124.46" y1="220.98" x2="124.46" y2="223.52" width="0.1524" layer="91"/>
+<junction x="116.84" y="220.98"/>
+<pinref part="C1A" gate="G$1" pin="2"/>
+<wire x1="48.26" y1="223.52" x2="48.26" y2="220.98" width="0.1524" layer="91"/>
+<junction x="48.26" y="220.98"/>
 </segment>
 <segment>
 <pinref part="C14" gate="G$1" pin="2"/>
 <pinref part="C15" gate="G$1" pin="2"/>
 <pinref part="GND16" gate="1" pin="GND"/>
-<wire x1="177.8" y1="205.74" x2="177.8" y2="203.2" width="0.1524" layer="91"/>
-<wire x1="177.8" y1="205.74" x2="180.34" y2="205.74" width="0.1524" layer="91"/>
-<wire x1="180.34" y1="205.74" x2="187.96" y2="205.74" width="0.1524" layer="91"/>
-<wire x1="187.96" y1="205.74" x2="187.96" y2="208.28" width="0.1524" layer="91"/>
-<wire x1="180.34" y1="205.74" x2="180.34" y2="208.28" width="0.1524" layer="91"/>
-<junction x="180.34" y="205.74"/>
+<wire x1="182.88" y1="220.98" x2="182.88" y2="218.44" width="0.1524" layer="91"/>
+<wire x1="182.88" y1="220.98" x2="185.42" y2="220.98" width="0.1524" layer="91"/>
+<wire x1="185.42" y1="220.98" x2="193.04" y2="220.98" width="0.1524" layer="91"/>
+<wire x1="193.04" y1="220.98" x2="193.04" y2="223.52" width="0.1524" layer="91"/>
+<wire x1="185.42" y1="220.98" x2="185.42" y2="223.52" width="0.1524" layer="91"/>
+<junction x="185.42" y="220.98"/>
 <pinref part="C16" gate="G$1" pin="2"/>
-<wire x1="187.96" y1="205.74" x2="195.58" y2="205.74" width="0.1524" layer="91"/>
-<wire x1="195.58" y1="205.74" x2="195.58" y2="208.28" width="0.1524" layer="91"/>
-<junction x="187.96" y="205.74"/>
+<wire x1="193.04" y1="220.98" x2="200.66" y2="220.98" width="0.1524" layer="91"/>
+<wire x1="200.66" y1="220.98" x2="200.66" y2="223.52" width="0.1524" layer="91"/>
+<junction x="193.04" y="220.98"/>
 <pinref part="C17" gate="G$1" pin="2"/>
-<wire x1="195.58" y1="205.74" x2="203.2" y2="205.74" width="0.1524" layer="91"/>
-<wire x1="203.2" y1="205.74" x2="203.2" y2="208.28" width="0.1524" layer="91"/>
-<junction x="195.58" y="205.74"/>
+<wire x1="200.66" y1="220.98" x2="208.28" y2="220.98" width="0.1524" layer="91"/>
+<wire x1="208.28" y1="220.98" x2="208.28" y2="223.52" width="0.1524" layer="91"/>
+<junction x="200.66" y="220.98"/>
 <pinref part="C19" gate="G$1" pin="2"/>
-<wire x1="203.2" y1="205.74" x2="210.82" y2="205.74" width="0.1524" layer="91"/>
-<wire x1="210.82" y1="205.74" x2="218.44" y2="205.74" width="0.1524" layer="91"/>
-<wire x1="218.44" y1="205.74" x2="218.44" y2="208.28" width="0.1524" layer="91"/>
-<junction x="203.2" y="205.74"/>
+<wire x1="208.28" y1="220.98" x2="215.9" y2="220.98" width="0.1524" layer="91"/>
+<wire x1="215.9" y1="220.98" x2="223.52" y2="220.98" width="0.1524" layer="91"/>
+<wire x1="223.52" y1="220.98" x2="223.52" y2="223.52" width="0.1524" layer="91"/>
+<junction x="208.28" y="220.98"/>
 <pinref part="C18" gate="G$1" pin="2"/>
-<wire x1="210.82" y1="208.28" x2="210.82" y2="205.74" width="0.1524" layer="91"/>
-<junction x="210.82" y="205.74"/>
+<wire x1="215.9" y1="223.52" x2="215.9" y2="220.98" width="0.1524" layer="91"/>
+<junction x="215.9" y="220.98"/>
 </segment>
 <segment>
-<pinref part="C11" gate="G$1" pin="2"/>
-<wire x1="147.32" y1="208.28" x2="147.32" y2="205.74" width="0.1524" layer="91"/>
-<wire x1="147.32" y1="205.74" x2="139.7" y2="205.74" width="0.1524" layer="91"/>
-<wire x1="139.7" y1="205.74" x2="134.62" y2="205.74" width="0.1524" layer="91"/>
-<wire x1="134.62" y1="205.74" x2="134.62" y2="203.2" width="0.1524" layer="91"/>
+<wire x1="134.62" y1="220.98" x2="129.54" y2="220.98" width="0.1524" layer="91"/>
+<wire x1="129.54" y1="220.98" x2="129.54" y2="218.44" width="0.1524" layer="91"/>
 <pinref part="GND17" gate="1" pin="GND"/>
-<wire x1="139.7" y1="208.28" x2="139.7" y2="205.74" width="0.1524" layer="91"/>
-<junction x="139.7" y="205.74"/>
+<wire x1="134.62" y1="223.52" x2="134.62" y2="220.98" width="0.1524" layer="91"/>
+<junction x="134.62" y="220.98"/>
 <pinref part="C10" gate="G$1" pin="2"/>
-<pinref part="C13" gate="G$1" pin="2"/>
-<wire x1="147.32" y1="205.74" x2="154.94" y2="205.74" width="0.1524" layer="91"/>
-<wire x1="154.94" y1="205.74" x2="162.56" y2="205.74" width="0.1524" layer="91"/>
-<wire x1="162.56" y1="205.74" x2="162.56" y2="208.28" width="0.1524" layer="91"/>
-<junction x="147.32" y="205.74"/>
+<wire x1="134.62" y1="220.98" x2="142.24" y2="220.98" width="0.1524" layer="91"/>
 <pinref part="C12" gate="G$1" pin="2"/>
-<wire x1="154.94" y1="208.28" x2="154.94" y2="205.74" width="0.1524" layer="91"/>
-<junction x="154.94" y="205.74"/>
+<wire x1="142.24" y1="223.52" x2="142.24" y2="220.98" width="0.1524" layer="91"/>
+<pinref part="C13" gate="G$1" pin="2"/>
+<wire x1="142.24" y1="220.98" x2="157.48" y2="220.98" width="0.1524" layer="91"/>
+<wire x1="157.48" y1="220.98" x2="165.1" y2="220.98" width="0.1524" layer="91"/>
+<wire x1="165.1" y1="220.98" x2="165.1" y2="223.52" width="0.1524" layer="91"/>
+<junction x="142.24" y="220.98"/>
+<pinref part="C11" gate="G$1" pin="2"/>
+<wire x1="157.48" y1="220.98" x2="157.48" y2="223.52" width="0.1524" layer="91"/>
+<junction x="157.48" y="220.98"/>
 </segment>
 <segment>
 <pinref part="GND1" gate="1" pin="GND"/>
@@ -9137,10 +9180,14 @@ Source: http://www.ctscorp.com/components/Datasheets/CTSChipArrayDs.pdf</descrip
 <wire x1="373.38" y1="170.18" x2="373.38" y2="172.72" width="0.1524" layer="91"/>
 <junction x="373.38" y="170.18"/>
 <pinref part="C21" gate="G$1" pin="1"/>
+<wire x1="391.16" y1="170.18" x2="381" y2="170.18" width="0.1524" layer="91"/>
 <wire x1="381" y1="170.18" x2="373.38" y2="170.18" width="0.1524" layer="91"/>
-<wire x1="381" y1="167.64" x2="381" y2="170.18" width="0.1524" layer="91"/>
+<wire x1="391.16" y1="167.64" x2="391.16" y2="170.18" width="0.1524" layer="91"/>
 <wire x1="373.38" y1="167.64" x2="373.38" y2="170.18" width="0.1524" layer="91"/>
 <pinref part="C22" gate="G$1" pin="1"/>
+<pinref part="C22A" gate="G$1" pin="1"/>
+<wire x1="381" y1="167.64" x2="381" y2="170.18" width="0.1524" layer="91"/>
+<junction x="381" y="170.18"/>
 </segment>
 <segment>
 <pinref part="FB1" gate="G$1" pin="2"/>
@@ -9150,7 +9197,7 @@ Source: http://www.ctscorp.com/components/Datasheets/CTSChipArrayDs.pdf</descrip
 <wire x1="71.12" y1="233.68" x2="71.12" y2="236.22" width="0.1524" layer="91"/>
 <wire x1="71.12" y1="231.14" x2="71.12" y2="233.68" width="0.1524" layer="91"/>
 <junction x="71.12" y="233.68"/>
-<pinref part="C32" gate="G$1" pin="1"/>
+<pinref part="C31" gate="G$1" pin="1"/>
 <wire x1="81.28" y1="233.68" x2="71.12" y2="233.68" width="0.1524" layer="91"/>
 <wire x1="81.28" y1="231.14" x2="81.28" y2="233.68" width="0.1524" layer="91"/>
 <junction x="81.28" y="233.68"/>
@@ -9163,38 +9210,38 @@ Source: http://www.ctscorp.com/components/Datasheets/CTSChipArrayDs.pdf</descrip
 <pinref part="L1" gate="G$1" pin="2"/>
 <wire x1="63.5" y1="238.76" x2="63.5" y2="233.68" width="0.1524" layer="91"/>
 <junction x="63.5" y="233.68"/>
-<pinref part="C31" gate="G$1" pin="1"/>
+<pinref part="C2" gate="G$1" pin="1"/>
 <wire x1="81.28" y1="238.76" x2="81.28" y2="248.92" width="0.1524" layer="91"/>
 <junction x="81.28" y="238.76"/>
-<wire x1="81.28" y1="248.92" x2="96.52" y2="248.92" width="0.1524" layer="91"/>
-<pinref part="J1" gate="1" pin="1"/>
+<pinref part="FB2" gate="G$1" pin="1"/>
+<wire x1="81.28" y1="248.92" x2="93.98" y2="248.92" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="C14" gate="G$1" pin="1"/>
 <pinref part="C15" gate="G$1" pin="1"/>
 <pinref part="P+4" gate="VCC" pin="VCC"/>
-<wire x1="175.26" y1="218.44" x2="175.26" y2="220.98" width="0.1524" layer="91"/>
-<wire x1="175.26" y1="218.44" x2="180.34" y2="218.44" width="0.1524" layer="91"/>
-<wire x1="180.34" y1="218.44" x2="187.96" y2="218.44" width="0.1524" layer="91"/>
-<wire x1="187.96" y1="218.44" x2="187.96" y2="215.9" width="0.1524" layer="91"/>
-<wire x1="180.34" y1="215.9" x2="180.34" y2="218.44" width="0.1524" layer="91"/>
-<junction x="180.34" y="218.44"/>
+<wire x1="180.34" y1="233.68" x2="180.34" y2="236.22" width="0.1524" layer="91"/>
+<wire x1="180.34" y1="233.68" x2="185.42" y2="233.68" width="0.1524" layer="91"/>
+<wire x1="185.42" y1="233.68" x2="193.04" y2="233.68" width="0.1524" layer="91"/>
+<wire x1="193.04" y1="233.68" x2="193.04" y2="231.14" width="0.1524" layer="91"/>
+<wire x1="185.42" y1="231.14" x2="185.42" y2="233.68" width="0.1524" layer="91"/>
+<junction x="185.42" y="233.68"/>
 <pinref part="C16" gate="G$1" pin="1"/>
-<wire x1="187.96" y1="218.44" x2="195.58" y2="218.44" width="0.1524" layer="91"/>
-<wire x1="195.58" y1="218.44" x2="195.58" y2="215.9" width="0.1524" layer="91"/>
-<junction x="187.96" y="218.44"/>
+<wire x1="193.04" y1="233.68" x2="200.66" y2="233.68" width="0.1524" layer="91"/>
+<wire x1="200.66" y1="233.68" x2="200.66" y2="231.14" width="0.1524" layer="91"/>
+<junction x="193.04" y="233.68"/>
 <pinref part="C17" gate="G$1" pin="1"/>
-<wire x1="195.58" y1="218.44" x2="203.2" y2="218.44" width="0.1524" layer="91"/>
-<wire x1="203.2" y1="218.44" x2="203.2" y2="215.9" width="0.1524" layer="91"/>
-<junction x="195.58" y="218.44"/>
+<wire x1="200.66" y1="233.68" x2="208.28" y2="233.68" width="0.1524" layer="91"/>
+<wire x1="208.28" y1="233.68" x2="208.28" y2="231.14" width="0.1524" layer="91"/>
+<junction x="200.66" y="233.68"/>
 <pinref part="C19" gate="G$1" pin="1"/>
-<wire x1="203.2" y1="218.44" x2="210.82" y2="218.44" width="0.1524" layer="91"/>
-<wire x1="210.82" y1="218.44" x2="218.44" y2="218.44" width="0.1524" layer="91"/>
-<wire x1="218.44" y1="218.44" x2="218.44" y2="215.9" width="0.1524" layer="91"/>
-<junction x="203.2" y="218.44"/>
+<wire x1="208.28" y1="233.68" x2="215.9" y2="233.68" width="0.1524" layer="91"/>
+<wire x1="215.9" y1="233.68" x2="223.52" y2="233.68" width="0.1524" layer="91"/>
+<wire x1="223.52" y1="233.68" x2="223.52" y2="231.14" width="0.1524" layer="91"/>
+<junction x="208.28" y="233.68"/>
 <pinref part="C18" gate="G$1" pin="1"/>
-<wire x1="210.82" y1="215.9" x2="210.82" y2="218.44" width="0.1524" layer="91"/>
-<junction x="210.82" y="218.44"/>
+<wire x1="215.9" y1="231.14" x2="215.9" y2="233.68" width="0.1524" layer="91"/>
+<junction x="215.9" y="233.68"/>
 </segment>
 <segment>
 <pinref part="P+8" gate="VCC" pin="VCC"/>
@@ -9618,6 +9665,8 @@ Source: http://www.ctscorp.com/components/Datasheets/CTSChipArrayDs.pdf</descrip
 <pinref part="L1" gate="G$1" pin="1"/>
 <wire x1="48.26" y1="238.76" x2="48.26" y2="233.68" width="0.1524" layer="91"/>
 <junction x="48.26" y="233.68"/>
+<pinref part="C1A" gate="G$1" pin="1"/>
+<wire x1="48.26" y1="233.68" x2="48.26" y2="231.14" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="HSYNC#" class="0">
@@ -9655,46 +9704,35 @@ Source: http://www.ctscorp.com/components/Datasheets/CTSChipArrayDs.pdf</descrip
 <segment>
 <wire x1="121.92" y1="233.68" x2="121.92" y2="236.22" width="0.1524" layer="91"/>
 <pinref part="P+11" gate="VCC" pin="VCC"/>
-<pinref part="C33" gate="G$1" pin="1"/>
+<pinref part="C32" gate="G$1" pin="1"/>
 <wire x1="116.84" y1="231.14" x2="116.84" y2="233.68" width="0.1524" layer="91"/>
 <wire x1="121.92" y1="233.68" x2="116.84" y2="233.68" width="0.1524" layer="91"/>
 <junction x="116.84" y="233.68"/>
 <pinref part="U3" gate="G$1" pin="OUT"/>
 <wire x1="111.76" y1="238.76" x2="116.84" y2="238.76" width="0.1524" layer="91"/>
 <wire x1="116.84" y1="238.76" x2="116.84" y2="233.68" width="0.1524" layer="91"/>
-<wire x1="106.68" y1="248.92" x2="116.84" y2="248.92" width="0.1524" layer="91"/>
 <wire x1="116.84" y1="248.92" x2="116.84" y2="238.76" width="0.1524" layer="91"/>
 <junction x="116.84" y="238.76"/>
-<pinref part="J1" gate="1" pin="2"/>
+<pinref part="FB2" gate="G$1" pin="2"/>
+<wire x1="104.14" y1="248.92" x2="116.84" y2="248.92" width="0.1524" layer="91"/>
+<pinref part="C3" gate="G$1" pin="1"/>
+<wire x1="121.92" y1="233.68" x2="124.46" y2="233.68" width="0.1524" layer="91"/>
+<wire x1="124.46" y1="233.68" x2="124.46" y2="231.14" width="0.1524" layer="91"/>
+<junction x="121.92" y="233.68"/>
 </segment>
 <segment>
 <pinref part="P+12" gate="VCC" pin="VCC"/>
-<wire x1="134.62" y1="220.98" x2="134.62" y2="218.44" width="0.1524" layer="91"/>
-<pinref part="C11" gate="G$1" pin="1"/>
-<wire x1="134.62" y1="218.44" x2="139.7" y2="218.44" width="0.1524" layer="91"/>
-<wire x1="139.7" y1="218.44" x2="147.32" y2="218.44" width="0.1524" layer="91"/>
-<wire x1="147.32" y1="218.44" x2="147.32" y2="215.9" width="0.1524" layer="91"/>
-<wire x1="139.7" y1="215.9" x2="139.7" y2="218.44" width="0.1524" layer="91"/>
-<junction x="139.7" y="218.44"/>
+<wire x1="129.54" y1="236.22" x2="129.54" y2="233.68" width="0.1524" layer="91"/>
+<wire x1="129.54" y1="233.68" x2="134.62" y2="233.68" width="0.1524" layer="91"/>
+<wire x1="134.62" y1="231.14" x2="134.62" y2="233.68" width="0.1524" layer="91"/>
+<junction x="134.62" y="233.68"/>
 <pinref part="C10" gate="G$1" pin="1"/>
-<pinref part="C13" gate="G$1" pin="1"/>
-<wire x1="147.32" y1="218.44" x2="154.94" y2="218.44" width="0.1524" layer="91"/>
-<wire x1="154.94" y1="218.44" x2="162.56" y2="218.44" width="0.1524" layer="91"/>
-<wire x1="162.56" y1="218.44" x2="162.56" y2="215.9" width="0.1524" layer="91"/>
-<junction x="147.32" y="218.44"/>
+<wire x1="134.62" y1="233.68" x2="142.24" y2="233.68" width="0.1524" layer="91"/>
 <pinref part="C12" gate="G$1" pin="1"/>
-<wire x1="154.94" y1="215.9" x2="154.94" y2="218.44" width="0.1524" layer="91"/>
-<junction x="154.94" y="218.44"/>
-</segment>
-<segment>
-<pinref part="U1" gate="G$1" pin="VCCINT@3"/>
-<pinref part="P+15" gate="VCC" pin="VCC"/>
-<wire x1="144.78" y1="175.26" x2="144.78" y2="182.88" width="0.1524" layer="91"/>
-</segment>
-<segment>
-<pinref part="P+16" gate="VCC" pin="VCC"/>
-<pinref part="U1" gate="G$1" pin="VCCINT@2"/>
-<wire x1="147.32" y1="55.88" x2="147.32" y2="68.58" width="0.1524" layer="91"/>
+<wire x1="142.24" y1="231.14" x2="142.24" y2="233.68" width="0.1524" layer="91"/>
+<pinref part="J1" gate="1" pin="1"/>
+<wire x1="142.24" y1="233.68" x2="144.78" y2="233.68" width="0.1524" layer="91"/>
+<junction x="142.24" y="233.68"/>
 </segment>
 </net>
 <net name="N$1" class="0">
@@ -10202,6 +10240,31 @@ Source: http://www.ctscorp.com/components/Datasheets/CTSChipArrayDs.pdf</descrip
 <wire x1="81.28" y1="195.58" x2="81.28" y2="149.86" width="0.1524" layer="91"/>
 <pinref part="U1" gate="G$1" pin="B1/0"/>
 <wire x1="81.28" y1="149.86" x2="91.44" y2="149.86" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="VCCINT" class="0">
+<segment>
+<pinref part="J1" gate="1" pin="2"/>
+<pinref part="C13" gate="G$1" pin="1"/>
+<wire x1="154.94" y1="233.68" x2="157.48" y2="233.68" width="0.1524" layer="91"/>
+<wire x1="157.48" y1="233.68" x2="165.1" y2="233.68" width="0.1524" layer="91"/>
+<wire x1="165.1" y1="233.68" x2="165.1" y2="231.14" width="0.1524" layer="91"/>
+<pinref part="C11" gate="G$1" pin="1"/>
+<wire x1="157.48" y1="231.14" x2="157.48" y2="233.68" width="0.1524" layer="91"/>
+<junction x="157.48" y="233.68"/>
+<pinref part="VCC1" gate="G$1" pin="VCCINT"/>
+<wire x1="165.1" y1="233.68" x2="165.1" y2="236.22" width="0.1524" layer="91"/>
+<junction x="165.1" y="233.68"/>
+</segment>
+<segment>
+<pinref part="U1" gate="G$1" pin="VCCINT@3"/>
+<pinref part="VCC2" gate="G$1" pin="VCCINT"/>
+<wire x1="144.78" y1="180.34" x2="144.78" y2="175.26" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="U1" gate="G$1" pin="VCCINT@2"/>
+<pinref part="VCC3" gate="G$1" pin="VCCINT"/>
+<wire x1="147.32" y1="63.5" x2="147.32" y2="68.58" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>
