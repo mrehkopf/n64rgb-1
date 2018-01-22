@@ -34,10 +34,6 @@
 #include "system.h"
 
 
-extern alt_u32 ctrl_data;
-extern alt_u8  info_data;
-
-
 #define CTRL_A_OFFSET      0
 #define CTRL_B_OFFSET      1
 #define CTRL_Z_OFFSET      2
@@ -129,6 +125,7 @@ extern alt_u8  info_data;
 //#define INFO_FALLBACKMODE_SETMASK   (1<<INFO_FALLBACKMODE)
 //#define INFO_FALLBACKMODE_CLRMASK   (INFO_GETALL_MASK & ~INFO_FALLBACKMODE_SETMASK)
 
+#define NVSYNC_IN_MASK 0x01
 
 typedef enum {
   CMD_NON = 0,
@@ -151,9 +148,11 @@ typedef enum {
 
 
 cmd_t ctrl_data_to_cmd();
-inline void get_ctrl_data()
-  {  ctrl_data = IORD_ALTERA_AVALON_PIO_DATA(CTRL_DATA_IN_BASE);  };
-inline void get_info_data()
-  {  info_data = IORD_ALTERA_AVALON_PIO_DATA(INFO_SET_IN_BASE) & INFO_GETALL_MASK;  };
+inline alt_u32 get_ctrl_data()
+  {  return IORD_ALTERA_AVALON_PIO_DATA(CTRL_DATA_IN_BASE);  };
+inline alt_u8 get_info_data()
+  {  return (IORD_ALTERA_AVALON_PIO_DATA(INFO_SET_IN_BASE) & INFO_GETALL_MASK);  };
+inline alt_u8 get_nvsync()
+  {  return (IORD_ALTERA_AVALON_PIO_DATA(NVSYNC_IN_BASE) & NVSYNC_IN_MASK);  };
 
 #endif /* N64_H_ */

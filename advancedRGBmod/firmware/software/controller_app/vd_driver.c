@@ -42,12 +42,11 @@ int vd_clear_area(alt_u8 horiz_offset_start, alt_u8 horiz_offset_stop, alt_u8 ve
   alt_u8 horiz_offset, vert_offset;
   for (horiz_offset = horiz_offset_start; horiz_offset<=horiz_offset_stop; horiz_offset++)
     for (vert_offset = vert_offset_start; vert_offset<=vert_offset_stop; vert_offset++)
-      vd_print_char(horiz_offset,vert_offset,FONTCOLOR_NON, 0x00);
+      vd_print_char(horiz_offset,vert_offset, BACKGROUNDCOLOR_STANDARD, FONTCOLOR_NON, 0x00);
   return(0);
 };
 
-
-int vd_print_string(alt_u8 horiz_offset, alt_u8 vert_offset, alt_u8 color, const char *string)
+int vd_print_string(alt_u8 horiz_offset, alt_u8 vert_offset, alt_u8 background, alt_u8 color, const char *string)
 {
   int i = 0;
   alt_u8 original_horiz_offset;
@@ -64,28 +63,47 @@ int vd_print_string(alt_u8 horiz_offset, alt_u8 vert_offset, alt_u8 color, const
       continue;
     }
     // Lay down that character and increment our offsets.
-    vd_print_char(horiz_offset, vert_offset, color, string[i]);
+    vd_print_char(horiz_offset, vert_offset, background, color, string[i]);
     i++;
     horiz_offset++;
   }
   return (0);
 }
 
-int vd_print_char (alt_u8 horiz_offset, alt_u8 vert_offset, alt_u8 color, const char character)
+int vd_print_char (alt_u8 horiz_offset, alt_u8 vert_offset, alt_u8 background, alt_u8 color, const char character)
 {
   if((horiz_offset >= 0) && (horiz_offset < _width) && (vert_offset >= 0) && (vert_offset < _height)){
     VD_SET_ADDR(horiz_offset,vert_offset);
-    VD_SET_DATA(color,character);
-    vd_write_data();
+    VD_SET_DATA(background,color,character);
+    vd_write_data(1,1);
   }
   return(0);
 }
 
-void vd_write_data()
+int vd_change_color_area(alt_u8 horiz_offset_start, alt_u8 horiz_offset_stop, alt_u8 vert_offset_start, alt_u8 vert_offset_stop, alt_u8 background, alt_u8 fontcolor)
 {
-  alt_u8 wrctrl;
+  alt_u8 horiz_offset, vert_offset;
+  for (horiz_offset = horiz_offset_start; horiz_offset<=horiz_offset_stop; horiz_offset++)
+    for (vert_offset = vert_offset_start; vert_offset<=vert_offset_stop; vert_offset++)
+      vd_change_color(horiz_offset,vert_offset, background, fontcolor);
+  return(0);
+};
 
-  wrctrl = IORD_ALTERA_AVALON_PIO_DATA(VD_WRCTRL_BASE) | VD_WRCTRL_WREN_SETMASK;
+int vd_change_color_px (alt_u8 horiz_offset, alt_u8 vert_offset, alt_u8 background, alt_u8 color)
+{
+  if((horiz_offset >= 0) && (horiz_offset < _width) && (vert_offset >= 0) && (vert_offset < _height)){
+    VD_SET_ADDR(horiz_offset,vert_offset);
+    VD_SET_DATA(background,color,EMPTY);
+    vd_write_data(1,0);
+  }
+  return(0);
+}
+
+void vd_write_data(alt_u8 wr_color, alt_u8 wr_font)
+{
+  alt_u8 wrctrl = ((wr_color != 0) << 1) | (wr_font != 0);
+
+  wrctrl = IORD_ALTERA_AVALON_PIO_DATA(VD_WRCTRL_BASE) | (wrctrl & VD_WRCTRL_WREN_GETMASK);
   IOWR_ALTERA_AVALON_PIO_DATA(VD_WRCTRL_BASE,wrctrl);
   wrctrl = wrctrl & VD_WRCTRL_WREN_CLRMASK;
   IOWR_ALTERA_AVALON_PIO_DATA(VD_WRCTRL_BASE,wrctrl);

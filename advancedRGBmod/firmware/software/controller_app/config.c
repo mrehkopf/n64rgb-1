@@ -33,32 +33,99 @@
 #include "config.h"
 
 
-#define FALLBACK_DEFAULT_CONFIG (             \
-  CFG_GETALL_MASK & ( CFG_USEIGR_SETMASK    | \
-                      CFG_RGSB_SETMASK      | \
-                      CFG_SLSTR_0_SETMASK     ))
+#define CFGI_DEFAULT  CFGI_QUICKCHANGE_RSTMASK
+
+#define JUMPERSET_BASE  DEFAULT_CFG_SET_IN_BASE
+
+#define CFG_GAMMA_DEFAULTVAL      5
+#define CFG_GAMMA_DEFAULT_SETMASK (CFG_GAMMA_DEFAULTVAL<<CFG_GAMMA_OFFSET)
+
+#define FALLBACK_DEFAULT_CONFIG (                 \
+  CFG_GETALL_MASK & ( CFG_USEIGR_SETMASK        | \
+                      CFG_GAMMA_DEFAULT_SETMASK | \
+                      CFG_RGSB_SETMASK          | \
+                      CFG_SLSTR_0_SETMASK         ))
 #define DEFAULT0_CONFIG (                      \
-  CFG_GETALL_MASK & ( CFG_USEIGR_SETMASK    | \
-                      CFG_SLSTR_0_SETMASK     ))
+  CFG_GETALL_MASK & ( CFG_USEIGR_SETMASK        | \
+                      CFG_GAMMA_DEFAULT_SETMASK ))
 
 #define DEFAULT_CFG_ALLMASK           0x3F
-#define DEFAULT_CFG_NRGSB_GETMASK     (1<<CFG_RGSB_OFFSET)
 #define DEFAULT_CFG_NYPBPR_GETMASK    (1<<CFG_YPBPR_OFFSET)
+#define DEFAULT_CFG_NRGSB_GETMASK     (1<<CFG_RGSB_OFFSET)
 #define DEFAULT_CFG_NSLSTR_GETMASK    (3<<CFG_SLSTR_OFFSET)
 #define DEFAULT_CFG_LINEX2_GETMASK    (1<<CFG_LINEX2_OFFSET)
 #define DEFAULT_CFG_N480IBOB_GETMASK  (1<<CFG_480IBOB_OFFSET)
 #define DEFAULT_CFG_JUMPERINV_MASK    0x3D  /* inversion due to nature of jumper */
 
 
-volatile alt_u16 cfg_data;
-
-
-void cfg_load_defaults()
+void cfg_inc_value(config_t* cfg_data)
 {
-  if(info_data & INFO_FALLBACKMODE_GETMASK)
-    cfg_data = FALLBACK_DEFAULT_CONFIG;
-  else
-    cfg_data = DEFAULT0_CONFIG | ((IORD_ALTERA_AVALON_PIO_DATA(DEFAULT_CFG_SET_IN_BASE) ^ DEFAULT_CFG_JUMPERINV_MASK) & DEFAULT_CFG_ALLMASK);
+  if (cfg_data->cfg_type == FLAG) {
+    cfg_toggle_flag(cfg_data);
+    return;
+  }
 
-  cfg_apply();
+  alt_u16 cfg_word = cfg_data->cfg_word->cfg_word_val;
+  alt_u16 cur_val = (cfg_word & cfg_data->value_details.getvalue_mask) >> cfg_data->cfg_word_offset;
+
+  cur_val = cur_val == cfg_data->value_details.max_value ? 0 : cur_val + 1;
+  cfg_word = (cfg_word & ~cfg_data->value_details.getvalue_mask) | (cur_val << cfg_data->cfg_word_offset);
+
+  cfg_data->cfg_word->cfg_word_val = cfg_word;
+};
+
+void cfg_dec_value(config_t* cfg_data)
+{
+  if (cfg_data->cfg_type == FLAG) {
+    cfg_toggle_flag(cfg_data);
+    return;
+  }
+
+  alt_u16 cfg_word = cfg_data->cfg_word->cfg_word_val;
+  alt_u16 cur_val = (cfg_word & cfg_data->value_details.getvalue_mask) >> cfg_data->cfg_word_offset;
+
+  cur_val = cur_val == 0 ? cfg_data->value_details.max_value : cur_val - 1;
+  cfg_word = (cfg_word & ~cfg_data->value_details.getvalue_mask) | (cur_val << cfg_data->cfg_word_offset);
+
+  cfg_data->cfg_word->cfg_word_val = cfg_word;
+};
+
+alt_u16 cfg_get_value(config_t* cfg_data)
+{
+  if (cfg_data->cfg_type == FLAG) return ((cfg_data->cfg_word->cfg_word_val & cfg_data->flag_masks.setflag_mask)     >> cfg_data->cfg_word_offset);
+  else                            return ((cfg_data->cfg_word->cfg_word_val & cfg_data->value_details.getvalue_mask) >> cfg_data->cfg_word_offset);
+};
+
+void cfg_set_value(config_t* cfg_data, alt_u16 value)
+{
+  if (cfg_data->cfg_type == FLAG) {
+    if (value) cfg_set_flag(cfg_data);
+    else       cfg_clear_flag(cfg_data);
+  } else {
+    alt_u16 cfg_word = cfg_data->cfg_word->cfg_word_val;
+    alt_u16 cur_val = value > cfg_data->value_details.max_value ? 0 : value;
+
+    cfg_word = (cfg_word & ~cfg_data->value_details.getvalue_mask) | (cur_val << cfg_data->cfg_word_offset);
+
+    cfg_data->cfg_word->cfg_word_val = cfg_word;
+  }
+};
+
+void cfg_load_defaults(cfg_word_t* cfg_word,alt_u8 fallback)
+{
+  if (cfg_word->cfg_word_type == GENERAL) {
+    alt_u16 jumperset = (IORD_ALTERA_AVALON_PIO_DATA(JUMPERSET_BASE) ^ DEFAULT_CFG_JUMPERINV_MASK) & DEFAULT_CFG_ALLMASK;
+
+    if(fallback)
+      cfg_word->cfg_word_val = FALLBACK_DEFAULT_CONFIG;
+    else
+      cfg_word->cfg_word_val = (DEFAULT0_CONFIG | jumperset) & CFG_GETALL_MASK;
+
+    cfg_apply_word(cfg_word);
+  } else if (cfg_word->cfg_word_type == INTERNAL) {
+//    if(fallback)
+//      cfg_word->cfg_word_val = CFGI_DEFAULT;
+//    else
+      cfg_word->cfg_word_val = CFGI_DEFAULT;
+  }
 }

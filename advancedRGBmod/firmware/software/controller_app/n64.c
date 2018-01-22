@@ -32,20 +32,18 @@
 #include "system.h"
 #include "n64.h"
 
+
 #define COMMAND_HISTORY_LENGTH  3
 
-alt_u32 ctrl_data;
-alt_u8  info_data;
-
 // ToDo: export function into logic to save some memory space
-cmd_t ctrl_data_to_cmd()
+cmd_t ctrl_data_to_cmd(alt_u32* ctrl_data)
 {
   cmd_t cmd_new = CMD_NON;
   static cmd_t cmd_pre = CMD_NON;
 
   static alt_u8 cmd_history_cnt = COMMAND_HISTORY_LENGTH;
 
-  switch (ctrl_data & CTRL_GETALL_DIGITAL_MASK) {
+  switch (*ctrl_data & CTRL_GETALL_DIGITAL_MASK) {
     case BTN_OPEN_OSDMENU:
       cmd_new = CMD_OPEN_MENU;
       break;

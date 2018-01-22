@@ -60,6 +60,7 @@ parameter vdata_width_o = 4 + 3*color_width_o;
   `define VDATA_O_GR_SLICE  2*color_width_o-1:  color_width_o
   `define VDATA_O_BL_SLICE    color_width_o-1:0
 
+  `define GAMMA_TABLE_OFF   4'b0101
 
   `define HSTART_NTSC_240P  11'd240
   `define HSTART_NTSC_480I  11'd230
@@ -135,26 +136,50 @@ parameter vdata_width_o = 4 + 3*color_width_o;
   `define OSD_HEADER_V_STOP   8'd57
   `define OSD_FOOTER_V_START  8'd202
 
-  // define OSD background window color
-  `define OSD_WINDOW_BG_COLOR 6'b000001
+  // define OSD background window color (three bits each color)
+  `define OSD_BACKGROUND_WHITE        2'b11
+  `define OSD_BACKGROUND_GREY         2'b10
+  `define OSD_BACKGROUND_BLACK        2'b01
+  `define OSD_BACKGROUND_DARKBLUE     2'b00
+
+  `define OSD_WINDOW_BGCOLOR_WHITE    9'b111111111
+  `define OSD_WINDOW_BGCOLOR_GREY     9'b010010010
+  `define OSD_WINDOW_BGCOLOR_BLACK    9'b000000000
+  `define OSD_WINDOW_BGCOLOR_DARKBLUE 9'b000000011
 
   // define text color
-  `define FONTCOLOR_NON          4'h0
-  `define FONTCOLOR_WHITE        4'h1
-  `define FONTCOLOR_RED          4'h2
-  `define FONTCOLOR_GREEN        4'h3
-  `define FONTCOLOR_BLUE         4'h4
-  `define FONTCOLOR_YELLOW       4'h5
-  `define FONTCOLOR_CYAN         4'h6
-  `define FONTCOLOR_MAGENTA      4'h7
+  `define FONTCOLOR_NON              4'h0
+  `define FONTCOLOR_BLACK            4'h1
+  `define FONTCOLOR_GREY             4'h2
+  `define FONTCOLOR_LIGHTGREY        4'h3
+  `define FONTCOLOR_WHITE            4'h4
+  `define FONTCOLOR_RED              4'h5
+  `define FONTCOLOR_GREEN            4'h6
+  `define FONTCOLOR_BLUE             4'h7
+  `define FONTCOLOR_YELLOW           4'h8
+  `define FONTCOLOR_CYAN             4'h9
+  `define FONTCOLOR_MAGENTA          4'hA
+  `define FONTCOLOR_DARKORANGE       4'hD
+  `define FONTCOLOR_TOMATO           4'hC
+  `define FONTCOLOR_DARKMAGENTA      4'hD
+  `define FONTCOLOR_NAVAJOWHITE      4'hE
+  `define FONTCOLOR_DARKGOLD         4'hF
 
-  `define OSD_TXT_COLOR_WHITE   21'h1FFFFF
-  `define OSD_TXT_COLOR_RED     21'h1FC000
-  `define OSD_TXT_COLOR_GREEN   21'h003F80
-  `define OSD_TXT_COLOR_BLUE    21'h00007F
-  `define OSD_TXT_COLOR_YELLOW  21'h1FFF80
-  `define OSD_TXT_COLOR_CYAN    21'h003FFF
-  `define OSD_TXT_COLOR_MAGENTA 21'h1FC07F
+  `define OSD_TXT_COLOR_BLACK       21'h000000
+  `define OSD_TXT_COLOR_GREY        21'h07CF9F
+  `define OSD_TXT_COLOR_LIGHTGREY   21'h0FDFBF
+  `define OSD_TXT_COLOR_WHITE       21'h1FFFFF
+  `define OSD_TXT_COLOR_RED         21'h1FC000
+  `define OSD_TXT_COLOR_GREEN       21'h003F80
+  `define OSD_TXT_COLOR_BLUE        21'h00007F
+  `define OSD_TXT_COLOR_YELLOW      21'h1FFF80
+  `define OSD_TXT_COLOR_CYAN        21'h003FFF
+  `define OSD_TXT_COLOR_MAGENTA     21'h1FC07F
+  `define OSD_TXT_COLOR_DARKORANGE  21'h199980
+  `define OSD_TXT_COLOR_TOMATO      21'h1DD721
+  `define OSD_TXT_COLOR_DARKMAGENTA 21'h114045
+  `define OSD_TXT_COLOR_NAVAJOWHITE 21'h1FF7D6
+  `define OSD_TXT_COLOR_DARKGOLD    21'h1DEB07
 
 
   // In-game reset command

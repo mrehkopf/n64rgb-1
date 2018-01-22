@@ -34,7 +34,7 @@
 
 
 #define HEADER_UNDERLINE      0x08
-#define HOME_LOWSEC_UNDERLINE 0x00
+#define HOME_LOWSEC_UNDERLINE 0x01
 #define HEADER_H_OFFSET       0
 #define OVERLAY_V_OFFSET_WH   2
 #define TEXTOVERLAY_H_OFFSET  0
@@ -51,13 +51,36 @@
 #define VERSION_H_OFFSET 20
 #define VERSION_V_OFFSET  5
 
-#define BTN_OVERLAY_H_OFFSET  (VD_WIDTH - 12)
-#define BTN_OVERLAY_V_OFFSET  (VD_HEIGHT - 5)
+
+#define BTN_OVERLAY_0_H_OFFSET  (VD_WIDTH - 12)
+#define BTN_OVERLAY_0_V_OFFSET  (VD_HEIGHT - 4)
+#define BTN_OVERLAY_1_H_OFFSET  (VD_WIDTH - 12)
+#define BTN_OVERLAY_1_V_OFFSET  (VD_HEIGHT - 3)
+
+#define CFG_OVERLAY_H_OFFSET  2
+#define CFG_OVERLAY_V_OFFSET  OVERLAY_V_OFFSET_WH
+#define CFG_VALS_H_OFFSET     (27 + CFG_OVERLAY_H_OFFSET)
+#define CFG_VALS_V_OFFSET     CFG_OVERLAY_V_OFFSET
+#define CFG_LINEX2_V_OFFSET   ( 1 + CFG_VALS_V_OFFSET)
+#define CFG_480IBOB_V_OFFSET  ( 2 + CFG_VALS_V_OFFSET)
+#define CFG_SLSTR_V_OFFSET    ( 3 + CFG_VALS_V_OFFSET)
+#define CFG_FORMAT_V_OFFSET   ( 4 + CFG_VALS_V_OFFSET)
+#define CFG_DEBLUR_V_OFFSET   ( 5 + CFG_VALS_V_OFFSET)
+#define CFG_15BIT_V_OFFSET    ( 6 + CFG_VALS_V_OFFSET)
+#define CFG_GAMMA_V_OFFSET    ( 7 + CFG_VALS_V_OFFSET)
+
+#define MISC_OVERLAY_H_OFFSET   2
+#define MISC_OVERLAY_V_OFFSET   OVERLAY_V_OFFSET_WH
+#define MISC_VALS_H_OFFSET      (23 + MISC_OVERLAY_H_OFFSET)
+#define MISC_VALS_V_OFFSET      CFG_OVERLAY_V_OFFSET
+#define MISC_IGR_RESET_V_OFFSET ( 1 + MISC_VALS_V_OFFSET)
+#define MISC_IGR_QUICK_V_OFFSET ( 2 + MISC_VALS_V_OFFSET)
+
 
 #define INFO_OVERLAY_H_OFFSET 2
-#define INFO_OVERLAY_V_OFFSET 2
-#define INFO_VALS_H_OFFSET    (17 + INFO_OVERLAY_H_OFFSET)
-#define INFO_VALS_V_OFFSET    OVERLAY_V_OFFSET_WH
+#define INFO_OVERLAY_V_OFFSET OVERLAY_V_OFFSET_WH
+#define INFO_VALS_H_OFFSET    (18 + INFO_OVERLAY_H_OFFSET)
+#define INFO_VALS_V_OFFSET    INFO_OVERLAY_V_OFFSET
 
 #define INFO_VIN_V_OFFSET     (1 + INFO_VALS_V_OFFSET)
 #define INFO_VOUT_V_OFFSET    (2 + INFO_VALS_V_OFFSET)
@@ -67,12 +90,27 @@
 #define INFO_FAO_V_OFFSET     (6 + INFO_VALS_V_OFFSET)
 
 
+#define MAIN_OVERLAY_H_OFFSET 2
+#define MAIN_OVERLAY_V_OFFSET OVERLAY_V_OFFSET_WH
+
+#define MAIN2VINFO_V_OFFSET   (0 + MAIN_OVERLAY_V_OFFSET)
+#define MAIN2CFG_V_OFFSET     (1 + MAIN_OVERLAY_V_OFFSET)
+#define MAIN2MISC_V_OFFSET    (2 + MAIN_OVERLAY_V_OFFSET)
+#define MAIN2SAVE_V_OFFSET    (3 + MAIN_OVERLAY_V_OFFSET)
+#define MAIN2ABOUT_V_OFFSET   (5 + MAIN_OVERLAY_V_OFFSET)
+#define MAIN2THANKS_V_OFFSET  (6 + MAIN_OVERLAY_V_OFFSET)
+#define MAIN2LICENSE_V_OFFSET (7 + MAIN_OVERLAY_V_OFFSET)
+
+
 static const char *copyright_note =
     "2018 borti4938"; /* 14 chars */
 
 static const char *btn_overlay_0 =
     "A ... Enter\n"
     "B ... Close";
+
+//static const char *btn_overlay_1 =
+//    "B ... Back";
 
 static const char *vinfo_header =
     "N64 Advanced - Video-Info";
@@ -85,8 +123,27 @@ static const char *vinfo_overlay =
     "* 240p-DeBlur:\n"
     "* Filter AddOn:";
 
+static const char *cfg_header =
+    "N64 Advanced - Configuration";
+static const char *cfg_overlay =
+    "* Linedoubling:\n"
+    "  - LineX2:\n"
+    "  - 480i de-int. (bob):\n"
+    "  - Scanlines:\n"
+    "* Output Format:\n"
+    "* 240p-DeBlur:\n"
+    "* 15bit Mode:\n"
+    "* Gamma Value:";
+
+static const char *misc_header =
+    "N64 Advanced - Miscellaneous";
+static const char *misc_overlay =
+    "* In-Game Routines:\n"
+    "  - Reset:\n"
+    "  - Quick-Access:";
+
 static const char *thanks_overlay =
-    "The N64 RGB project would not be what it is with\n"
+    "The N64 RGB project would not be what it is\n"
     "without the contributions many other people.\n"
     "Here, I want to point out especially:\n"
     " - viletim  : First public DIY N64 DAC project\n"
@@ -129,20 +186,22 @@ static const char *home_header =
 static const char *home_overlay =
     "[Video-Info]\n"
     "[Configuration]\n"
-    "[Miscellaneous]\n\n"
+    "[Miscellaneous]\n"
+    "[Load/Save]\n\n"
     "About...\n"
     "Acknowledgment...\n"
     "License...";
 
 
-static const char *OffOn[]        = {"Off","On"};
-static const char *VideoMode[]    = {"240p60","288p50","480i60","576i50","480p60","576p50"};
-static const char *VideoColor[]   = {"21bit","15bit"};
-static const char *VideoFormat[]  = {"RGBS","RGBS/RGsB","YPbPr"};
-static const char *DeBlur[]       = {"(estimated)","(forced)","(480i/576i)"};
-//static const char *DeBlurCfg[]    = {"Auto","Off","Always"};
-static const char *FilterAddOn[]  = {"not installed","9.5MHz","18MHz","Filter bypassed"};
-//static const char *SLStrength[]   = {"0%","25%","50%","100%"};
-//static const char *GammaValue[]   = {"1.0","0.8","0.9","1.1","1.2"};
+const char *OffOn[]        = {"Off","On"};
+const char *VideoMode[]    = {"240p60","288p50","480i60","576i50","480p60","576p50"};
+const char *VideoColor[]   = {"21bit","15bit"};
+const char *VideoFormat[]  = {"RGBS","RGBS/RGsB","YPbPr"};
+const char *DeBlur[]       = {"(estimated)","(forced)","(480i/576i)"};
+const char *DeBlurCfg[]    = {"Auto","Off","Always"};
+const char *FilterAddOn[]  = {"not installed","9.5MHz","18MHz","Filter bypassed"};
+const char *SLStrength[]   = {"0%","25%","50%","100%"};
+const char *GammaValue[]   = {"0.70","0.75","0.80","0.85","0.90","1.00","1.10","1.15","1.20"};
+const char *QuickChange[]  = {"Off","DeBlur","15bit mode","All"};
 
 #endif /* MENUTEXTS_H_ */

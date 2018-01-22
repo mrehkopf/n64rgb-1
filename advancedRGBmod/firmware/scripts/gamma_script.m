@@ -23,7 +23,7 @@ bit_width = 7;
 max_value = 2^7-1;
 rgb_i = 0:max_value;
 
-gamma = [0.8 0.9 1.1 1.2];   % gamma values
+gamma = [0.7 0.75 0.8 0.85 0.9 1.1 1.15 1.2];   % gamma values
 fileName = 'gamma_vals.hex'; % file-name for mem-init
 targetFolder = '../ip/';     % target folder for mem-init file
 

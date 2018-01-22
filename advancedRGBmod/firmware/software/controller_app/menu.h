@@ -46,7 +46,7 @@ typedef enum {
 
 typedef enum {
   HOME = 0,
-  INFO,
+  VINFO,
   CONFIG,
   TEXT
 } screentype_t;
@@ -83,8 +83,10 @@ extern menu_t home_menu;
 
 updateaction_t apply_command(cmd_t command, menu_t** current_menu);
 void print_overlay(menu_t* current_menu);
-void print_select(menu_t* current_menu);
-void update_vinfo_screen();
+void print_selection_arrow(menu_t* current_menu);
+void print_selection_window(menu_t* current_menu);
+int update_vinfo_screen(menu_t* current_menu, cfg_word_t* cfg_word, alt_u8 info_data);
+int update_cfg_screen(menu_t* current_menu, cfg_word_t* cfg_word);
 
 
 //extern char szText[];
@@ -92,7 +94,6 @@ void update_vinfo_screen();
 //void print_home_screen();
 //void print_info_screen();
 //void print_cfg_screen();
-//void update_cfg_screen();
 
 
 #endif /* MENU_H_ */

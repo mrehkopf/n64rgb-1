@@ -57,7 +57,7 @@ input nRST;
 
 input  [color_width_i-1:0] D_i;
 input  [              4:0] demuxparams_i;
-input  [              2:0] gammaparams_i;
+input  [              3:0] gammaparams_i;
 
 output reg [`VDATA_I_FU_SLICE] vdata_r_0 = {vdata_width_i{1'b0}}; // buffer for sync, red, green and blue
 output reg [`VDATA_I_FU_SLICE] vdata_r_1 = {vdata_width_i{1'b0}}; // (unpacked array types in ports requires system verilog)
@@ -71,8 +71,10 @@ wire ndo_deblur      = demuxparams_i[  2];
 wire nblank_rgb      = demuxparams_i[  1];
 wire n15bit_mode     = demuxparams_i[  0];
 
-wire       en_gamma_boost = gammaparams_i[2];
-wire [1:0] gamma_rom_page = gammaparams_i[1:0];
+wire       en_gamma_boost     = ~(gammaparams_i == `GAMMA_TABLE_OFF);
+wire [3:0] gamma_rom_page_tmp =  (gammaparams_i < `GAMMA_TABLE_OFF) ? gammaparams_i       :
+                                                                      gammaparams_i - 1'b1;
+wire [2:0] gamma_rom_page     = gamma_rom_page_tmp[2:0];
 
 
 // start of rtl

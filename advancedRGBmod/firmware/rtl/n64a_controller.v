@@ -71,7 +71,7 @@ input CTRL;
 
 input      [ 4:0] InfoSet;
 input      [ 5:0] DefaultConfigSet;
-output reg [11:0] ConfigSet;
+output reg [12:0] ConfigSet;
 
 input nCLK;
 input nDSYNC;
@@ -81,6 +81,10 @@ output reg [`VDATA_I_FU_SLICE] video_data_o;
 
 
 // start of rtl
+
+
+wire nHSYNC_cur = video_data_i[3*color_width_i+1];
+wire nVSYNC_cur = video_data_i[3*color_width_i+3];
 
 
 // Part 1: Connect PLL
@@ -96,7 +100,7 @@ altpll_1 sys_pll(
   .locked(PLL_LOCKED)
 );
 
-wire nRST_pll = nRST & PLL_LOCKED;
+wire nRST_pll = PLL_LOCKED;
 
 
 // Part 2: Instantiate NIOS II
@@ -131,15 +135,16 @@ system system_u(
   .ctrl_data_in_export({ctrl_analog_data,ctrl_digital_data[1]}),
   .default_cfg_set_in_export(DefaultConfigSet),
   .cfg_set_out_export(SysConfigSet),
-  .info_set_in_export({InfoSet,FallbackMode})
+  .info_set_in_export({InfoSet,FallbackMode}),
+  .nvsync_in_export(nVSYNC_cur)
 );
 
-wire show_osd = SysConfigSet[13];
-wire use_igr  = SysConfigSet[12];
+wire show_osd = SysConfigSet[14];
+wire use_igr  = SysConfigSet[13];
 
 always @(negedge nCLK) begin
   if (&{~nDSYNC,nVSYNC_pre,~nVSYNC_cur} | ~nRST)
-    ConfigSet <= SysConfigSet[11:0];
+    ConfigSet <= SysConfigSet[12:0];
 //    ConfigSet <= {cfg_nDeBlurMan,cfg_nForceDeBlur,cfg_n15bit_mode,cfg_gamma,cfg_nEN_RGsB,cfg_nEN_YPbPr,cfg_SL_str,cfg_n240p,cfg_n480i_bob};
 end
 
@@ -261,7 +266,7 @@ always @(posedge CLK_4M) begin
       initiate_nrst <= 1'b1;
   end
 
-  if (!nRST_pll) begin
+  if (!nRST) begin
     rd_state      <= ST_WAIT4N64;
     wait_cnt      <= 12'h000;
     prev_ctrl     <=  1'b1;
@@ -304,10 +309,6 @@ assign nRST = drv_rst ? 1'b0 : 1'bz;
 //   (for simplicity atm. RAM has 48x16 words)
 // - content is mapped into memory and written by NIOSII processor
 // - Font is looked up in an extra ROM
-
-
-wire nHSYNC_cur = video_data_i[3*color_width_i+1];
-wire nVSYNC_cur = video_data_i[3*color_width_i+3];
 
 reg nHSYNC_pre = 1'b0;
 reg nVSYNC_pre = 1'b0;
@@ -403,20 +404,24 @@ ram2port_2 vd_color_u(
   .q({background_tmp,font_color_tmp})
 );
 
-reg [7:0] font_addr_msb  = 8'h0;
-reg [7:0] font_color_del = 8'h0;
+reg [3:0] background_color_del = 4'h0;
+reg [7:0] font_addr_msb        = 8'h0;
+reg [7:0] font_color_del       = 8'h0;
 
 always @(negedge nCLK) begin
+  background_color_del <= {background_color_del[1:0],background_tmp};
   font_addr_msb  <= {font_addr_msb [3:0],txt_v_cnt[3:0]};
   font_color_del <= {font_color_del[3:0],font_color_tmp};
 
   if (~nRST) begin
-    font_addr_msb  <= 8'h0;
-    font_color_del <= 8'h0;
+    background_color_del <= 4'h0;
+    font_addr_msb        <= 8'h0;
+    font_color_del       <= 8'h0;
   end
 end
 
-wire [3:0] font_color = font_color_del[7:4];
+wire [1:0] background_color = background_color_del[3:2];
+wire [3:0] font_color       = font_color_del[7:4];
 wire [7:0] font_word;
 
 rom1port_1 font_mem_u(
@@ -437,15 +442,29 @@ end
 
 wire pixel_is_set = font_word[font_pixel_select[11:9]];
 
-wire [5:0] window_bg_color = `OSD_WINDOW_BG_COLOR;
+wire [8:0] window_bg_color = (background_color == `OSD_BACKGROUND_WHITE) ? `OSD_WINDOW_BGCOLOR_WHITE   :
+                             (background_color == `OSD_BACKGROUND_GREY)  ? `OSD_WINDOW_BGCOLOR_GREY    :
+                             (background_color == `OSD_BACKGROUND_BLACK) ? `OSD_WINDOW_BGCOLOR_BLACK   :
+                                                                           `OSD_WINDOW_BGCOLOR_DARKBLUE;
 
-wire [`VDATA_I_CO_SLICE] txt_color = (font_color == `FONTCOLOR_WHITE)  ? `OSD_TXT_COLOR_WHITE  :
-                                     (font_color == `FONTCOLOR_RED)    ? `OSD_TXT_COLOR_RED    :
-                                     (font_color == `FONTCOLOR_GREEN)  ? `OSD_TXT_COLOR_GREEN  :
-                                     (font_color == `FONTCOLOR_BLUE)   ? `OSD_TXT_COLOR_BLUE   :
-                                     (font_color == `FONTCOLOR_YELLOW) ? `OSD_TXT_COLOR_YELLOW :
-                                     (font_color == `FONTCOLOR_CYAN)   ? `OSD_TXT_COLOR_CYAN   :
-                                                                         `OSD_TXT_COLOR_MAGENTA;
+wire [8:0] window_bg_color_default = `OSD_WINDOW_BGCOLOR_DARKBLUE;
+
+wire [`VDATA_I_CO_SLICE] txt_color = (font_color == `FONTCOLOR_WHITE)       ? `OSD_TXT_COLOR_WHITE       :
+                                     (font_color == `FONTCOLOR_BLACK)       ? `OSD_TXT_COLOR_BLACK       :
+                                     (font_color == `FONTCOLOR_GREY)        ? `OSD_TXT_COLOR_GREY        :
+                                     (font_color == `FONTCOLOR_LIGHTGREY)   ? `OSD_TXT_COLOR_LIGHTGREY   :
+                                     (font_color == `FONTCOLOR_WHITE)       ? `OSD_TXT_COLOR_WHITE       :
+                                     (font_color == `FONTCOLOR_RED)         ? `OSD_TXT_COLOR_RED         :
+                                     (font_color == `FONTCOLOR_GREEN)       ? `OSD_TXT_COLOR_GREEN       :
+                                     (font_color == `FONTCOLOR_BLUE)        ? `OSD_TXT_COLOR_BLUE        :
+                                     (font_color == `FONTCOLOR_YELLOW)      ? `OSD_TXT_COLOR_YELLOW      :
+                                     (font_color == `FONTCOLOR_CYAN)        ? `OSD_TXT_COLOR_CYAN        :
+                                     (font_color == `FONTCOLOR_MAGENTA)     ? `OSD_TXT_COLOR_MAGENTA     :
+                                     (font_color == `FONTCOLOR_DARKORANGE)  ? `OSD_TXT_COLOR_DARKORANGE  :
+                                     (font_color == `FONTCOLOR_TOMATO)      ? `OSD_TXT_COLOR_TOMATO      :
+                                     (font_color == `FONTCOLOR_DARKMAGENTA) ? `OSD_TXT_COLOR_DARKMAGENTA :
+                                     (font_color == `FONTCOLOR_NAVAJOWHITE) ? `OSD_TXT_COLOR_NAVAJOWHITE :
+                                                                              `OSD_TXT_COLOR_DARKGOLD    ;
 
 always @(negedge nCLK) begin
   // pass through sync
@@ -453,20 +472,29 @@ always @(negedge nCLK) begin
 
   // draw menu window if needed
   if (show_osd & draw_osd_window[4]) begin
-    if (&{en_txtrd[4],|font_color,pixel_is_set}) begin
-      video_data_o[`VDATA_I_CO_SLICE] <= txt_color;
+    if (en_txtrd[4]) begin
+      if (|font_color & pixel_is_set) begin
+        video_data_o[`VDATA_I_CO_SLICE] <= txt_color;
+      end else begin
+      // modify red
+        video_data_o[3*color_width_i-1:3*color_width_i-3] <= window_bg_color[8:6];
+        video_data_o[3*color_width_i-4:2*color_width_i  ] <= video_data_i[3*color_width_i-1:2*color_width_i+3];
+      // modify green
+        video_data_o[2*color_width_i-1:2*color_width_i-3] <= window_bg_color[5:3];
+        video_data_o[2*color_width_i-4:  color_width_i  ] <= video_data_i[2*color_width_i-1:color_width_i+3];
+      // modify blue
+        video_data_o[color_width_i-1:color_width_i-3] <= window_bg_color[2:0];
+        video_data_o[color_width_i-4:              0] <= video_data_i[color_width_i-1:3];
+      end
     end else begin
     // modify red
-      video_data_o[3*color_width_i-1:3*color_width_i-2] <= window_bg_color[5:4];
-      video_data_o[3*color_width_i-3                  ] <= 1'b0;
+      video_data_o[3*color_width_i-1:3*color_width_i-3] <= window_bg_color_default[8:6];
       video_data_o[3*color_width_i-4:2*color_width_i  ] <= video_data_i[3*color_width_i-1:2*color_width_i+3];
     // modify green
-      video_data_o[2*color_width_i-1:2*color_width_i-2] <= window_bg_color[3:2];
-      video_data_o[2*color_width_i-3                  ] <= 1'b0;
+      video_data_o[2*color_width_i-1:2*color_width_i-3] <= window_bg_color_default[5:3];
       video_data_o[2*color_width_i-4:  color_width_i  ] <= video_data_i[2*color_width_i-1:color_width_i+3];
     // modify blue
-      video_data_o[color_width_i-1:color_width_i-2] <= window_bg_color[1:0];
-      video_data_o[color_width_i-3                ] <= 1'b0;
+      video_data_o[color_width_i-1:color_width_i-3] <= window_bg_color_default[2:0];
       video_data_o[color_width_i-4:              0] <= video_data_i[color_width_i-1:3];
     end
   end else begin
