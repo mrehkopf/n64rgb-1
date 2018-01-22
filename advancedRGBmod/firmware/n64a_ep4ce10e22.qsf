@@ -167,9 +167,8 @@ set_global_assignment -name VERILOG_INCLUDE_FILE vh/n64a_params.vh
 set_global_assignment -name VERILOG_FILE rtl/n64a_controller.v
 set_global_assignment -name QIP_FILE ip/CycloneIVE/altpll_1.qip
 set_global_assignment -name QIP_FILE system/synthesis/system.qip
-set_global_assignment -name QIP_FILE ip/CycloneIVE/ram2port_1.qip
 set_global_assignment -name QIP_FILE ip/CycloneIVE/rom1port_1.qip
-set_global_assignment -name QIP_FILE ip/CycloneIVE/ram1port_1.qip
+set_global_assignment -name QIP_FILE ip/CycloneIVE/ram2port_1.qip
 set_global_assignment -name QIP_FILE ip/CycloneIVE/ram2port_2.qip
 set_global_assignment -name VERILOG_FILE rtl/n64_vinfo_ext.v
 set_global_assignment -name VERILOG_FILE rtl/n64_deblur.v
@@ -182,7 +181,6 @@ set_global_assignment -name VERILOG_FILE rtl/n64a_vconv.v
 set_global_assignment -name QIP_FILE ip/CycloneIVE/altmult_add3_0.qip
 set_global_assignment -name QIP_FILE ip/CycloneIVE/altmult_add2_0.qip
 set_global_assignment -name SDC_FILE sdc/n64a_sdc.sdc
-
 
 set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files/ep4ce10e22
 
