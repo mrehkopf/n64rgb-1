@@ -159,9 +159,9 @@ parameter ST_WAIT4N64 = 2'b00; // wait for N64 sending request to controller
 parameter ST_N64_RD   = 2'b01; // N64 request sniffing
 parameter ST_CTRL_RD  = 2'b10; // controller response
 
-reg [9:0] sampling_point_cnt  = 10'h0;  // used to estimated new sampling point
-reg [3:0] sampling_point_n64  =  4'h8;  // wait_cnt increased a few times since neg. edge -> sample data
-reg [3:0] sampling_point_ctrl =  4'h8;  // (9 by default -> delay somewhere around 2.25us)
+reg [9:0] sampl_p_cnt  = 10'h0; // used to estimated new threshold point
+reg [3:0] sampl_p_n64  =  4'h8; // wait_cnt increased a few times since neg. edge -> sample data
+reg [3:0] sampl_p_ctrl =  4'h8; // (9 by default -> delay somewhere around 2.25us)
 
 reg        prev_ctrl    =  1'b1;
 reg [11:0] wait_cnt     = 12'b0; // counter for wait state (needs appr. 1.0ms at CLK_4M clock to fill up from 0 to 4095)
@@ -191,6 +191,9 @@ reg initiate_nrst = 1'b0;
 // 24:31 - Y axis
 // 32    - Stop bit
 
+wire [4:0] sampl_p_new = (rd_state == ST_N64_RD) ? sampl_p_cnt[7:4] + sampl_p_cnt[3] :
+                                                   sampl_p_cnt[9:6] + sampl_p_cnt[5] ;
+
 always @(posedge CLK_4M) begin
   case (rd_state)
     ST_WAIT4N64:
@@ -200,7 +203,7 @@ always @(posedge CLK_4M) begin
         ctrl_data_cnt <=  6'h0;
       end
     ST_N64_RD: begin
-      if (wait_cnt[7:0] == {4'h0,sampling_point_n64}) begin // sample data
+      if (wait_cnt[7:0] == {4'h0,sampl_p_n64}) begin // sample data
         if (ctrl_data_cnt[3]) // eight bits read
           if (CTRL & (serial_data[29:22] == 8'b10000000)) begin // check command and stop bit
           // trick: the 2 LSB command bits lies where controller produces unused constant values
@@ -217,7 +220,7 @@ always @(posedge CLK_4M) begin
       end
     end
     ST_CTRL_RD: begin
-      if (wait_cnt[7:0] == {4'h0,sampling_point_ctrl}) begin // sample data
+      if (wait_cnt[7:0] == {4'h0,sampl_p_ctrl}) begin // sample data
         if (ctrl_data_cnt[5]) begin // thirtytwo bits read
           next_rd_state <= ST_WAIT4N64;
           new_ctrl_data <= CTRL; // stop bit must be '1'
@@ -230,16 +233,19 @@ always @(posedge CLK_4M) begin
     default: next_rd_state <= ST_WAIT4N64;
   endcase
 
+  if (~&sampl_p_cnt)
+    sampl_p_cnt <= sampl_p_cnt + 1'b1;
+
   if (prev_ctrl & ~CTRL) begin    // counter resets on neg. edge
     rd_state <= next_rd_state;
     wait_cnt <= 12'h000;
     if (|next_rd_state) begin     // following statements not applied to ST_WAIT4N64
       if (~|ctrl_data_cnt)
-        sampling_point_cnt <= 10'h0;
-      else if (ctrl_data_cnt[3] & (rd_state == ST_N64_RD))
-        sampling_point_n64 <= sampling_point_cnt[7:4];
-      else if (ctrl_data_cnt[5] & (rd_state == ST_CTRL_RD))
-        sampling_point_ctrl <= sampling_point_cnt[9:6];
+        sampl_p_cnt <= 10'h0;
+      else if (ctrl_data_cnt[3] & (rd_state == ST_N64_RD) & ~sampl_p_new[4])
+        sampl_p_n64  <= sampl_p_new[3:0];
+      else if (ctrl_data_cnt[5] & (rd_state == ST_CTRL_RD) & ~sampl_p_new[4])
+        sampl_p_ctrl <= sampl_p_new[3:0];
     end
   end else begin
     if (~&wait_cnt) begin  // saturate counter if needed
@@ -248,9 +254,6 @@ always @(posedge CLK_4M) begin
       rd_state <= ST_WAIT4N64;
       wait_cnt <= 12'h000;
     end
-    
-    if (~&sampling_point_cnt)
-      sampling_point_cnt <= sampling_point_cnt + 1'b1;
   end
 
   prev_ctrl <= CTRL;
